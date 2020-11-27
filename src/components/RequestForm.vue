@@ -18,8 +18,8 @@ export default {
     },
     methods: {
         async onRequestSubmit() {
-            let queryStr = "SELECT " + this.timestamp;
-            console.log(queryStr);
+            let queryStr = "SELECT " + this.timestamp + " FROM MySerie;";
+            console.log("Requête envoyée :", queryStr);
             try {
                 let response = await fetch("http://localhost:8080/query?query=" + queryStr);
                 const data = await response.json();
