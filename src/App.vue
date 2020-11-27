@@ -1,15 +1,15 @@
 <template>
   <div>
-    <Table />
+    <RequestForm />
   </div>
 </template>
 
 <script>
-import Table from "./components/Table";
+import RequestForm from "./components/RequestForm";
 export default {
   name: "App",
   components: {
-    Table,
+    RequestForm,
   },
 };
 </script>
