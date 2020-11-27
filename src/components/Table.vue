@@ -57,7 +57,7 @@ export default {
   methods: {
     onSubmit() {
       this.allScores.push({ name: this.name, score: this.score });
-      
+      this.clearForm();
     },
     clearForm() {
       this.name = "";
