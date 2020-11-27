@@ -2,6 +2,7 @@
   <div class="container">
     <h1 class="mt-4 text-center">Table</h1>
     <form>
+      <!--
       <div class="form-group">
         <label for="name">Timestamp</label>
         <input
@@ -11,12 +12,13 @@
           class="form-control"
         />
       </div>
+      -->
       <div class="form-group">
-        <label for="score">Value</label>
+        <label for="value">Value</label>
         <input
           type="number"
           placeholder="Ex: 53453"
-          v-model="score"
+          v-model="value"
           class="form-control"
         />
       </div>
@@ -56,7 +58,7 @@
         <tr v-for="(entry, i) in sortedList" :key="i">
           <th scope="row">{{ ++i }}</th>
           <td>{{ entry.name }}</td>
-          <td>{{ entry.score }}</td>
+          <td>{{ entry.value }}</td>
           <td>{{ entry.date }}</td>
           <td>{{ entry.time }}</td>
         </tr>
@@ -70,7 +72,7 @@ export default {
   name: "Table",
   data: () => ({
     name: "",
-    score: "",
+    value: "",
     allScores: [],
     date: new Date().toISOString().substr(0, 10),
     time: ""
@@ -78,7 +80,7 @@ export default {
   computed: {
     sortedList: function () {
       return this.allScores.slice().sort(function (a, b) {
-        return b.score - a.score;
+        return b.value - a.value;
       });
     },
   },
@@ -86,15 +88,15 @@ export default {
     onSubmit() {
       this.allScores.push({
         name: this.name,
-        score: this.score,
-        date: this.date,
+        value: this.value,
+        date: this.date.split("-").join("/"),
         time: this.time
       });
       this.clearForm();
     },
     clearForm() {
       this.name = "";
-      this.score = "";
+      this.value = "";
       var t = new Date();
       this.date = t.getDate;
       this.time = t.getTime();
