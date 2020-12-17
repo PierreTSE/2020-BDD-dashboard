@@ -1,8 +1,7 @@
 <template>
   <div class="container">
     <h1 class="mt-4 text-center">Table</h1>
-    <form>
-      <!--
+    <!-- <form>
       <div class="form-group">
         <label for="name">Timestamp</label>
         <input
@@ -12,7 +11,6 @@
           class="form-control"
         />
       </div>
-      -->
       <div class="form-group">
         <label for="value">Value</label>
         <input
@@ -31,7 +29,6 @@
         />
       </div>
       <div>
-        <!-- TODO Find a way to add placeholder time-->  
         <label for="time">Time</label>
         <input
           type="time"
@@ -40,10 +37,11 @@
           step="1"
         />
       </div>
-      <button type="button" @click="onSubmit" class="btn btn-dark">
+     
+    </form> -->
+     <button type="button" @click="jsonParse" class="btn btn-dark">
         Submit
       </button>
-    </form>
     <table class="table mt-5">
       <thead>
         <tr>
@@ -101,6 +99,21 @@ export default {
       this.date = t.getDate;
       this.time = t.getTime();
     },
+    jsonParse() {
+      var jsonTest = '{ "success" : true, "data" : [{"timestamp" : "125645", "value" : 15},{"timestamp" :"125646" , "value" : 10},{"timestamp" :"125647" , "value" : 19}]}';
+      var obj = JSON.parse(jsonTest);
+      if(obj.success){
+        for (var i = 0; i < obj.data.length; i++ ){
+          var t = new Date();
+          this.allScores.push({
+          name: "ok",
+          value: obj.data[i].value,
+          date: t.getDate(),
+          time: obj.data[i].timestamp
+          });
+        }
+      }
+    }
   },
 };
 </script>
