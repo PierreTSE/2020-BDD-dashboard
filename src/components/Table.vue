@@ -68,13 +68,15 @@
 <script>
 export default {
   name: "Table",
-  data: () => ({
+  data() {
+    return {
     name: "",
     value: "",
     allScores: [],
     date: new Date().toISOString().substr(0, 10),
     time: ""
-  }),
+    }
+  },
   computed: {
     sortedList: function () {
       return this.allScores.slice().sort(function (a, b) {
@@ -100,19 +102,21 @@ export default {
       this.time = t.getTime();
     },
     jsonParse() {
+      console.log("Début jsonParse()");
       var jsonTest = '{ "success" : true, "data" : [{"timestamp" : "125645", "value" : 15},{"timestamp" :"125646" , "value" : 10},{"timestamp" :"125647" , "value" : 19}]}';
       var obj = JSON.parse(jsonTest);
-      if(obj.success){
-        for (var i = 0; i < obj.data.length; i++ ){
+      if (obj.success) {
+        for (let i = 0; i < obj.data.length; i++) {
           var t = new Date();
           this.allScores.push({
-          name: "ok",
-          value: obj.data[i].value,
-          date: t.getDate(),
-          time: obj.data[i].timestamp
+            name: "ok",
+            value: obj.data[i].value,
+            date: t.getDate(),
+            time: obj.data[i].timestamp
           });
         }
       }
+      console.log("Fin jsonParse()");
     }
   },
 };
