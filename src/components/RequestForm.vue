@@ -3,14 +3,21 @@
         <h2>Critères de recherche :</h2>
         <h5 style="color: red">{{ request }}</h5>
         <form class="form-inline"> 
-            <input type="checkbox" class="form-control flex-fill" v-model="manual_query_enable" @change="updateCheckboxes(true)">
-            <label for ="date_after_enable">requête manuelle</label>
 
-            <input type="checkbox" class="form-control flex-fill" v-model="date_before_enable" @change="updateCheckboxes()">
-            <label for ="date_before_enable">jusqu'à</label>
+            <label class="container">requête manuelle
+                <input type="checkbox" v-model="manual_query_enable" @change="updateCheckboxes(true)">
+                <span class="checkmark"></span>
+            </label>
 
-            <input type="checkbox" class="form-control flex-fill" v-model="date_after_enable" @change="updateCheckboxes()">
-            <label for ="date_after_enable">à partir de</label>
+            <label class="container">jusqu'à
+                <input type="checkbox" v-model="date_before_enable" @change="updateCheckboxes()">
+                <span class="checkmark"></span>
+            </label>
+
+            <label class="container">à partir de
+                <input type="checkbox" v-model="date_after_enable" @change="updateCheckboxes()">
+                <span class="checkmark"></span>
+            </label>
         </form>
         <form class="form-group form-inline">
             <input type="date" class="form-control flex-fill" v-model="date_before" v-if="date_before_enable" @change="updateRequest()"/>
@@ -119,4 +126,73 @@ export default {
 </script>
 
 <style scoped>
+
+ /* Customize the label (the container) */
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+} 
+
 </style>
