@@ -1,5 +1,6 @@
 <template>
-    <div class="container">
+    <div class="py-4 border-top border-bottom">
+        <h2>Critères de recherche :</h2>
         <form class="form-inline">
             <input class="form-control" v-model="timestamp" type="text" placeholder="Timestamp">
             <button type="button" class="btn btn-info" @click="onRequestSubmit()">Request</button>
@@ -29,7 +30,7 @@ export default {
                     throw new Error("Soucis de reponse. Code reçu : " + data.code);
                 }
             } catch (err) {
-                console.error("Huston, nous avons un problème! (surement que nous n'avons pas reçu de réponse du serveur).", err);
+                console.error("Houston, nous avons un problème! (surement que nous n'avons pas reçu de réponse du serveur).", err);
             }
             
             this.clearForm();
@@ -42,3 +43,6 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+</style>
