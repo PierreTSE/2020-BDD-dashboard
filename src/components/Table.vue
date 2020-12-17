@@ -37,11 +37,11 @@
           step="1"
         />
       </div>
-     
-    </form> -->
-     <button type="button" @click="jsonParse" class="btn btn-dark">
+     <button type="button" @click="onSubmit" class="btn btn-dark">
         Submit
       </button>
+    </form> -->
+     
     <table class="table mt-5">
       <thead>
         <tr>
