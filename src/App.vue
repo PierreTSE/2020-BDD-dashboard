@@ -9,11 +9,14 @@
       <div id="page-content">
         <div id="content-left">
           <InfoSerie />
+          
+          <button id="DEBUG" class="btn btn-warning" @click="on_DEBUG_press()">TEST TABLE.jsonParse()</button>
+          
           <RequestForm />
           <MyGraph />
         </div>
         <div id="content-right">
-          <Table />
+          <Table ref="myTable"/>
         </div>
       </div>
     </div>
@@ -29,6 +32,9 @@ import MySidebar from "./components/MySidebar";
 import MyGraph from "./components/MyGraph";
 import InfoSerie from "./components/InfoSerie";
 import Table from "./components/Table";
+
+
+
 export default {
   name: "App",
   components: {
@@ -39,6 +45,19 @@ export default {
     InfoSerie,
     Table
   },
+  methods: {
+    on_DEBUG_press() {
+      // let fake_data = {
+      //   "success" : true,
+      //   "data" : {
+      //       "125645" : 15,
+      //       "125646" : 10,
+      //       "125647" : 19
+      //   }
+      // // };
+      this.$refs.myTable.jsonParse();
+    }
+  }
 };
 
 // Aide pour faire communiquer 2 components : https://stackoverflow.com/a/60171060 
