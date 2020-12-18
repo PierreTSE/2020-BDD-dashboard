@@ -59,7 +59,7 @@ export default {
             //load conditions for the request
             if (this.request_mode_all) {
                 if (this.date_exact) {
-                    conditions.push("timestamp == " + Date.parse(this.date_before)/1000);
+                    conditions.push("timestamp == " + Date.parse(this.date_exact)/1000);
                 } else {
                     this.request =  "SELECT all FROM " + this.serie;
                     return; //escape to avoid overwrite later in function
