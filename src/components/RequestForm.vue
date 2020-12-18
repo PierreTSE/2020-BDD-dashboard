@@ -116,8 +116,9 @@ export default {
             this.value_max = null;
             this.date_before = new Date().toISOString().substr(0, 10);
             this.date_after = new Date().toISOString().substr(0, 10);
-            this.date_exact = new Date().toISOString().substr(0, 10);
+            this.date_exact = null;
             this.manual_query = null;
+            this.updateCheckboxes();
         },
 
         updateCheckboxes(manual_query_mode=false) {
