@@ -48,17 +48,13 @@
           <th scope="col">#</th>
           <th scope="col">Timestamp</th>
           <th scope="col">Value</th>
-          <th scope="col">Date</th>
-          <th scope="col">Time</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(entry, i) in sortedList" :key="i">
           <th scope="row">{{ ++i }}</th>
-          <td>{{ entry.name }}</td>
+          <td>{{ entry.ts }}</td>
           <td>{{ entry.value }}</td>
-          <td>{{ entry.date }}</td>
-          <td>{{ entry.time }}</td>
         </tr>
       </tbody>
     </table>
@@ -70,53 +66,32 @@ export default {
   name: "Table",
   data() {
     return {
-    name: "",
-    value: "",
     allScores: [],
-    date: new Date().toISOString().substr(0, 10),
-    time: ""
     }
   },
   computed: {
     sortedList: function () {
       return this.allScores.slice().sort(function (a, b) {
-        return b.value - a.value;
+        return a.value > b.value;
       });
     },
   },
   methods: {
-    onSubmit() {
-      this.allScores.push({
-        name: this.name,
-        value: this.value,
-        date: this.date.split("-").join("/"),
-        time: this.time
-      });
-      this.clearForm();
+    clearTable() {
+      this.allScores = [];
     },
-    clearForm() {
-      this.name = "";
-      this.value = "";
-      var t = new Date();
-      this.date = t.getDate;
-      this.time = t.getTime();
-    },
-    jsonParse() {
-      console.log("Début jsonParse()");
-      var jsonTest = '{ "success" : true, "data" : [{"timestamp" : "125645", "value" : 15},{"timestamp" :"125646" , "value" : 10},{"timestamp" :"125647" , "value" : 19}]}';
-      var obj = JSON.parse(jsonTest);
+
+    jsonParse(json_input) {
+      this.clearTable();  // Effacer les données déjà présentes
+      let obj = JSON.parse(json_input);
       if (obj.success) {
-        for (let i = 0; i < obj.data.length; i++) {
-          var t = new Date();
+        for (let i = 0; i < obj.data.length; i++) {  // Pour chaque donnée dans le JSON
           this.allScores.push({
-            name: "ok",
+            ts: obj.data[i].timestamp,
             value: obj.data[i].value,
-            date: t.getDate(),
-            time: obj.data[i].timestamp
           });
         }
       }
-      console.log("Fin jsonParse()");
     }
   },
 };

@@ -47,15 +47,16 @@ export default {
   },
   methods: {
     on_DEBUG_press() {
-      // let fake_data = {
-      //   "success" : true,
-      //   "data" : {
-      //       "125645" : 15,
-      //       "125646" : 10,
-      //       "125647" : 19
-      //   }
-      // // };
-      this.$refs.myTable.jsonParse();
+      let fake_data = {
+        "success" : true,
+        "data" : [
+          {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
+          {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
+          {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
+          {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
+        ]
+      };
+      this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
     }
   }
 };
