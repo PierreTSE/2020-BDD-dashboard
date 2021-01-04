@@ -76,11 +76,13 @@ export default {
 }
 
 #content-left {
+  vertical-align: top;
   width: 60%;
   display: inline-block;
 }
 
 #content-right {
+  vertical-align: top;
   width: 40%;
   display: inline-block;
 }
