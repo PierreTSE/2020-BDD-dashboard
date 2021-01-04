@@ -47,6 +47,7 @@ export default {
   },
   methods: {
     on_DEBUG_press() {
+      // Generer des données aléatoires
       let fake_data = {
         "success" : true,
         "data" : [

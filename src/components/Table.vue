@@ -51,7 +51,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(entry, i) in sortedList" :key="i">
+        <tr v-for="(entry, i) in allScores" :key="i">
           <th scope="row">{{ ++i }}</th>
           <td>{{ entry.ts }}</td>
           <td>{{ entry.value }}</td>
@@ -70,11 +70,11 @@ export default {
     }
   },
   computed: {
-    sortedList: function () {
-      return this.allScores.slice().sort(function (a, b) {
-        return a.value > b.value;
-      });
-    },
+    // sortedList: function () {
+    //   return this.allScores.sort(function (a, b) {
+    //     return a.ts > b.ts;
+    //   });
+    // },
   },
   methods: {
     clearTable() {
@@ -92,6 +92,13 @@ export default {
           });
         }
       }
+
+      // Trier les scores par timestamp (croissant)
+      console.log(this.allScores);
+      this.allScores.sort(function(a, b) {
+        return (a.ts - b.ts);
+      });
+      console.log(this.allScores);
     }
   },
 };
