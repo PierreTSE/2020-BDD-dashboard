@@ -9,11 +9,14 @@
       <div id="page-content">
         <div id="content-left">
           <InfoSerie />
+          
+          <button id="DEBUG" class="btn btn-warning" @click="on_DEBUG_press()">TEST TABLE.jsonParse()</button>
+          
           <RequestForm />
           <MyGraph />
         </div>
         <div id="content-right">
-          <Table />
+          <Table ref="myTable"/>
         </div>
       </div>
     </div>
@@ -29,6 +32,9 @@ import MySidebar from "./components/MySidebar";
 import MyGraph from "./components/MyGraph";
 import InfoSerie from "./components/InfoSerie";
 import Table from "./components/Table";
+
+
+
 export default {
   name: "App",
   components: {
@@ -39,6 +45,21 @@ export default {
     InfoSerie,
     Table
   },
+  methods: {
+    on_DEBUG_press() {
+      // Generer des données aléatoires
+      let fake_data = {
+        "success" : true,
+        "data" : [
+          {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
+          {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
+          {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
+          {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
+        ]
+      };
+      this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
+    }
+  }
 };
 
 // Aide pour faire communiquer 2 components : https://stackoverflow.com/a/60171060 

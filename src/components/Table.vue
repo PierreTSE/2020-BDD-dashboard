@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h1 class="mt-4 text-center">Table</h1>
-    <form>
+    <!-- <form>
       <div class="form-group">
         <label for="name">Timestamp</label>
         <input
@@ -12,18 +12,36 @@
         />
       </div>
       <div class="form-group">
-        <label for="score">Value</label>
+        <label for="value">Value</label>
         <input
           type="number"
           placeholder="Ex: 53453"
-          v-model="score"
+          v-model="value"
           class="form-control"
         />
       </div>
-      <button type="button" @click="onSubmit" class="btn btn-dark">
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input 
+          type="date" 
+          v-model="date"
+          class="form-control"
+        />
+      </div>
+      <div>
+        <label for="time">Time</label>
+        <input
+          type="time"
+          v-model="time"
+          class="form-control"
+          step="1"
+        />
+      </div>
+     <button type="button" @click="onSubmit" class="btn btn-dark">
         Submit
       </button>
-    </form>
+    </form> -->
+     
     <table class="table mt-5">
       <thead>
         <tr>
@@ -33,10 +51,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(entry, i) in sortedList" :key="i">
+        <tr v-for="(entry, i) in allScores" :key="i">
           <th scope="row">{{ ++i }}</th>
-          <td>{{ entry.name }}</td>
-          <td>{{ entry.score }}</td>
+          <td>{{ entry.ts }}</td>
+          <td>{{ entry.value }}</td>
         </tr>
       </tbody>
     </table>
@@ -46,23 +64,42 @@
 <script>
 export default {
   name: "Table",
-  data: () => ({ name: "", score: "", allScores: [] }),
+  data() {
+    return {
+    allScores: [],
+    }
+  },
   computed: {
-    sortedList: function() {
-      return this.allScores.slice().sort(function(a, b) {
-        return b.score - a.score;
-      });
-    },
+    // sortedList: function () {
+    //   return this.allScores.sort(function (a, b) {
+    //     return a.ts > b.ts;
+    //   });
+    // },
   },
   methods: {
-    onSubmit() {
-      this.allScores.push({ name: this.name, score: this.score });
-      this.clearForm();
+    clearTable() {
+      this.allScores = [];
     },
-    clearForm() {
-      this.name = "";
-      this.score = "";
-    },
+
+    jsonParse(json_input) {
+      this.clearTable();  // Effacer les données déjà présentes
+      let obj = JSON.parse(json_input);
+      if (obj.success) {
+        for (let i = 0; i < obj.data.length; i++) {  // Pour chaque donnée dans le JSON
+          this.allScores.push({
+            ts: obj.data[i].timestamp,
+            value: obj.data[i].value,
+          });
+        }
+      }
+
+      // Trier les scores par timestamp (croissant)
+      console.log(this.allScores);
+      this.allScores.sort(function(a, b) {
+        return (a.ts - b.ts);
+      });
+      console.log(this.allScores);
+    }
   },
 };
 </script>
