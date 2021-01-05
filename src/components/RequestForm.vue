@@ -99,13 +99,15 @@ export default {
             console.log("REQUEST :", query_string);
             try {
                 let response = await fetch("http://localhost:8080/query?query=" + query_string);
-                const data = await response.json();
                 if (response.ok) {
+                    const data = await response.json();
                     console.log("RESPONSE : ", data);
+                    if (data["success"] == true) {
+                        // TODO Send data to Table
+                    }
                 } else {
-                    throw new Error("ERROR (BAD RESPONSE) : " + data.code);
+                    throw new Error("ERROR (BAD NETWORK RESPONSE).");
                 }
-                // TODO : send data to table
             } catch (err) {
                 console.error("ERROR : ", err);
             }
