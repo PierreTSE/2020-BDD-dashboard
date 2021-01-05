@@ -10,9 +10,12 @@
         <div id="content-left">
           <InfoSerie />
           
-          <button id="DEBUG" class="btn btn-warning" @click="on_DEBUG_press()">TEST TABLE.jsonParse()</button>
-          
-          <RequestForm />
+          <div class="bg-dark p-2">
+            <p class="h6 text-warning">Debug:</p>
+            <button id="DEBUG_Table" class="btn btn-warning mx-1" @click="on_DEBUG_Table_press()">Test Table.jsonParse()</button>
+            <button id="DEBUG_Request" class="btn btn-warning mx-1" @click="on_DEBUG_Request_press()">Show Live Request</button>
+          </div>
+          <RequestForm ref="requestForm"/>
           <MyGraph />
         </div>
         <div id="content-right">
@@ -46,7 +49,7 @@ export default {
     Table
   },
   methods: {
-    on_DEBUG_press() {
+    on_DEBUG_Table_press() {
       // Generer des données aléatoires
       let fake_data = {
         "success" : true,
@@ -58,7 +61,15 @@ export default {
         ]
       };
       this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
+    },
+  on_DEBUG_Request_press() {
+    this.$refs.requestForm.show_request = !this.$refs.requestForm.show_request;
+    if (this.$refs.requestForm.show_request) {
+      document.getElementById("DEBUG_Request").innerText  = "Hide Live Request";
+    } else {
+      document.getElementById("DEBUG_Request").innerText  = "Show Live Request";
     }
+  },
   }
 };
 

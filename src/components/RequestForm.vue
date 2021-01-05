@@ -1,7 +1,7 @@
 <template>
     <div class="py-4 border-top border-bottom">
         <h2>Critères de recherche :</h2>
-        <p class="h5 bg-warning">{{ request }}</p>
+        <p class="h5 bg-warning" v-if="show_request">{{ request }}</p>
         
         <div class="alert alert-danger alert-dismissible" role="alert" v-if="show_alert">
             Erreur de syntaxe dans la requete !
@@ -53,6 +53,7 @@ export default {
         date_exact: null,
         request: null,
         serie: "MySerie",
+        show_request: false,
         show_alert: false,
     }),
     methods: {
