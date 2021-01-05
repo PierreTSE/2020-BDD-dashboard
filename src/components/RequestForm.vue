@@ -1,7 +1,15 @@
 <template>
     <div class="py-4 border-top border-bottom">
         <h2>Critères de recherche :</h2>
-        <h5 style="color: red">{{ request }}</h5>
+        <p class="h5 bg-warning">{{ request }}</p>
+        
+        <div class="alert alert-danger alert-dismissible" role="alert" v-if="show_alert">
+            Erreur de syntaxe dans la requete !
+            <div v-on:click="show_alert = !show_alert" class="close">
+                <p>&times;</p>
+            </div>
+        </div>
+
         <form class="form-inline"> 
 
             <label class="container">requête manuelle
@@ -44,13 +52,13 @@ export default {
         date_after: new Date().toISOString().substr(0, 10),
         date_exact: null,
         request: null,
-        serie: "MySerie "
-        
+        serie: "MySerie",
+        show_alert: false,
     }),
     methods: {
         updateRequest() {
             //initialization
-            let prefix = "SELECT FROM " + this.serie;
+            let prefix = "SELECT FROM " + this.serie + " ";
             let conditions = []
             let conditions_processed = "";
 
@@ -74,7 +82,7 @@ export default {
                     conditions.push("timestamp >= " + Date.parse(this.date_after)/1000);
                 }
             }
-
+            
             // Apply conditions to request if needed (WHERE clause)
             if (conditions.length > 0) {
                 conditions_processed = "WHERE "
@@ -83,16 +91,17 @@ export default {
                 });
                 conditions_processed = conditions_processed.slice(0, -5)
                 
-            this.request = prefix + conditions_processed + ";";
+                this.request = prefix + conditions_processed + ";";
             }
         },
 
         onRequestSubmit() {
+            this.show_alert = false;  // Hide the potential leftover error message
             this.sendRequest(this.request);
             this.clearForm();
         },
 
-        async sendRequest(query_string){
+        async sendRequest(query_string) {
             console.log("REQUEST :", query_string);
             try {
                 let response = await fetch("http://localhost:8080/query?query=" + query_string);
@@ -101,6 +110,9 @@ export default {
                     console.log("RESPONSE : ", data);
                     if (data["success"] == true) {
                         // TODO Send data to Table
+                    } else {
+                        this.show_alert = true;
+                        throw new Error("ERROR(S) : " + JSON.stringify(data["error"]));
                     }
                 } else {
                     throw new Error("ERROR (BAD NETWORK RESPONSE).");
