@@ -48,9 +48,7 @@ export default {
         
     }),
     methods: {
-        updateRequest(){
-            //TODO : change function organisation to avoid all `return;` (not pretty)
-
+        updateRequest() {
             //initialization
             let prefix = "SELECT FROM " + this.serie;
             let conditions = []
@@ -62,12 +60,10 @@ export default {
                     conditions.push("timestamp == " + Date.parse(this.date_exact)/1000);
                 } else {
                     this.request =  "SELECT all FROM " + this.serie;
-                    return; //escape to avoid overwrite later in function
                 }
             } 
             else if (this.manual_query_enable){
                 this.request = this.manual_query;
-                return; //escape to avoid overwrite later in function
             } 
             else {
                 // TODO : Do we want finer controls ? like choose with hour rather than date (pls no)
@@ -79,15 +75,16 @@ export default {
                 }
             }
 
-            //apply conditions to request if needed 
+            // Apply conditions to request if needed (WHERE clause)
             if (conditions.length > 0) {
                 conditions_processed = "WHERE "
                 conditions.forEach(cond => {
                     conditions_processed += cond + " AND "
                 });
                 conditions_processed = conditions_processed.slice(0, -5)
-            }
+                
             this.request = prefix + conditions_processed + ";";
+            }
         },
 
         onRequestSubmit() {
