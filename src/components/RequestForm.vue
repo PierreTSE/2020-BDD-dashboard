@@ -109,7 +109,9 @@ export default {
                     const data = await response.json();
                     console.log("RESPONSE : ", data);
                     if (data["success"] == true) {
-                        // TODO Send data to Table
+                        console.log("Data received: ", data["data"]);
+                        // Send data to Table
+                        this.$parent.$refs.myTable.jsonParse(JSON.stringify(data));
                     } else {
                         this.show_alert = true;
                         throw new Error("ERROR(S) : " + JSON.stringify(data["error"]));
