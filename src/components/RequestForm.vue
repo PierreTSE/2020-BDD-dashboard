@@ -10,29 +10,85 @@
             </div>
         </div>
 
-        <form class="form-inline"> 
+        <div> 
 
             <label class="container">requête manuelle
                 <input type="checkbox" v-model="manual_query_enable" @change="updateCheckboxes(true)">
                 <span class="checkmark"></span>
             </label>
 
-            <label class="container">jusqu'à
-                <input type="checkbox" v-model="date_before_enable" @change="updateCheckboxes()">
-                <span class="checkmark"></span>
-            </label>
+            <form class="form-inline">
 
-            <label class="container">à partir de
-                <input type="checkbox" v-model="date_after_enable" @change="updateCheckboxes()">
-                <span class="checkmark"></span>
-            </label>
-        </form>
+                <div class="form-check form-check-inline">
+                    <label class="container">jusqu'à
+                        <input type="checkbox" v-model="date_before_enable" @change="updateCheckboxes()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="container" v-if="date_before_enable"> inclus
+                            <input type="checkbox" v-model="include_before_enable" @change="updateCheckboxes()">
+                            <span class="checkmark"></span>
+                    </label>
+                </div>
+                
+            </form>
+
+            <form class="form-inline">
+
+                <div class="form-check form-check-inline">
+                    <label class="container">à partir de
+                        <input type="checkbox" v-model="date_after_enable" @change="updateCheckboxes()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="container" v-if="date_after_enable"> inclus
+                            <input type="checkbox" v-model="include_after_enable" @change="updateCheckboxes()">
+                            <span class="checkmark"></span>
+                    </label>
+                </div>
+            </form>
+        </div>
+        
         <form class="form-group form-inline">
-            <input type="date" class="form-control flex-fill" v-model="date_before" v-if="date_before_enable" @change="updateRequest()"/>
-            <input type="date" class="form-control flex-fill" v-model="date_after" v-if="date_after_enable" @change="updateRequest()"/>
+            <input type="date" class="form-control flex-fill mr-1" v-model="date_before" v-if="date_before_enable" @change="updateRequest()"/>
+            <input type="time" class="form-control mr-2" step="1" v-model="time_before" v-if="date_before_enable" @change="updateRequest()">
+            <input type="date" class="form-control flex-fill mr-1" v-model="date_after" v-if="date_after_enable" @change="updateRequest()"/>
+            <input type="time" class="form-control mr-2" step="1" v-model="time_after" v-if="date_after_enable" @change="updateRequest()"/>
+
             <input type="date" class="form-control flex-fill" v-model="date_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
             <input type="text" class="form-control flex-fill" v-model="manual_query" v-if="manual_query_enable" @keyup="updateRequest()" @keydown="updateRequest()"/>            
             <button type="button" class="btn btn-info" @click="onRequestSubmit()">{{submit_text}}</button>
+        </form>
+
+        <form class="form-inline">
+
+            <div class="form-check form-check-inline">
+
+                <label class="container" id="aggregation">SUM
+                    <input class="form-check-input" type="checkbox" v-model="sum_enable" @change="updateCheckboxes()">
+                    <span class="checkmark"></span>
+                </label>
+
+                <label class="container" id="aggregation">COUNT
+                    <input class="form-check-input" type="checkbox" v-model="count_enable" @change="updateCheckboxes()">
+                    <span class="checkmark"></span>
+                </label>
+
+                <label class="container" id="aggregation">AVG
+                    <input class="form-check-input" type="checkbox" v-model="avg_enable" @change="updateCheckboxes()">
+                    <span class="checkmark"></span>
+                </label>
+
+                <label class="container" id="aggregation">MIN
+                    <input class="form-check-input" type="checkbox" v-model="min_enable" @change="updateCheckboxes()">
+                    <span class="checkmark"></span>
+                </label>
+
+                <label class="container" id="aggregation">MAX
+                    <input class="form-check-input" type="checkbox" v-model="max_enable" @change="updateCheckboxes()">
+                    <span class="checkmark"></span>
+                </label> 
+
+            </div>
+
         </form>
     </div>
 </template>
@@ -44,12 +100,21 @@ export default {
     data: () => ({   
         submit_text: null,
         date_before_enable: false,
+        include_before_enable: false,
         date_after_enable: false,
+        include_after_enable: false,
         manual_query_enable: false,
+        sum_enable: false,
+        count_enable: false,
+        avg_enable: false,
+        min_enable: false,
+        max_enable: false,
         request_mode_all: true,
         manual_query: null,
         date_before: new Date().toISOString().substr(0, 10), 
         date_after: new Date().toISOString().substr(0, 10),
+        time_before: "00:00:00",
+        time_after: "00:00:00",
         date_exact: null,
         request: null,
         serie: "MySerie",
@@ -68,7 +133,7 @@ export default {
                 if (this.date_exact) {
                     conditions.push("timestamp == " + Date.parse(this.date_exact)/1000);
                 } else {
-                    this.request =  "SELECT all FROM " + this.serie;
+                    this.request =  "SELECT all FROM " + this.serie +";";
                 }
             } 
             else if (this.manual_query_enable){
@@ -77,10 +142,24 @@ export default {
             else {
                 // TODO : Do we want finer controls ? like choose with hour rather than date (pls no)
                 if (this.date_before_enable){
-                    conditions.push("timestamp <= " + Date.parse(this.date_before)/1000);
+                    if (this.include_before_enable){
+                        let timestamp = this.date_before + "T" + this.time_before + ".000Z";
+                        conditions.push("timestamp <= " + Date.parse(timestamp)/1000);
+                    }
+                    else {
+                        let timestamp = this.date_before + "T" + this.time_before + ".000Z";
+                        conditions.push("timestamp < " + Date.parse(timestamp)/1000);
+                    }
                 }
                 if (this.date_after_enable){
-                    conditions.push("timestamp >= " + Date.parse(this.date_after)/1000);
+                    if (this.include_after_enable) {
+                        let timestamp = this.date_after + "T" + this.time_after + ".000Z";
+                        conditions.push("timestamp >= " + Date.parse(timestamp)/1000);
+                    }
+                    else {
+                        let timestamp = this.date_after + "T" + this.time_after + ".000Z";
+                        conditions.push("timestamp > " + Date.parse(timestamp)/1000);
+                    }
                 }
             }
             
@@ -93,6 +172,28 @@ export default {
                 conditions_processed = conditions_processed.slice(0, -5)
                 
                 this.request = prefix + conditions_processed + ";";
+            }
+
+            // Insert aggregation functions
+            if (this.sum_enable | this.count_enable | this.avg_enable | this.min_enable | this.max_enable){
+                let agg_prefix = "";
+                if (this.sum_enable){
+                    agg_prefix += "SUM ";
+                }
+                if (this.count_enable){
+                    agg_prefix += "COUNT ";
+                }
+                if (this.avg_enable){
+                    agg_prefix += "AVG ";
+                }
+                if (this.min_enable){
+                    agg_prefix += "MIN ";
+                }
+                if (this.max_enable){
+                    agg_prefix += "MAX ";
+                }
+                let new_request = [this.request.slice(0, 7), agg_prefix, this.request.slice(7)].join('');
+                this.request = new_request;
             }
         },
 
@@ -130,6 +231,8 @@ export default {
             this.value_max = null;
             this.date_before = new Date().toISOString().substr(0, 10);
             this.date_after = new Date().toISOString().substr(0, 10);
+            this.time_before = "00:00:00";
+            this.time_after = "00:00:00";
             this.date_exact = null;
             this.manual_query = null;
             this.updateCheckboxes();
@@ -171,6 +274,7 @@ export default {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  white-space: nowrap;
 }
 
 /* Hide the browser's default checkbox */
