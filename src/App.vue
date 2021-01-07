@@ -88,13 +88,30 @@ export default {
 
 #content-left {
   vertical-align: top;
-  width: 60%;
   display: inline-block;
 }
 
 #content-right {
   vertical-align: top;
-  width: 40%;
   display: inline-block;
 }
+
+@media (min-width: 1000px) {  /* Pour grands écrans */
+  #content-left {
+    width: 60%;
+  }
+  #content-right {
+    width: 40%;
+  }
+}
+
+@media (max-width: 1000px) {  /* Pour petits écrans */
+  #content-left {
+    width: 100%;
+  }
+  #content-right {
+    width: 100%;
+  }
+}
+
 </style>
