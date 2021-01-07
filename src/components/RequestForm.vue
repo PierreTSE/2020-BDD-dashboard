@@ -28,8 +28,11 @@
             </label>
         </form>
         <form class="form-group form-inline">
-            <input type="date" class="form-control flex-fill" v-model="date_before" v-if="date_before_enable" @change="updateRequest()"/>
-            <input type="date" class="form-control flex-fill" v-model="date_after" v-if="date_after_enable" @change="updateRequest()"/>
+            <input type="date" class="form-control flex-fill mr-1" v-model="date_before" v-if="date_before_enable" @change="updateRequest()"/>
+            <input type="time" class="form-control mr-2" step="1" v-model="time_before" v-if="date_before_enable" @change="updateRequest()">
+            <input type="date" class="form-control flex-fill mr-1" v-model="date_after" v-if="date_after_enable" @change="updateRequest()"/>
+            <input type="time" class="form-control mr-2" step="1" v-model="time_after" v-if="date_after_enable" @change="updateRequest()"/>
+
             <input type="date" class="form-control flex-fill" v-model="date_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
             <input type="text" class="form-control flex-fill" v-model="manual_query" v-if="manual_query_enable" @keyup="updateRequest()" @keydown="updateRequest()"/>            
             <button type="button" class="btn btn-info" @click="onRequestSubmit()">{{submit_text}}</button>
@@ -50,6 +53,8 @@ export default {
         manual_query: null,
         date_before: new Date().toISOString().substr(0, 10), 
         date_after: new Date().toISOString().substr(0, 10),
+        time_before: "00:00:00",
+        time_after: "00:00:00",
         date_exact: null,
         request: null,
         serie: "MySerie",
@@ -77,10 +82,12 @@ export default {
             else {
                 // TODO : Do we want finer controls ? like choose with hour rather than date (pls no)
                 if (this.date_before_enable){
-                    conditions.push("timestamp <= " + Date.parse(this.date_before)/1000);
+                    let timestamp = this.date_before + "T" + this.time_before + ".000Z";
+                    conditions.push("timestamp <= " + Date.parse(timestamp)/1000);
                 }
                 if (this.date_after_enable){
-                    conditions.push("timestamp >= " + Date.parse(this.date_after)/1000);
+                    let timestamp = this.date_after + "T" + this.time_after + ".000Z";
+                    conditions.push("timestamp >= " + Date.parse(timestamp)/1000);
                 }
             }
             
@@ -130,6 +137,8 @@ export default {
             this.value_max = null;
             this.date_before = new Date().toISOString().substr(0, 10);
             this.date_after = new Date().toISOString().substr(0, 10);
+            this.time_before = "00:00:00";
+            this.time_after = "00:00:00";
             this.date_exact = null;
             this.manual_query = null;
             this.updateCheckboxes();
