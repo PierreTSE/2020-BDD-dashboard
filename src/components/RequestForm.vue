@@ -10,23 +10,43 @@
             </div>
         </div>
 
-        <form class="form-inline"> 
+        <div> 
 
             <label class="container">requête manuelle
                 <input type="checkbox" v-model="manual_query_enable" @change="updateCheckboxes(true)">
                 <span class="checkmark"></span>
             </label>
 
-            <label class="container">jusqu'à
-                <input type="checkbox" v-model="date_before_enable" @change="updateCheckboxes()">
-                <span class="checkmark"></span>
-            </label>
+            <form class="form-inline">
 
-            <label class="container">à partir de
-                <input type="checkbox" v-model="date_after_enable" @change="updateCheckboxes()">
-                <span class="checkmark"></span>
-            </label>
-        </form>
+                <div class="form-check form-check-inline">
+                    <label class="container">jusqu'à
+                        <input type="checkbox" v-model="date_before_enable" @change="updateCheckboxes()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="container" v-if="date_before_enable"> inclus
+                            <input type="checkbox" v-model="include_before_enable" @change="updateCheckboxes()">
+                            <span class="checkmark"></span>
+                    </label>
+                </div>
+                
+            </form>
+
+            <form class="form-inline">
+
+                <div class="form-check form-check-inline">
+                    <label class="container">à partir de
+                        <input type="checkbox" v-model="date_after_enable" @change="updateCheckboxes()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="container" v-if="date_after_enable"> inclus
+                            <input type="checkbox" v-model="include_after_enable" @change="updateCheckboxes()">
+                            <span class="checkmark"></span>
+                    </label>
+                </div>
+            </form>
+        </div>
+
         <form class="form-group form-inline">
             <input type="date" class="form-control flex-fill mr-1" v-model="date_before" v-if="date_before_enable" @change="updateRequest()"/>
             <input type="time" class="form-control mr-2" step="1" v-model="time_before" v-if="date_before_enable" @change="updateRequest()">
@@ -47,7 +67,9 @@ export default {
     data: () => ({   
         submit_text: null,
         date_before_enable: false,
+        include_before_enable: false,
         date_after_enable: false,
+        include_after_enable: false,
         manual_query_enable: false,
         request_mode_all: true,
         manual_query: null,
@@ -73,7 +95,7 @@ export default {
                 if (this.date_exact) {
                     conditions.push("timestamp == " + Date.parse(this.date_exact)/1000);
                 } else {
-                    this.request =  "SELECT all FROM " + this.serie;
+                    this.request =  "SELECT all FROM " + this.serie +";";
                 }
             } 
             else if (this.manual_query_enable){
@@ -82,12 +104,24 @@ export default {
             else {
                 // TODO : Do we want finer controls ? like choose with hour rather than date (pls no)
                 if (this.date_before_enable){
-                    let timestamp = this.date_before + "T" + this.time_before + ".000Z";
-                    conditions.push("timestamp <= " + Date.parse(timestamp)/1000);
+                    if (this.include_before_enable){
+                        let timestamp = this.date_before + "T" + this.time_before + ".000Z";
+                        conditions.push("timestamp <= " + Date.parse(timestamp)/1000);
+                    }
+                    else {
+                        let timestamp = this.date_before + "T" + this.time_before + ".000Z";
+                        conditions.push("timestamp < " + Date.parse(timestamp)/1000);
+                    }
                 }
                 if (this.date_after_enable){
-                    let timestamp = this.date_after + "T" + this.time_after + ".000Z";
-                    conditions.push("timestamp >= " + Date.parse(timestamp)/1000);
+                    if (this.include_after_enable) {
+                        let timestamp = this.date_after + "T" + this.time_after + ".000Z";
+                        conditions.push("timestamp >= " + Date.parse(timestamp)/1000);
+                    }
+                    else {
+                        let timestamp = this.date_after + "T" + this.time_after + ".000Z";
+                        conditions.push("timestamp > " + Date.parse(timestamp)/1000);
+                    }
                 }
             }
             
@@ -180,6 +214,7 @@ export default {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  white-space: nowrap;
 }
 
 /* Hide the browser's default checkbox */
