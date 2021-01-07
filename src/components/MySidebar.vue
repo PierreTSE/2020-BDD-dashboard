@@ -1,10 +1,10 @@
 <template lang="html">
 
-  <nav class="p-1" id="sidebar-wrapper">
+  <nav class="p-1 d-none d-xl-block" id="sidebar-wrapper">
     <p>Serie</p>
     <p>Seri2</p>
     <p>Seri3</p>
-  </nav>
+  </nav>   
 
 </template>
 

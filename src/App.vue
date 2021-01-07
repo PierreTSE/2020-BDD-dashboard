@@ -86,6 +86,12 @@ export default {
   width: 100%;
 }
 
+@media only screen and (max-width: 1200px)
+{
+  #page-content{
+    padding-left: 0px;
+  }
+}
 #content-left {
   vertical-align: top;
   width: 60%;
