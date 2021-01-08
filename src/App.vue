@@ -2,7 +2,7 @@
 
   <div>
 
-    <MyHeader />  <!-- Barre d'entete en haut -->
+    <MyHeader :series="series" />  <!-- Barre d'entete en haut -->
   
     <div class="d-flex container-fluid">
       <MySidebar />  <!-- Barre de navigation à gauche -->
@@ -40,6 +40,11 @@ import Table from "./components/Table";
 
 export default {
   name: "App",
+  data() {
+    return {
+      series: ["Serie1", "TemparaturesLyon", "Serie3"],
+    }
+  },
   components: {
     RequestForm,
     MyHeader,
@@ -62,6 +67,7 @@ export default {
           ]
         }
       };
+      this.series.push("azerty");
       this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
     },
     
@@ -108,6 +114,12 @@ export default {
   width: 100%;
 }
 
+@media only screen and (max-width: 1200px)
+{
+  #page-content{
+    padding-left: 0px;
+  }
+}
 #content-left {
   vertical-align: top;
   display: inline-block;

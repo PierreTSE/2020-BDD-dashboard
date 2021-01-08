@@ -1,10 +1,10 @@
 <template lang="html">
 
-  <nav class="p-1" id="sidebar-wrapper">
+  <nav class="p-1 d-none d-xl-block" id="sidebar-wrapper">
     <p>Serie</p>
     <p>Seri2</p>
     <p>Seri3</p>
-  </nav>
+  </nav>   
 
 </template>
 
@@ -33,7 +33,7 @@
 #sidebar-wrapper {
   width: 150px;  /* Meme valeur que le padding-left div#page-content */
   position: fixed;
-  top: 70px;  /* Meme valeur que 'height' de MyHeader */
+  top: 90px;  /* Meme valeur que 'height' de MyHeader */
   left: 0;
   bottom: 0;
   margin :0;
