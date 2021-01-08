@@ -1,14 +1,34 @@
 <template>
   <div class="container">
-    <h1 class="mt-4 text-center">Table</h1>
-    <!-- <form>
+    <button type="button" class="btn btn-default btn-circle btn-xl mt-4" 
+    @click="showInsertDiv=!showInsertDiv"><i class="fa fa-plus"></i>
+    </button>
+
+    <button type="button" class="btn btn-default btn-circle btn-xl mt-4" 
+    @click="showFileDiv=!showFileDiv"><i class="fa fa-file"></i>
+    </button>
+    <div v-if="showFileDiv">
+      <br>
+      <input type="file"  @change="loadTextFromFile">
+    </div>
+
+    <!-- Add row to table div -->
+    <form v-if="showInsertDiv">
       <div class="form-group">
-        <label for="name">Timestamp</label>
-        <input
-          type="text"
-          placeholder="Ex: Timestamp 1"
-          v-model="name"
+        <label for="date">Date</label>
+        <input 
+          type="date" 
+          v-model="date"
           class="form-control"
+        />
+      </div>
+      <div>
+        <label for="time">Heure</label>
+        <input
+          type="time"
+          v-model="time"
+          class="form-control"
+          step="1"
         />
       </div>
       <div class="form-group">
@@ -20,28 +40,13 @@
           class="form-control"
         />
       </div>
-      <div class="form-group">
-        <label for="date">Date</label>
-        <input 
-          type="date" 
-          v-model="date"
-          class="form-control"
-        />
-      </div>
-      <div>
-        <label for="time">Time</label>
-        <input
-          type="time"
-          v-model="time"
-          class="form-control"
-          step="1"
-        />
-      </div>
      <button type="button" @click="onSubmit" class="btn btn-dark">
         Submit
       </button>
-    </form> -->
-     
+    </form>
+    
+    
+    
     <table class="table mt-5">
       <thead>
         <tr>
@@ -66,7 +71,9 @@ export default {
   name: "Table",
   data() {
     return {
-    allScores: [],
+    allScores: [], 
+    showInsertDiv: false,
+    showFileDiv: false
     }
   },
   computed: {
@@ -99,7 +106,31 @@ export default {
         return (a.ts - b.ts);
       });
       console.log(this.allScores);
+    },
+
+    loadTextFromFile(ev) {
+      const file = ev.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = e => this.$emit("load", e.target.result);
+      reader.readAsText(file);
     }
+
   },
 };
 </script>
+
+<style scoped>
+
+
+.btn-circle.btn-xl {
+    width: 60px;
+    height: 60px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+    margin-left: 3px;
+    background-color: #10bccf;
+}
+</style>
