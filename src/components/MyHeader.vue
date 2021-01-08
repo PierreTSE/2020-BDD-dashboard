@@ -1,7 +1,14 @@
 <template lang="html">
 
   <header class="">
-    <h1>Dashboard</h1>
+    <div class="row">
+            <div class="col-sm-10 col-12">
+                <h1>Dashboard</h1>
+            </div>
+            <div class="col-sm-2 col-12">
+                <button type="button"  class="btn btn-primary">Menu</button>
+            </div>
+    </div>
   </header>
 
 </template>
@@ -40,5 +47,9 @@ header {
   background-color: #fff;
   padding: 5px;
   border-bottom: 3px solid black;
+}
+
+button{
+  float:right;
 }
 </style>
