@@ -9,7 +9,10 @@
     </button>
     <div v-if="showFileDiv">
       <br>
-      <input type="file"  @change="loadTextFromFile">
+      <input type="file"  @change="loadTextFromFile" style="margin-bottom : 5px"/><br>
+      <button type="button" @click="onCSVSubmit" class="btn btn-dark">
+        Submit
+      </button>
     </div>
 
     <!-- Add row to table div -->
@@ -38,7 +41,7 @@
           placeholder="Ex: 53453"
           v-model="value"
           class="form-control"
-        />
+        @keyup.enter="enterClicked()"/>
       </div>
      <button type="button" @click="onTimestampSubmit" class="btn btn-dark">
         Submit
@@ -67,7 +70,12 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import VuePapaParse from 'vue-papa-parse'
+Vue.use(VuePapaParse)
+
 export default {
+  
   name: "Table",
   data() {
     return {
@@ -76,7 +84,8 @@ export default {
       showFileDiv: false,
       date: new Date(),
       time: "00:00:00",
-      value: 0
+      value: 0,
+      csvScores: [],
     }
   },
   computed: {
@@ -117,10 +126,42 @@ export default {
 
       reader.onload = e => this.$emit("load", e.target.result);
       reader.readAsText(file);
+
+      this.$papa.parse(file, {
+        complete: function(results) {
+          this.csvScores = results.data;
+          console.log(this.csvScores);
+        }
+        
+      });
     },
 
     onTimestampSubmit() {
-      console.log("onTimestampSubmit() TOOD");
+      let serie = null;
+      let timestamp = this.date + "T" + this.time + ".000Z";
+      timestamp = Date.parse(timestamp)/1000;
+      let request = "INSERT INTO " + serie + " VALUES (("+ timestamp +", " + this.value+"));";
+      console.log(request);
+      this.allScores.push({
+            ts: timestamp,
+            value: this.value,
+          });
+    },
+
+    onCSVSubmit(){
+      let serie = null;
+      console.log(this.csvScores);
+      for (let i = 0; i < this.csvScores.length; i++) {  // Every data in the CSV
+        this.allScores.push({
+          ts: this.csvScores[i][0],
+          value: this.csvScores[i][1],
+        });
+      }      
+      console.log(serie);
+    },
+
+    enterClicked(){
+      this.onTimestampSubmit();
     }
 
   },
