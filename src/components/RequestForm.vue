@@ -53,7 +53,7 @@
             <input type="date" class="form-control flex-fill mr-1" v-model="date_after" v-if="date_after_enable" @change="updateRequest()"/>
             <input type="time" class="form-control mr-2" step="1" v-model="time_after" v-if="date_after_enable" @change="updateRequest()"/>
 
-            <input type="date" class="form-control flex-fill" v-model="date_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
+            <input type="date" class="form-control flex-fill mr-1" v-model="date_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
             <input type="time" class="form-control mr-2" step="1" v-model="time_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
             <input type="text" class="form-control flex-fill" v-model="manual_query" v-if="manual_query_enable" @keyup="updateRequest()" @keydown="updateRequest()"/>            
             <button type="button" class="btn btn-info" @click="onRequestSubmit()">{{submit_text}}</button>
@@ -125,6 +125,7 @@ export default {
     }),
     methods: {
         updateRequest() {
+            // TODO FIX pour chrome
             //initialization
             let prefix = "SELECT FROM " + this.serie + " ";
             let conditions = []
@@ -133,6 +134,7 @@ export default {
             //load conditions for the request
             if (this.request_mode_all) {
                 if (this.date_exact) {
+                    console.log(this.time_exact);
                     let timestamp = this.date_exact + "T" + this.time_exact + ".000Z";
                     conditions.push("timestamp <= " + Date.parse(timestamp)/1000);
                 } else {
