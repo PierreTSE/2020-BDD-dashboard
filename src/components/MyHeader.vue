@@ -1,13 +1,20 @@
 <template lang="html">
 
   <header class="">
-    <div class="row">
-            <div class="col-sm-10 col-12">
-                <h1>Dashboard</h1>
-            </div>
-            <div class="col-sm-2 col-12 d-flex">
-                <button type="button"  class="btn btn-primary ml-auto">Menu</button>
-            </div>
+    <div class="container-fluid pos-f-t">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        </nav>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link" href="#">Serie1</a></li>
+            <li class="nav-item"><a class="nav-link " href="#">Serie2</a></li>
+            <li class="nav-item"><a class="nav-link " href="#">Serie3</a></li>
+          </ul>
+        </div>
     </div>
   </header>
 
