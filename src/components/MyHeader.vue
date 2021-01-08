@@ -5,9 +5,8 @@
         <b-navbar-brand href="#">Dashboard</b-navbar-brand>
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" class="menu-test" style="width:100%">
-          <b-navbar-nav>
-            <b-nav-item href="#">Serie1</b-nav-item>
-            <b-nav-item href="#">Serie2</b-nav-item>
+          <b-navbar-nav >
+            <b-nav-item href="#" v-for="item in table" :key="item">{{item}}</b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
@@ -25,7 +24,7 @@
     },
     data () {
       return {
-
+        table:["Serie1", "Serie2"]
       }
     },
     methods: {
