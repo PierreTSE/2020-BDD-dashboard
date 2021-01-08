@@ -33,7 +33,7 @@
 #sidebar-wrapper {
   width: 150px;  /* Meme valeur que le padding-left div#page-content */
   position: fixed;
-  top: 70px;  /* Meme valeur que 'height' de MyHeader */
+  top: 90px;  /* Meme valeur que 'height' de MyHeader */
   left: 0;
   bottom: 0;
   margin :0;

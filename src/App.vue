@@ -2,7 +2,7 @@
 
   <div>
 
-    <MyHeader />  <!-- Barre d'entete en haut -->
+    <MyHeader :series="series" />  <!-- Barre d'entete en haut -->
   
     <div class="d-flex container-fluid">
       <MySidebar />  <!-- Barre de navigation à gauche -->
@@ -40,6 +40,11 @@ import Table from "./components/Table";
 
 export default {
   name: "App",
+  data() {
+    return {
+      series: ["Serie1", "TemparaturesLyon", "Serie3"],
+    }
+  },
   components: {
     RequestForm,
     MyHeader,
@@ -60,6 +65,7 @@ export default {
           {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
         ]
       };
+      this.series.push("azerty");
       this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
     },
   on_DEBUG_Request_press() {
