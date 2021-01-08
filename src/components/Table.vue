@@ -66,15 +66,8 @@ export default {
   name: "Table",
   data() {
     return {
-    allScores: [],
+      allScores: [],
     }
-  },
-  computed: {
-    // sortedList: function () {
-    //   return this.allScores.sort(function (a, b) {
-    //     return a.ts > b.ts;
-    //   });
-    // },
   },
   methods: {
     clearTable() {
@@ -85,10 +78,10 @@ export default {
       this.clearTable();  // Effacer les données déjà présentes
       let obj = JSON.parse(json_input);
       if (obj.success) {
-        for (let i = 0; i < obj.data.length; i++) {  // Pour chaque donnée dans le JSON
+        for (let i = 0; i < obj.data.values.length; i++) {  // Pour chaque donnée dans le JSON
           this.allScores.push({
-            ts: obj.data[i].timestamp,
-            value: obj.data[i].value,
+            ts: obj.data.values[i].timestamp,
+            value: obj.data.values[i].value,
           });
         }
       }
