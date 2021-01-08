@@ -1,9 +1,7 @@
 <template lang="html">
 
-  <nav class="p-1 d-none d-xl-block" id="sidebar-wrapper">
-    <p>Serie</p>
-    <p>Seri2</p>
-    <p>Seri3</p>
+  <nav class="p-2 mb-1 d-none d-xl-block border-right border-info" id="sidebar-wrapper">
+    <p class="h5" v-for="(s,index) in series" :key="index">{{s.name}}</p>
   </nav>   
 
 </template>
@@ -11,14 +9,12 @@
 <script lang="js">
   export default  {
     name: 'MySidebar',
-    props: [],
-    mounted () {
+    props: ["series"],  // Data from parent
 
-    },
+    mounted () {},
+    
     data () {
-      return {
-
-      }
+      return {}
     },
     methods: {
 
@@ -31,7 +27,7 @@
 
 <style>
 #sidebar-wrapper {
-  width: 150px;  /* Meme valeur que le padding-left div#page-content */
+  width: 170px;  /* Meme valeur que le padding-left div#page-content */
   position: fixed;
   top: 90px;  /* Meme valeur que 'height' de MyHeader */
   left: 0;
@@ -40,6 +36,6 @@
   /*min-height: 100vh;  /* Occupe tout l'ecran */
   /*margin-bottom: -70px; /* Compense l'offset vertical a cause de l'entete */
   padding-right: 20px;
-  border-right: 3px solid black;
+  border-width: 5px!important;
 }
 </style>

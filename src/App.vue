@@ -5,7 +5,7 @@
     <MyHeader :series="series" />  <!-- Barre d'entete en haut -->
   
     <div class="d-flex container-fluid">
-      <MySidebar />  <!-- Barre de navigation à gauche -->
+      <MySidebar :series="series" />  <!-- Barre de navigation à gauche -->
       <div id="page-content">
         <div id="content-left">
           <InfoSerie />
@@ -22,6 +22,7 @@
               <button id="DEBUG_Agreg" class="btn btn-warning m-1" @click="on_DEBUG_Agreg_press()">Test affichage agregation</button>
             </div>
           </div>
+
           <RequestForm ref="requestForm"/>
           <MyGraph />
         </div>
@@ -48,7 +49,11 @@ export default {
   name: "App",
   data() {
     return {
-      series: ["Serie1", "TemparaturesLyon", "Serie3"],
+      series: [
+        {"name": "Serie1", "type":"int64"},
+        {"name": "SerieTemp", "type":"float32"},
+        {"name": "SerieFun", "type":"int32"},
+      ],
       showDebug: true,
     }
   },
@@ -111,7 +116,7 @@ export default {
 <style scoped>
 #page-content {
   padding-top: 70px;  /* Meme valeur que le height de MyHeader */
-  padding-left: 150px;  /* Meme valeur que le width du Sidebar */
+  padding-left: 170px;  /* Meme valeur que le width du Sidebar */
   min-width: 0;
   width: 100%;
 }

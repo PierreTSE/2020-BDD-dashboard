@@ -6,7 +6,7 @@
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" class="my-menu" style="width:100%">
           <b-navbar-nav >
-            <b-nav-item href="#" v-for="(item,index) in series" :key="index">{{item}}</b-nav-item>
+            <b-nav-item href="#" v-for="(s,index) in series" :key="index">{{s.name}}</b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
@@ -19,9 +19,9 @@
   export default  {
     name: 'MyHeader',
     props: ["series"],  // Data from parent
-    mounted () {
+    
+    mounted () {},
 
-    },
     data () {
       return {
       }
@@ -45,6 +45,7 @@ header {
   background-color: #fff;
   padding: 5px;
   /* border-bottom: 3px solid black; */
+  z-index: 10;
 }
 @media only screen and (min-width: 1200px) {
   .my-menu {
