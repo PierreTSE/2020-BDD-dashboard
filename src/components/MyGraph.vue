@@ -19,7 +19,7 @@
       }"
       :min="0">
     </TrendChart>
-    <button @click="addValue()">DEBUG(add value)</button>
+    <button @click="DEBUG_addValue()">DEBUG(add value)</button>
   </div>
 
 </template>
@@ -36,18 +36,24 @@
 
     },
     data: () => ({
-      x_values: [0,1,2],
-      y_values: [0,2,1],
+      x_values: [0,0],
+      y_values: [0,0],
     }),
     methods: {
-      addValue(){
+      async DEBUG_addValue(){
         //TODO: get values from re
-        this.x_values.push(Math.floor(Math.random() * 5));
-        this.y_values.push(Math.floor(Math.random() * 5));
+        this.x_values = [0,this.y_values[this.y_values.length - 1],this.y_values.length];
+        this.y_values.push(this.y_values[this.y_values.length - 1] + Math.random() - 0.5);
+        this.y_values = this.y_values.slice(Math.max(this.y_values.length - 100, 0))
+        await new Promise(r => setTimeout(r, 1));
+        this.addValue();
       },
-      updateGraphValues(x_,y_){
-        this.x_values = x_;
-        this.y_values = y_;
+      setGraphValues(data){
+        this.x_values = this.y_values = null;
+        data.forEach(element => {
+          this.x_values.push(element.ts);
+          this.y_values.push(element.value);
+        });
       }
     },
     computed: {
