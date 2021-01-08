@@ -1,11 +1,11 @@
 <template>
   <div class="container">
     <button type="button" class="btn btn-default btn-circle btn-xl mt-4" 
-    @click="showInsertDiv=!showInsertDiv"><i class="fa fa-plus"></i>
+    @click="showInsertDiv=!showInsertDiv; showFileDiv=false;"><i class="fa fa-plus"></i>
     </button>
 
     <button type="button" class="btn btn-default btn-circle btn-xl mt-4" 
-    @click="showFileDiv=!showFileDiv"><i class="fa fa-file"></i>
+    @click="showFileDiv=!showFileDiv; showInsertDiv=false;"><i class="fa fa-file"></i>
     </button>
     <div v-if="showFileDiv">
       <br>
@@ -40,7 +40,7 @@
           class="form-control"
         />
       </div>
-     <button type="button" @click="onSubmit" class="btn btn-dark">
+     <button type="button" @click="onTimestampSubmit" class="btn btn-dark">
         Submit
       </button>
     </form>
@@ -71,9 +71,12 @@ export default {
   name: "Table",
   data() {
     return {
-    allScores: [], 
-    showInsertDiv: false,
-    showFileDiv: false
+      allScores: [], 
+      showInsertDiv: false,
+      showFileDiv: false,
+      date: new Date(),
+      time: "00:00:00",
+      value: 0
     }
   },
   computed: {
@@ -114,6 +117,10 @@ export default {
 
       reader.onload = e => this.$emit("load", e.target.result);
       reader.readAsText(file);
+    },
+
+    onTimestampSubmit() {
+      console.log("onTimestampSubmit() TOOD");
     }
 
   },
