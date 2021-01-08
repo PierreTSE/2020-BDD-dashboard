@@ -5,8 +5,8 @@
             <div class="col-sm-10 col-12">
                 <h1>Dashboard</h1>
             </div>
-            <div class="col-sm-2 col-12">
-                <button type="button"  class="btn btn-primary">Menu</button>
+            <div class="col-sm-2 col-12 d-flex">
+                <button type="button"  class="btn btn-primary ml-auto">Menu</button>
             </div>
     </div>
   </header>
@@ -49,7 +49,5 @@ header {
   border-bottom: 3px solid black;
 }
 
-button{
-  float:right;
-}
+
 </style>
