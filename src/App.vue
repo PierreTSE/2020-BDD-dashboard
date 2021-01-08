@@ -10,11 +10,17 @@
         <div id="content-left">
           <InfoSerie />
           
-          <div class="bg-dark p-2">
-            <p class="h6 text-warning">Debug:</p>
-            <button id="DEBUG_Request" class="btn btn-warning m-1" @click="on_DEBUG_Request_press()">Show Live Request</button>
-            <button id="DEBUG_Table" class="btn btn-warning m-1" @click="on_DEBUG_Table_press()">Test affichage données</button>
-            <button id="DEBUG_Agreg" class="btn btn-warning m-1" @click="on_DEBUG_Agreg_press()">Test affichage agregation</button>
+          <div class="container-fluid bg-dark p-2">
+            <div class="row mx-auto">
+              <p class="col-auto mr-auto h6 text-warning my-auto">Debug:</p>
+              <button class="col-auto btn btn-sm text-warning bg-transparent" v-if="!showDebug" @click="showDebug = true;">v</button>
+              <button class="col-auto btn btn-sm text-warning bg-transparent" v-if="showDebug" @click="showDebug = false;">^</button>
+            </div>
+            <div v-if="showDebug" class="">
+              <button id="DEBUG_Request" class="btn btn-warning m-1" @click="on_DEBUG_Request_press()">Show Live Request</button>
+              <button id="DEBUG_Table" class="btn btn-warning m-1" @click="on_DEBUG_Table_press()">Test affichage données</button>
+              <button id="DEBUG_Agreg" class="btn btn-warning m-1" @click="on_DEBUG_Agreg_press()">Test affichage agregation</button>
+            </div>
           </div>
           <RequestForm ref="requestForm"/>
           <MyGraph />
@@ -43,6 +49,7 @@ export default {
   data() {
     return {
       series: ["Serie1", "TemparaturesLyon", "Serie3"],
+      showDebug: true,
     }
   },
   components: {
@@ -70,7 +77,8 @@ export default {
       this.series.push("azerty");
       this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
     },
-    
+
+    // DEBUGGING //
     on_DEBUG_Request_press() {
       this.$refs.requestForm.show_request = !this.$refs.requestForm.show_request;
       if (this.$refs.requestForm.show_request) {
@@ -82,12 +90,6 @@ export default {
 
     on_DEBUG_Agreg_press() {
       let agr_op = ["min", "max", "avg", "sum", "count"];
-      //   {"min": Math.floor(Math.random() * 100)},
-      //   {"max": Math.floor(Math.random() * 100)},
-      //   {"avg": Math.floor(Math.random() * 100)},
-      //   {"sum": Math.floor(Math.random() * 100)},
-      //   {"count": Math.floor(Math.random() * 100)}
-      // ];
       let fake_data = {
         "success" : true,
         "data" : {
@@ -114,12 +116,12 @@ export default {
   width: 100%;
 }
 
-@media only screen and (max-width: 1200px)
-{
+@media only screen and (max-width: 1200px) {
   #page-content{
     padding-left: 0px;
   }
 }
+
 #content-left {
   vertical-align: top;
   display: inline-block;

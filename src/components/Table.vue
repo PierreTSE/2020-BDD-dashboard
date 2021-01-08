@@ -110,11 +110,9 @@ export default {
       }
 
       // Trier les scores par timestamp (croissant)
-      console.log(this.allScores);
       this.allScores.sort(function(a, b) {
         return (a.ts - b.ts);
       });
-      console.log(this.allScores);
     }
   },
 };
