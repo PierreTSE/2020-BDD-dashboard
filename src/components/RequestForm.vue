@@ -54,6 +54,7 @@
             <input type="time" class="form-control mr-2" step="1" v-model="time_after" v-if="date_after_enable" @change="updateRequest()"/>
 
             <input type="date" class="form-control flex-fill" v-model="date_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
+            <input type="time" class="form-control mr-2" step="1" v-model="time_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
             <input type="text" class="form-control flex-fill" v-model="manual_query" v-if="manual_query_enable" @keyup="updateRequest()" @keydown="updateRequest()"/>            
             <button type="button" class="btn btn-info" @click="onRequestSubmit()">{{submit_text}}</button>
         </form>
@@ -116,6 +117,7 @@ export default {
         time_before: "00:00:00",
         time_after: "00:00:00",
         date_exact: null,
+        time_exact: "00:00:00",
         request: null,
         serie: "MySerie",
         show_request: false,
@@ -131,7 +133,8 @@ export default {
             //load conditions for the request
             if (this.request_mode_all) {
                 if (this.date_exact) {
-                    conditions.push("timestamp == " + Date.parse(this.date_exact)/1000);
+                    let timestamp = this.date_exact + "T" + this.time_exact + ".000Z";
+                    conditions.push("timestamp <= " + Date.parse(timestamp)/1000);
                 } else {
                     this.request =  "SELECT all FROM " + this.serie +";";
                 }
@@ -140,7 +143,6 @@ export default {
                 this.request = this.manual_query;
             } 
             else {
-                // TODO : Do we want finer controls ? like choose with hour rather than date (pls no)
                 if (this.date_before_enable){
                     if (this.include_before_enable){
                         let timestamp = this.date_before + "T" + this.time_before + ".000Z";
