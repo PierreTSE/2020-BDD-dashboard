@@ -64,6 +64,7 @@ export default {
       };
       this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
     },
+    
     on_DEBUG_Request_press() {
       this.$refs.requestForm.show_request = !this.$refs.requestForm.show_request;
       if (this.$refs.requestForm.show_request) {
@@ -72,6 +73,7 @@ export default {
         document.getElementById("DEBUG_Request").innerText  = "Show Live Request";
       }
     },
+
     on_DEBUG_Agreg_press() {
       let agr_op = ["min", "max", "avg", "sum", "count"];
       //   {"min": Math.floor(Math.random() * 100)},
@@ -87,7 +89,8 @@ export default {
         }
       };
       fake_data.data[agr_op[Math.floor(Math.random() * agr_op.length)]] = Math.floor(Math.random() * 100);
-
+      
+      this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
     }
   }
 };

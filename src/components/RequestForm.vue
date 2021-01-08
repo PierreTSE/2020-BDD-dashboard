@@ -60,7 +60,6 @@
         </form>
 
         <form class="form-inline">
-
             <div class="form-check form-check-inline">
 
                 <label class="container" id="aggregation">SUM

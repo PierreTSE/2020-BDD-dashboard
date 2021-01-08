@@ -51,6 +51,11 @@
         </tr>
       </thead>
       <tbody>
+        <tr v-if="agr_result.name != ''">
+          <th scope="row">{{agr_result.name}}</th>
+          <td></td>
+          <td>{{agr_result.value}}</td>
+        </tr>
         <tr v-for="(entry, i) in allScores" :key="i">
           <th scope="row">{{ ++i }}</th>
           <td>{{ entry.ts }}</td>
@@ -67,11 +72,13 @@ export default {
   data() {
     return {
       allScores: [],
+      agr_result: {name:"", value: 0},
     }
   },
   methods: {
     clearTable() {
       this.allScores = [];
+      this.agr_result = {name:"", value: 0};
     },
 
     jsonParse(json_input) {
@@ -83,6 +90,22 @@ export default {
             ts: obj.data.values[i].timestamp,
             value: obj.data.values[i].value,
           });
+        }
+
+        if (obj.data.min) {
+          this.agr_result = {name: "MIN", value: obj.data.min};
+        }
+        if (obj.data.max) {
+          this.agr_result = {name: "MAX", value: obj.data.max};
+        }
+        if (obj.data.sum) {
+          this.agr_result = {name: "SUM", value: obj.data.sum};
+        }
+        if (obj.data.avg) {
+          this.agr_result = {name: "AVG", value: obj.data.avg};
+        }
+        if (obj.data.count) {
+          this.agr_result = {name: "COUNT", value: obj.data.count};
         }
       }
 
