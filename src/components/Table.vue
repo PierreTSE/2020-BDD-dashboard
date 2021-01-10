@@ -10,8 +10,8 @@
     <div v-if="showFileDiv">
       <br>
       <input type="file"  @change="loadTextFromFile" style="margin-bottom : 5px"/><br>
-      <button type="button" @click="onCSVSubmit" class="btn btn-dark">
-        Submit
+      <button :disabled="!isCsvParsed" type="button" @click="onCSVSubmit" class="btn btn-dark">
+        Inserer les données
       </button>
     </div>
 
@@ -70,10 +70,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import VuePapaParse from 'vue-papa-parse'
-Vue.use(VuePapaParse)
-
 export default {
   
   name: "Table",
@@ -86,6 +82,7 @@ export default {
       time: "00:00:00",
       value: 0,
       csvScores: [],
+      isCsvParsed: false,
     }
   },
   computed: {
@@ -121,19 +118,28 @@ export default {
     },
 
     loadTextFromFile(ev) {
+      this.isCsvParsed = false;  // Désactive le bouton "Inserer les données"
+
       const file = ev.target.files[0];
       const reader = new FileReader();
+      // TODO Verifier que c'est bien un fichier csv
 
-      reader.onload = e => this.$emit("load", e.target.result);
+      // Cette fonction sera appélée quand le reader aura fini de lire le csv
+      let self = this;
+      reader.onload = function() {
+        self.$papa.parse(file, {
+            complete: function(results) {
+              // TODO
+              self.csvScores = results.data;
+              console.log(self.csvScores);
+              self.isCsvParsed = true;  // Rends le bouton "Inserer les données" clickable
+            }
+        });
+     
+      };
+
+      // Lire le fichier choisis
       reader.readAsText(file);
-
-      this.$papa.parse(file, {
-        complete: function(results) {
-          this.csvScores = results.data;
-          console.log(this.csvScores);
-        }
-        
-      });
     },
 
     onTimestampSubmit() {
