@@ -19,7 +19,7 @@
           <MyGraph />
         </div>
         <div id="content-right">
-          <Table ref="myTable"/>
+          <Table ref="myTable" curSeriesName="MaSerie"/>
         </div>
       </div>
     </div>

@@ -71,8 +71,8 @@
 
 <script>
 export default {
-  
   name: "Table",
+  props: ["curSeriesName"],  // Data from parent
   data() {
     return {
       allScores: [], 
@@ -143,10 +143,9 @@ export default {
     },
 
     onTimestampSubmit() {
-      let serie = null;
       let timestamp = this.date + "T" + this.time + ".000Z";
       timestamp = Date.parse(timestamp)/1000;
-      let request = "INSERT INTO " + serie + " VALUES (("+ timestamp +", " + this.value+"));";
+      let request = "INSERT INTO " + this.curSeriesName + " VALUES (("+ timestamp +", " + this.value+"));";
       console.log(request);
       this.allScores.push({
             ts: timestamp,
