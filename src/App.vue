@@ -150,13 +150,14 @@ export default {
         "success" : true,
         "data" : {
           "values": [
-            {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
-            {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
-            {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
-            {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
+            {"timestamp": Math.floor(Math.random()*34000000)+1577836800, "value": Math.floor(Math.random()*100)},
           ]
         }
       };
+      while(Math.random() > 0.1) {
+        fake_data.data.values.push({"timestamp": Math.floor(Math.random()*34000000)+1577836800, "value": Math.floor(Math.random()*100)});
+      }
+      
       this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
     },
 
