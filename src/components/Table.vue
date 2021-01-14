@@ -46,9 +46,9 @@
      <button type="button" @click="onTimestampSubmit" class="btn btn-dark">
         Submit
       </button>
-    </form>
+    </form>    
     
-    <table class="table table-sm mt-5">
+    <table class="table table-scroll table-sm mt-5">
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -58,7 +58,7 @@
       </thead>
       <tbody>
         <tr v-if="agr_result.name != ''">
-          <th scope="row">{{agr_result.name}}</th>
+          <th scope="row" >{{agr_result.name}}</th>
           <td></td>
           <td>{{agr_result.value}}</td>
         </tr>
@@ -244,7 +244,29 @@ export default {
 </script>
 
 <style scoped>
+.table-scroll{
+  width: 100%;
+}
+.table-scroll tbody{
+  display: block;
+  overflow: auto;
+  height: 330px;
+}
 
+.table-scroll thead tr {
+   display: block;
+}
+
+.table-scroll thead {
+  background: #10bccf;
+  color:#fff;
+}
+
+.table-scroll th, .table-scroll td {
+  padding: 5px;
+  text-align: left;
+  width: 200px;
+}
 
 .btn-circle.btn-xl {
     width: 60px;
