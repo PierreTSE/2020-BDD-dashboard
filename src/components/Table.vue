@@ -42,7 +42,7 @@
       </button>
     </form> -->
     <div>
-      <button class="btn btn-info" @click="onEdit">Edit</button>
+      <button class="btn btn-info" v-on:click="canEdit = !canEdit">Edit</button>
       <div>
         <table class="table table-sm mt-5">
           <thead>
@@ -58,8 +58,15 @@
               <td></td>
               <td>{{agr_result.value}}</td>
             </tr>
-            <tr v-for="(entry, i) in allScores" :key="i">
-              <th scope="row">{{ ++i }}</th>
+            <tr v-for="(entry, i) in allScores" :key="i" v-cloak>
+              <th scope="row">
+                <div class="view" v-if="!canEdit">
+                 {{ ++i }}
+                </div>
+                <div class="edit" v-if="canEdit">
+                  <button class="btn btn-info">Check</button>
+                </div>
+              </th>
               <td>{{ entry.ts }}</td>
               <td>{{ entry.value }}</td>
             </tr>
@@ -77,13 +84,13 @@ export default {
     return {
       allScores: [],
       agr_result: {name:"", value: 0},
-      isEdit: false,
+      canEdit: false,
     }
   },
   methods: {
 
     onEdit() {
-      this.isEdit=true;
+     
       console.log("hello");
     },
 
