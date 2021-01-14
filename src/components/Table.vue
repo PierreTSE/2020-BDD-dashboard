@@ -1,54 +1,79 @@
 <template>
   <div class="container">
-    <button type="button" class="btn btn-default btn-circle btn-xl mt-4" 
-    @click="showInsertDiv=!showInsertDiv; showFileDiv=false;"><i class="fa fa-plus"></i>
+    <button v-if="error == '' && !loading" type="button" class="btn btn-outline-success btn-circle btn-xl mt-4 mr-1" disabled>
+       <i class="fa fa-check"></i>
     </button>
 
-    <button type="button" class="btn btn-default btn-circle btn-xl mt-4" 
-    @click="showFileDiv=!showFileDiv; showInsertDiv=false;"><i class="fa fa-file"></i>
+    <button v-if="loading" type="button" class="btn btn-outline-warn btn-circle btn-xl mt-4 mr-1" disabled>
+       <i class="fa fa-spinner fa-pulse"></i>
     </button>
-    <div v-if="showFileDiv">
-      <br>
-      <input type="file" accept=".csv" @change="loadTextFromFile" style="margin-bottom : 5px"/><br>
-      <button :disabled="!isCsvParsed" type="button" @click="onCSVSubmit" class="btn btn-dark">
-        Insérer les données
-      </button>
-    </div>
-
-    <!-- Add row to table div -->
-    <form v-if="showInsertDiv" action="#">
-      <div class="form-group">
-        <label for="date">Date</label>
-        <input 
-          type="date" 
-          v-model="date"
-          class="form-control"
-        />
-      </div>
-      <div>
-        <label for="time">Heure</label>
-        <input
-          type="time"
-          v-model="time"
-          class="form-control"
-          step="1"
-        />
-      </div>
-      <div class="form-group">
-        <label for="value">Value</label>
-        <input
-          type="number"
-          placeholder="Ex: 53453"
-          v-model="value"
-          class="form-control"
-        @keyup.enter="onEnterClicked()"/>
-      </div>
-     <button type="button" @click="onTimestampSubmit" class="btn btn-dark">
-        Submit
-      </button>
-    </form>    
     
-    <table class="table table-scroll table-sm mt-5">
+    <button v-if="error != '' && !loading" type="button" class="btn btn-outline-danger btn-circle btn-xl mt-4 mr-1" disabled>
+       <i class="fa fa-exclamation"></i>
+    </button>
+
+    <button type="button" class="btn btn-circle btn-xl mt-4 mr-1" 
+      v-bind:class="{'btn-info': showInsertDiv, 'btn-outline-info': !showInsertDiv}"
+      @click="showInsertDiv=!showInsertDiv; showFileDiv=false;">
+      <i class="fa fa-plus"></i>
+    </button>
+
+    <button type="button" class="btn btn-circle btn-xl mt-4 mr-1" 
+      v-bind:class="{'btn-info': showFileDiv, 'btn-outline-info': !showFileDiv}"
+      @click="showFileDiv=!showFileDiv; showInsertDiv=false;">
+      <i class="fa fa-file"></i>
+    </button>
+
+    <p v-if="error != ''" class="h6 text-light p-2 bg-danger mt-1 mb-3">{{error}}</p>
+
+    <div v-if="showFileDiv || showInsertDiv" class="bg-info p-2 mt-2 mx-3">
+      <div v-if="showFileDiv">
+        <p class="text-light h5 pb-1 border-bottom">Lire un CSV</p>
+        <input type="file" accept=".csv" @change="loadTextFromFile" style="margin-bottom : 5px"/><br>
+        <button v-if="!isCsvParsed" type="button" class="btn btn-dark mt-2" disabled>
+          Aucun fichier chargé
+        </button>
+        <button v-if="isCsvParsed" type="button" @click="onCSVSubmit" class="btn btn-dark mt-2">
+          Insérer les données de {{parsedCsvFilename}}
+        </button>
+      </div>
+
+      <!-- Add row to table div -->
+      <form v-if="showInsertDiv" action="#">
+      <p class="text-light h5 pb-1 border-bottom">Ajouter une entrée</p>
+        <div class="form-group">
+          <label for="date" class="text-light h6">Date</label>
+          <input 
+            type="date" required
+            v-model="date"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group">
+          <label for="time" class="text-light h6">Heure</label>
+          <input
+            type="time" required
+            v-model="time"
+            class="form-control"
+            step="1"
+          />
+        </div>
+        <div class="form-group">
+          <label for="value" class="text-light h6">Value</label>
+          <input
+            type="number" required
+            placeholder="Ex: 53453"
+            v-model="value"
+            class="form-control"
+          @keyup.enter="onEnterClicked()"/>
+        </div>
+      <button type="button" @click="onTimestampSubmit" class="btn btn-dark">
+          Submit
+        </button>
+      </form>    
+    </div>
+    
+    <table class="table table-scroll table-sm mt-3">
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -76,7 +101,7 @@
 <script>
 export default {
   name: "Table",
-  props: ["curSeries"],  // Data from parent
+  props: ["curSeries", "error", "loading"],  // Data from parent
   data() {
     return {
       allScores: [], 
@@ -87,6 +112,7 @@ export default {
       value: 0,
       csvScores: [],
       isCsvParsed: false,
+      parsedCsvFilename: "",
       agr_result: {name:"", value: 0},
     }
   },
@@ -137,7 +163,7 @@ export default {
       this.isCsvParsed = false;  // Désactive le bouton "Inserer les données"
 
       const file = ev.target.files[0];
-      console.log(file.name);
+      this.parsedCsvFilename = file.name;
       const reader = new FileReader();
       let self = this;
 
@@ -162,31 +188,42 @@ export default {
     },
 
     onTimestampSubmit() {
+      let bufferScores = [];
       let timestamp = this.date + "T" + this.time + ".000Z";
       timestamp = Date.parse(timestamp)/1000;
       let request = "INSERT INTO " + this.curSeries.name + " VALUES (("+ timestamp +", " + this.value+"));";
-      console.log(request);
-      this.allScores.push({
+      bufferScores.push({
         ts: timestamp,
         value: parseInt(this.value),
       });
 
-      this.$emit('updateData', this.allScores);
+      this.$parent.sendRequest(request).then((res) => {
+        if (!res.success) {  // La requete a échoué, abandonné la mission
+          return;
+        }
+        
+        this.allScores.push(...bufferScores);
+        
+        // Trier les scores par timestamp (croissant)
+        this.allScores.sort(function(a, b) {
+          return (a.ts - b.ts);
+        });
 
-      this.sendRequest(request);
+        this.$emit('updateData', this.allScores);
+      
+      });
     },
 
     onCSVSubmit() {
-      console.log(this.csvScores);
-      let request="INSERT INTO " + this.curSeries.name + " VALUES (";
+      let bufferScores = [];
+      let request = "INSERT INTO " + this.curSeries.name + " VALUES (";
+
       for (let i = 0; i <= this.csvScores.length-1; i++) {  // Every data in the CSV
         // Check that this is valid data
         if (this.csvScores[i].length != 2 || !/^[0-9]+$/.test(this.csvScores[i][0]) || !/^[0-9]+$/.test(this.csvScores[i][1])) {
-          console.log("Ignored line: ", this.csvScores[i]);
           continue;
-        } 
-
-        this.allScores.push({
+        }
+        bufferScores.push({
           ts: parseInt(this.csvScores[i][0]),
           value: parseInt(this.csvScores[i][1]),
         });
@@ -195,50 +232,27 @@ export default {
       }
       request += ");";
 
-      this.$emit('updateData', this.allScores);
+      this.$parent.sendRequest(request).then((res) => {
+        if (!res.success) {  // La requete a échoué, abandonné la mission
+          return;
+        }
 
-      this.sendRequest(request);
+        this.allScores.push(...bufferScores);
+        
+        // Trier les scores par timestamp (croissant)
+        this.allScores.sort(function(a, b) {
+          return (a.ts - b.ts);
+        });
+
+        this.$emit('updateData', this.allScores);
+      });
+
     },
 
     onEnterClicked(){
       this.onTimestampSubmit();
     },
-    
-    async sendRequest(query_string) {
-      console.log("REQUEST :", query_string);
-      try {
-          let response = await fetch("http://localhost:8080/query?query=" + query_string);
-          if (response.ok) {
-              const data = await response.json();
-              console.log("RESPONSE : ", data);
-              if (data["success"] == true) {
-                  console.log("Data received: ", data["data"]);
-                  // Send data to Table
-                  this.$parent.$refs.myTable.jsonParse(JSON.stringify(data));
-              } else {
-                  this.show_alert = true;
-                  throw new Error("ERROR(S) : " + JSON.stringify(data["error"]));
-              }
-          } else {
-              throw new Error("ERROR (BAD NETWORK RESPONSE).");
-          }
-      } catch (err) {
-          console.error("ERROR : ", err);
-      }
-    },
 
-    // clearForm() {
-    //   // TODO modifier les champs à clear
-    //   this.value_min = null;
-    //   this.value_max = null;
-    //   this.date_before = new Date().toISOString().substr(0, 10);
-    //   this.date_after = new Date().toISOString().substr(0, 10);
-    //   this.time_before = "00:00:00";
-    //   this.time_after = "00:00:00";
-    //   this.date_exact = null;
-    //   this.manual_query = null;
-    //   this.updateCheckboxes();
-    // }
   },
 };
 </script>
@@ -269,13 +283,11 @@ export default {
 }
 
 .btn-circle.btn-xl {
-    width: 60px;
-    height: 60px;
-    padding: 10px 16px;
-    border-radius: 35px;
-    font-size: 24px;
-    line-height: 1.33;
-    margin-left: 3px;
-    background-color: #10bccf;
+  width: 40px;
+  height: 40px;
+  padding: 10px 12px;
+  border-radius: 50%;
+  font-size: 16px;
+  line-height: 1;
 }
 </style>

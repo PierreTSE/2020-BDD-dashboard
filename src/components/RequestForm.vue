@@ -202,31 +202,14 @@ export default {
 
         onRequestSubmit() {
             this.show_alert = false;  // Hide the potential leftover error message
-            this.sendRequest(this.request);
-            this.clearForm();
-        },
-
-        async sendRequest(query_string) {
-            console.log("REQUEST :", query_string);
-            try {
-                let response = await fetch("http://localhost:8080/query?query=" + query_string);
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log("RESPONSE : ", data);
-                    if (data["success"] == true) {
-                        console.log("Data received: ", data["data"]);
-                        // Send data to Table
-                        this.$parent.$refs.myTable.jsonParse(JSON.stringify(data));
-                    } else {
-                        this.show_alert = true;
-                        throw new Error("ERROR(S) : " + JSON.stringify(data["error"]));
-                    }
-                } else {
-                    throw new Error("ERROR (BAD NETWORK RESPONSE).");
+            this.$parent.sendRequest(this.request).then((res) => {
+                if (!res.success) {  // La requete a échoué, abandonné la mission
+                    return;
                 }
-            } catch (err) {
-                console.error("ERROR : ", err);
-            }
+                this.$parent.$refs.myTable.jsonParse(JSON.stringify(res));
+                
+            });
+            this.clearForm();
         },
 
         clearForm() {

@@ -27,7 +27,8 @@
           <MyGraph ref="myGraph"/>
         </div>
         <div id="content-right">
-          <Table ref="myTable" :curSeries="curSerie" @updateData="updateData"/>
+          <Table ref="myTable" :curSeries="curSerie" :error="requestError" 
+            :loading="requestLoading" @updateData="updateData"/>
         </div>
       </div>
     </div>
@@ -56,8 +57,9 @@ export default {
       ],
       curSerie: {"name": "SerieFun", "type":"int32"},
       showDebug: true,
-      data: {
-      }
+      data: {},
+      requestError: "",
+      requestLoading: false,
     }
   },
   components: {
@@ -69,6 +71,44 @@ export default {
     Table
   },
   methods: {
+    async sendRequest(query_string) {
+      this.requestLoading = true;
+      this.requestError = "";
+      console.log("REQUEST :", query_string);
+      try {
+        if (this.$offlineMode) {
+          this.requestLoading = false;
+          return {"success": true, "data": []};
+        }
+        let response = await fetch(this.$apiurl + query_string);
+        this.requestLoading = false;
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log("RESPONSE : ", data);
+          if (data["success"] == true) {
+            return data;
+          } else {
+            if (data.error.message)
+              this.requestError = data.error.message;
+            else
+              this.requestError = "Request failed. Unknown error (no message).";
+            return {"success": false, "error": data.error};
+          }
+        } else {
+          console.error("ERROR (BAD NETWORK RESPONSE).");
+          this.requestError = "Request failed. Bad Network Response.";
+          this.requestLoading = false;
+          return {"success": false, "error": {'message': "BAD NETWORK RESPONSE"}};
+        }
+      } catch (err) {
+        console.error("ERROR : ", err);
+        this.requestError = "Request failed. Connection error.";
+        this.requestLoading = false;
+        return {"success": false, "error": err};
+      }
+    },
+
     updateList(new_list) {
       // Met à jour la liste présente dans la sidebar / header
       // Chaque élément doit avoir la forme {"name": string, "type": string}

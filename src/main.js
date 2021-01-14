@@ -11,6 +11,9 @@ Vue.config.productionTip = false
 
 Vue.use(VuePapaParse)
 
+Vue.prototype.$apiurl = "http://localhost:8082/query?query=";
+Vue.prototype.$offlineMode = false;  // Si true, les requetes ne seront pas envoyés à l'api
 new Vue({
   render: h => h(App),
 }).$mount('#app')
+
