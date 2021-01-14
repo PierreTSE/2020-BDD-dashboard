@@ -23,7 +23,7 @@
             </div>
           </div>
 
-          <RequestForm ref="requestForm"/>
+          <RequestForm ref="requestForm" :serie="curSerie.name"/>
           <MyGraph ref="myGraph"/>
         </div>
         <div id="content-right">
@@ -180,7 +180,7 @@ export default {
       };
       fake_data.data[agr_op[Math.floor(Math.random() * agr_op.length)]] = Math.floor(Math.random() * 100);
       
-      this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
+      this.$refs.myTable.jsonParse(fake_data);
     }
     // FIN DEBUG //
   }

@@ -3,13 +3,6 @@
         <h2>Critères de recherche :</h2>
         <p id="requestDebug" class="h6 bg-warning p-1" v-if="show_request">{{ request }}</p>
         
-        <div class="alert alert-danger alert-dismissible" role="alert" v-if="show_alert">
-            Erreur de syntaxe dans la requete !
-            <div v-on:click="show_alert = !show_alert" class="close">
-                <p>&times;</p>
-            </div>
-        </div>
-
         <div> 
 
             <label class="my-container">requête manuelle
@@ -116,6 +109,7 @@
 <script>
 export default {
     name: "RequestForm",
+    props: ["serie"],
     data: () => ({   
         submit_text: null,
         date_before_enable: false,
@@ -137,9 +131,7 @@ export default {
         date_exact: null,
         time_exact: "00:00:00",
         request: "",
-        serie: "MySerie",
         show_request: false,
-        show_alert: false,
     }),
     methods: {
         updateRequest() {
@@ -152,7 +144,7 @@ export default {
             //load conditions for the request
             if (this.request_mode_all) {
                 if (this.date_exact) {
-                    console.log(this.time_exact);
+                    if (this.time_exact.length == 5) this.time_exact += ":00";
                     let timestamp = this.date_exact + "T" + this.time_exact + ".000Z";
                     conditions.push("timestamp <= " + Date.parse(timestamp)/1000);
                 } else {
@@ -164,6 +156,7 @@ export default {
             } 
             else {
                 if (this.date_before_enable){
+                    if (this.time_before.length == 5) this.time_before += ":00";
                     if (this.include_before_enable){
                         let timestamp = this.date_before + "T" + this.time_before + ".000Z";
                         conditions.push("timestamp <= " + Date.parse(timestamp)/1000);
@@ -174,6 +167,7 @@ export default {
                     }
                 }
                 if (this.date_after_enable){
+                    if (this.time_after.length == 5) this.time_after += ":00";
                     if (this.include_after_enable) {
                         let timestamp = this.date_after + "T" + this.time_after + ".000Z";
                         conditions.push("timestamp >= " + Date.parse(timestamp)/1000);
@@ -220,7 +214,6 @@ export default {
         },
 
         onRequestSubmit() {
-            this.show_alert = false;  // Hide the potential leftover error message
             this.$parent.sendRequest(this.request).then((res) => {
                 if (!res.success) {  // La requete a échoué, abandonné la mission
                     return;
