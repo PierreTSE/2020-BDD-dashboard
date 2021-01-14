@@ -41,12 +41,11 @@
       y_values: [0, 0],
     }),
     methods: {
-      async DEBUG_addValue(){
+      async DEBUG_addValue() {
         this.x_values.push(this.y_values.length);
         this.y_values.push(Math.random());
       },
-      setGraphValues(data){
-        console.log(data);
+      setGraphValues(data) {
         this.x_values = [];
         this.y_values = [];
         data.forEach(element => {

@@ -11,6 +11,9 @@ Vue.config.productionTip = false
 
 Vue.use(VuePapaParse)
 
+Vue.prototype.$apiurl = "http://localhost:8082/query?query=";
+
 new Vue({
   render: h => h(App),
 }).$mount('#app')
+

@@ -209,7 +209,7 @@ export default {
         async sendRequest(query_string) {
             console.log("REQUEST :", query_string);
             try {
-                let response = await fetch("http://localhost:8080/query?query=" + query_string);
+                let response = await fetch(this.$apiurl + query_string);
                 if (response.ok) {
                     const data = await response.json();
                     console.log("RESPONSE : ", data);
