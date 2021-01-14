@@ -24,10 +24,10 @@
           </div>
 
           <RequestForm ref="requestForm"/>
-          <MyGraph />
+          <MyGraph ref="myGraph"/>
         </div>
         <div id="content-right">
-          <Table ref="myTable" curSeriesName="MaSerie"/>
+          <Table ref="myTable" :curSeries="curSerie" @updateData="updateData"/>
         </div>
       </div>
     </div>
@@ -100,6 +100,7 @@ export default {
 
     updateData(new_data) {
       this.data = new_data;
+      this.$refs.myGraph.setGraphValues(this.data);
     },
 
     // DEBUG //
@@ -116,7 +117,6 @@ export default {
           ]
         }
       };
-      this.series.push("azerty");
       this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
     },
 
