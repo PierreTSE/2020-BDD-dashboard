@@ -127,7 +127,7 @@ export default {
 
       // TODO Verifier que c'est bien un fichier csv
       if(file.name.split(".").pop() != 'csv'){//check if file extension is csv
-        alert( "Please select CSV file type", "error");
+        alert( "Veuillez sélectionner un fichier CSV", "error");
       } else {
         reader.onload = function() {
         self.$papa.parse(file, {
@@ -151,27 +151,65 @@ export default {
       let request = "INSERT INTO " + this.curSeriesName + " VALUES (("+ timestamp +", " + this.value+"));";
       console.log(request);
       this.allScores.push({
-            ts: timestamp,
-            value: this.value,
-          });
+        ts: timestamp,
+        value: this.value,
+      });
+      this.sendRequest(request);
     },
 
     onCSVSubmit(){
-      let serie = null;
+      let serie = this.curSeriesName;
       console.log(this.csvScores);
       for (let i = 0; i < this.csvScores.length; i++) {  // Every data in the CSV
         this.allScores.push({
           ts: this.csvScores[i][0],
           value: this.csvScores[i][1],
         });
+
       }      
       console.log(serie);
+
     },
 
     enterClicked(){
       this.onTimestampSubmit();
-    }
+    },
+    
+    async sendRequest(query_string) {
+      console.log("REQUEST :", query_string);
+      try {
+          let response = await fetch("http://localhost:8080/query?query=" + query_string);
+          if (response.ok) {
+              const data = await response.json();
+              console.log("RESPONSE : ", data);
+              if (data["success"] == true) {
+                  console.log("Data received: ", data["data"]);
+                  // Send data to Table
+                  this.$parent.$refs.myTable.jsonParse(JSON.stringify(data));
+              } else {
+                  this.show_alert = true;
+                  throw new Error("ERROR(S) : " + JSON.stringify(data["error"]));
+              }
+          } else {
+              throw new Error("ERROR (BAD NETWORK RESPONSE).");
+          }
+      } catch (err) {
+          console.error("ERROR : ", err);
+      }
+    },
 
+    clearForm() {
+      // TODO modifier les champs à clear
+      this.value_min = null;
+      this.value_max = null;
+      this.date_before = new Date().toISOString().substr(0, 10);
+      this.date_after = new Date().toISOString().substr(0, 10);
+      this.time_before = "00:00:00";
+      this.time_after = "00:00:00";
+      this.date_exact = null;
+      this.manual_query = null;
+      this.updateCheckboxes();
+    }
   },
 };
 </script>
