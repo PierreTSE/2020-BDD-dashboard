@@ -1,24 +1,24 @@
 <template>
   <div class="container">
-    <button v-if="error == '' && !loading" type="button" class="btn btn-outline-success btn-circle btn-xl mt-4 mr-1" disabled>
+    <button v-if="error == '' && !loading" type="button" class="btn btn-outline-success btn-circle btn-xl my-2 mr-1" disabled>
        <i class="fa fa-check"></i>
     </button>
 
-    <button v-if="loading" type="button" class="btn btn-outline btn-circle btn-xl mt-4 mr-1" disabled>
+    <button v-if="loading" type="button" class="btn btn-outline btn-circle btn-xl my-2 mr-1" disabled>
        <i class="fa fa-spinner fa-pulse"></i>
     </button>
     
-    <button v-if="error != '' && !loading" type="button" class="btn btn-outline-danger btn-circle btn-xl mt-4 mr-1" disabled>
+    <button v-if="error != '' && !loading" type="button" class="btn btn-outline-danger btn-circle btn-xl my-2 mr-1" disabled>
        <i class="fa fa-exclamation"></i>
     </button>
 
-    <button type="button" class="btn btn-circle btn-xl mt-4 mr-1" 
+    <button type="button" class="btn btn-circle btn-xl my-2 mr-1" 
       v-bind:class="{'btn-info': showInsertDiv, 'btn-outline-info': !showInsertDiv}"
       @click="showInsertDiv=!showInsertDiv; showFileDiv=false;">
       <i class="fa fa-plus"></i>
     </button>
 
-    <button type="button" class="btn btn-circle btn-xl mt-4 mr-1" 
+    <button type="button" class="btn btn-circle btn-xl my-2 mr-1" 
       v-bind:class="{'btn-info': showFileDiv, 'btn-outline-info': !showFileDiv}"
       @click="showFileDiv=!showFileDiv; showInsertDiv=false;">
       <i class="fa fa-file"></i>
@@ -28,7 +28,7 @@
 
     <div v-if="showFileDiv || showInsertDiv" class=" conatiner-fluid bg-info p-2 mt-2 mx-3">
       <div v-if="showFileDiv">
-        <p class="text-light h5 pb-1 border-bottom">Lire un CSV</p>
+        <p class="text-light h5 pb-1 border-bottom">Importer un fichier CSV</p>
         <input type="file" accept=".csv" @change="loadTextFromFile" style="margin-bottom : 5px"/><br>
         <button v-if="!isCsvParsed" type="button" class="btn btn-dark mt-2" disabled>
           Aucun fichier chargé
@@ -59,7 +59,7 @@
           />
         </div>
         <div class="form-group row my-2 mx-auto">
-          <label for="value" class="col-3 text-light h6 col-form-label">Value</label>
+          <label for="value" class="col-3 text-light h6 col-form-label">Valeur</label>
           <input
             type="number" required
             placeholder="Ex: 53453"

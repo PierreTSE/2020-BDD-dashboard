@@ -56,7 +56,7 @@ export default {
         {"name": "SerieFun", "type":"int32"},
       ],
       curSerie: {"name": "SerieFun", "type":"int32"},
-      showDebug: true,
+      showDebug: false,
       data: {},
       requestError: "",
       requestLoading: false,
@@ -193,7 +193,7 @@ export default {
 
 <style scoped>
 #page-content {
-  padding-top: 70px;  /* Meme valeur que le height de MyHeader */
+  padding-top: 90px;  /* Meme valeur que le height de MyHeader */
   padding-left: 170px;  /* Meme valeur que le width du Sidebar */
   min-width: 0;
   width: 100%;
