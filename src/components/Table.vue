@@ -172,8 +172,7 @@ export default {
       this.sendRequest(request);
     },
 
-    onCSVSubmit(){
-      
+    onCSVSubmit() {
       console.log(this.csvScores);
       let request="INSERT INTO " + this.curSeriesName + " VALUES (";
       for (let i = 0; i < this.csvScores.length-1; i++) {  // Every data in the CSV
@@ -181,17 +180,16 @@ export default {
           ts: this.csvScores[i][0],
           value: this.csvScores[i][1],
         });
-        request+="("+ this.csvScores[i][0] +", " + this.csvScores[i][1]+")," ;
-
+        request += "("+ this.csvScores[i][0] +", " + this.csvScores[i][1]+")," ;
       }
       this.allScores.push({
         ts: this.csvScores[this.csvScores.length-1][0],
         value: this.csvScores[this.csvScores.length-1][1],
       });
-      request+="("+ this.csvScores[this.csvScores.length-1][0] +", " + this.csvScores[this.csvScores.length-1][1]+"));" ;      
+      request += "("+ this.csvScores[this.csvScores.length-1][0] +", " + this.csvScores[this.csvScores.length-1][1]+"));" ;      
+
       console.log(request);
       this.sendRequest(request);
-
     },
 
     enterClicked(){
@@ -221,18 +219,18 @@ export default {
       }
     },
 
-    clearForm() {
-      // TODO modifier les champs à clear
-      this.value_min = null;
-      this.value_max = null;
-      this.date_before = new Date().toISOString().substr(0, 10);
-      this.date_after = new Date().toISOString().substr(0, 10);
-      this.time_before = "00:00:00";
-      this.time_after = "00:00:00";
-      this.date_exact = null;
-      this.manual_query = null;
-      this.updateCheckboxes();
-    }
+    // clearForm() {
+    //   // TODO modifier les champs à clear
+    //   this.value_min = null;
+    //   this.value_max = null;
+    //   this.date_before = new Date().toISOString().substr(0, 10);
+    //   this.date_after = new Date().toISOString().substr(0, 10);
+    //   this.time_before = "00:00:00";
+    //   this.time_after = "00:00:00";
+    //   this.date_exact = null;
+    //   this.manual_query = null;
+    //   this.updateCheckboxes();
+    // }
   },
 };
 </script>

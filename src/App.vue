@@ -56,6 +56,8 @@ export default {
       ],
       curSerie: {"name": "SerieFun", "type":"int32"},
       showDebug: true,
+      data: {
+      }
     }
   },
   components: {
@@ -94,6 +96,10 @@ export default {
           break;
         }
       }
+    },
+
+    updateData(new_data) {
+      this.data = new_data;
     },
 
     // DEBUG //
