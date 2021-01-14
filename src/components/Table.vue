@@ -16,7 +16,7 @@
     </div>
 
     <!-- Add row to table div -->
-    <form v-if="showInsertDiv">
+    <form v-if="showInsertDiv" action="#">
       <div class="form-group">
         <label for="date">Date</label>
         <input 
@@ -41,14 +41,12 @@
           placeholder="Ex: 53453"
           v-model="value"
           class="form-control"
-        @keyup.enter="enterClicked()"/>
+        @keyup.enter="onEnterClicked()"/>
       </div>
      <button type="button" @click="onTimestampSubmit" class="btn btn-dark">
         Submit
       </button>
     </form>
-    
-    
     
     <table class="table table-sm mt-5">
       <thead>
@@ -72,12 +70,13 @@
       </tbody>
     </table>
   </div>
+
 </template>
 
 <script>
 export default {
   name: "Table",
-  props: ["curSeriesName"],  // Data from parent
+  props: ["curSeries"],  // Data from parent
   data() {
     return {
       allScores: [], 
@@ -132,8 +131,6 @@ export default {
           this.agr_result = {name: "COUNT", value: obj.data.count};
         }
       }
-
-      
     },
 
     loadTextFromFile(ev) {
@@ -144,34 +141,34 @@ export default {
       const reader = new FileReader();
       let self = this;
 
-      // TODO Verifier que c'est bien un fichier csv
+      // Verifier que c'est bien un fichier csv
       if(file.name.split(".").pop() != 'csv'){//check if file extension is csv
         alert( "Veuillez sélectionner un fichier CSV", "error");
       } else {
+        // Cette fonction sera appélée quand le reader aura fini de lire le csv
         reader.onload = function() {
         self.$papa.parse(file, {
             complete: function(results) {
-              // TODO
               self.csvScores = results.data;
               console.log(self.csvScores);
               self.isCsvParsed = true;  // Rends le bouton "Inserer les données" clickable
             }
           });
         };
-      // Lire le fichier choisis
-      reader.readAsText(file);
+        
+        // Lire le fichier choisis
+        reader.readAsText(file);
       }
-      // Cette fonction sera appélée quand le reader aura fini de lire le csv
     },
 
     onTimestampSubmit() {
       let timestamp = this.date + "T" + this.time + ".000Z";
       timestamp = Date.parse(timestamp)/1000;
-      let request = "INSERT INTO " + this.curSeriesName + " VALUES (("+ timestamp +", " + this.value+"));";
+      let request = "INSERT INTO " + this.curSeries.name + " VALUES (("+ timestamp +", " + this.value+"));";
       console.log(request);
       this.allScores.push({
         ts: timestamp,
-        value: this.value,
+        value: parseInt(this.value),
       });
 
       this.$emit('updateData', this.allScores);
@@ -181,25 +178,29 @@ export default {
 
     onCSVSubmit() {
       console.log(this.csvScores);
-      let request="INSERT INTO " + this.curSeriesName + " VALUES (";
-      for (let i = 0; i < this.csvScores.length-1; i++) {  // Every data in the CSV
+      let request="INSERT INTO " + this.curSeries.name + " VALUES (";
+      for (let i = 0; i <= this.csvScores.length-1; i++) {  // Every data in the CSV
+        // Check that this is valid data
+        if (this.csvScores[i].length != 2 || !/^[0-9]+$/.test(this.csvScores[i][0]) || !/^[0-9]+$/.test(this.csvScores[i][1])) {
+          console.log("Ignored line: ", this.csvScores[i]);
+          continue;
+        } 
+
         this.allScores.push({
-          ts: this.csvScores[i][0],
-          value: this.csvScores[i][1],
+          ts: parseInt(this.csvScores[i][0]),
+          value: parseInt(this.csvScores[i][1]),
         });
+
         request += "("+ this.csvScores[i][0] +", " + this.csvScores[i][1]+")," ;
       }
-      this.allScores.push({
-        ts: this.csvScores[this.csvScores.length-1][0],
-        value: this.csvScores[this.csvScores.length-1][1],
-      });
-      request += "("+ this.csvScores[this.csvScores.length-1][0] +", " + this.csvScores[this.csvScores.length-1][1]+"));" ;      
+      request += ");";
 
-      console.log(request);
+      this.$emit('updateData', this.allScores);
+
       this.sendRequest(request);
     },
 
-    enterClicked(){
+    onEnterClicked(){
       this.onTimestampSubmit();
     },
     

@@ -27,7 +27,7 @@
           <MyGraph ref="myGraph"/>
         </div>
         <div id="content-right">
-          <Table ref="myTable" curSeriesName="MaSerie" @updateData="updateData"/>
+          <Table ref="myTable" :curSeries="curSerie" @updateData="updateData"/>
         </div>
       </div>
     </div>
