@@ -158,16 +158,24 @@ export default {
     },
 
     onCSVSubmit(){
-      let serie = this.curSeriesName;
+      
       console.log(this.csvScores);
-      for (let i = 0; i < this.csvScores.length; i++) {  // Every data in the CSV
+      let request="INSERT INTO " + this.curSeriesName + " VALUES (";
+      for (let i = 0; i < this.csvScores.length-1; i++) {  // Every data in the CSV
         this.allScores.push({
           ts: this.csvScores[i][0],
           value: this.csvScores[i][1],
         });
+        request+="("+ this.csvScores[i][0] +", " + this.csvScores[i][1]+")," ;
 
-      }      
-      console.log(serie);
+      }
+      this.allScores.push({
+        ts: this.csvScores[this.csvScores.length-1][0],
+        value: this.csvScores[this.csvScores.length-1][1],
+      });
+      request+="("+ this.csvScores[this.csvScores.length-1][0] +", " + this.csvScores[this.csvScores.length-1][1]+"));" ;      
+      console.log(request);
+      this.sendRequest(request);
 
     },
 
