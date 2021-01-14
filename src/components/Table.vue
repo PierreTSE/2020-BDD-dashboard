@@ -1,24 +1,24 @@
 <template>
   <div class="container">
-    <button v-if="error == '' && !loading" type="button" class="btn btn-outline-success btn-circle btn-xl mt-4 mr-1" disabled>
+    <button v-if="error == '' && !loading" type="button" class="btn btn-outline-success btn-circle btn-xl my-2 mr-1" disabled>
        <i class="fa fa-check"></i>
     </button>
 
-    <button v-if="loading" type="button" class="btn btn-outline-warn btn-circle btn-xl mt-4 mr-1" disabled>
+    <button v-if="loading" type="button" class="btn btn-outline btn-circle btn-xl my-2 mr-1" disabled>
        <i class="fa fa-spinner fa-pulse"></i>
     </button>
     
-    <button v-if="error != '' && !loading" type="button" class="btn btn-outline-danger btn-circle btn-xl mt-4 mr-1" disabled>
+    <button v-if="error != '' && !loading" type="button" class="btn btn-outline-danger btn-circle btn-xl my-2 mr-1" disabled>
        <i class="fa fa-exclamation"></i>
     </button>
 
-    <button type="button" class="btn btn-circle btn-xl mt-4 mr-1" 
+    <button type="button" class="btn btn-circle btn-xl my-2 mr-1" 
       v-bind:class="{'btn-info': showInsertDiv, 'btn-outline-info': !showInsertDiv}"
       @click="showInsertDiv=!showInsertDiv; showFileDiv=false;">
       <i class="fa fa-plus"></i>
     </button>
 
-    <button type="button" class="btn btn-circle btn-xl mt-4 mr-1" 
+    <button type="button" class="btn btn-circle btn-xl my-2 mr-1" 
       v-bind:class="{'btn-info': showFileDiv, 'btn-outline-info': !showFileDiv}"
       @click="showFileDiv=!showFileDiv; showInsertDiv=false;">
       <i class="fa fa-file"></i>
@@ -26,9 +26,9 @@
 
     <p v-if="error != ''" class="h6 text-light p-2 bg-danger mt-1 mb-3">{{error}}</p>
 
-    <div v-if="showFileDiv || showInsertDiv" class="bg-info p-2 mt-2 mx-3">
+    <div v-if="showFileDiv || showInsertDiv" class=" conatiner-fluid bg-info p-2 mt-2 mx-3">
       <div v-if="showFileDiv">
-        <p class="text-light h5 pb-1 border-bottom">Lire un CSV</p>
+        <p class="text-light h5 pb-1 border-bottom">Importer un fichier CSV</p>
         <input type="file" accept=".csv" @change="loadTextFromFile" style="margin-bottom : 5px"/><br>
         <button v-if="!isCsvParsed" type="button" class="btn btn-dark mt-2" disabled>
           Aucun fichier chargé
@@ -41,33 +41,34 @@
       <!-- Add row to table div -->
       <form v-if="showInsertDiv" action="#">
       <p class="text-light h5 pb-1 border-bottom">Ajouter une entrée</p>
-        <div class="form-group">
-          <label for="date" class="text-light h6">Date</label>
+        <div class="form-group row my-2 mx-auto">
+          <label for="date" class="col-3 text-light h6 col-form-label">Date</label>
           <input 
             type="date" required
             v-model="date"
-            class="form-control"
+            class="form-control col"
           />
         </div>
-        <div class="form-group">
-          <label for="time" class="text-light h6">Heure</label>
+        <div class="form-group row my-2 mx-auto">
+          <label for="time" class="col-3 text-light h6 col-form-label">Heure</label>
           <input
             type="time" required
             v-model="time"
-            class="form-control"
+            class="form-control col"
             step="1"
           />
         </div>
-        <div class="form-group">
-          <label for="value" class="text-light h6">Value</label>
+        <div class="form-group row my-2 mx-auto">
+          <label for="value" class="col-3 text-light h6 col-form-label">Valeur</label>
           <input
             type="number" required
             placeholder="Ex: 53453"
             v-model="value"
-            class="form-control"
+            class="form-control col"
           @keyup.enter="onEnterClicked()"/>
         </div>
-      <button type="button" @click="onTimestampSubmit" class="btn btn-dark">
+      <button type="button" @click="onTimestampSubmit" class="btn btn-dark mt-2 ml-1 px-4" 
+        :disabled="date == '' || time.length < 5">
           Submit
         </button>
       </form>    
@@ -107,7 +108,7 @@ export default {
       allScores: [], 
       showInsertDiv: false,
       showFileDiv: false,
-      date: new Date(),
+      date: "",
       time: "00:00:00",
       value: 0,
       csvScores: [],
@@ -124,12 +125,11 @@ export default {
 
     jsonParse(json_input) {
       this.clearTable();  // Effacer les données déjà présentes
-      let obj = JSON.parse(json_input);
-      if (obj.success) {
-        for (let i = 0; i < obj.data.values.length; i++) {  // Pour chaque donnée dans le JSON
+      if (json_input.success) {
+        for (let i = 0; i < json_input.data.values.length; i++) {  // Pour chaque donnée dans le JSON
           this.allScores.push({
-            ts: obj.data.values[i].timestamp,
-            value: obj.data.values[i].value,
+            ts: json_input.data.values[i].timestamp,
+            value: json_input.data.values[i].value,
           });
         }
 
@@ -141,20 +141,20 @@ export default {
 
         this.$emit('updateData', this.allScores);
 
-        if (obj.data.min) {
-          this.agr_result = {name: "MIN", value: obj.data.min};
+        if (json_input.data.min) {
+          this.agr_result = {name: "MIN", value: json_input.data.min};
         }
-        if (obj.data.max) {
-          this.agr_result = {name: "MAX", value: obj.data.max};
+        if (json_input.data.max) {
+          this.agr_result = {name: "MAX", value: json_input.data.max};
         }
-        if (obj.data.sum) {
-          this.agr_result = {name: "SUM", value: obj.data.sum};
+        if (json_input.data.sum) {
+          this.agr_result = {name: "SUM", value: json_input.data.sum};
         }
-        if (obj.data.avg) {
-          this.agr_result = {name: "AVG", value: obj.data.avg};
+        if (json_input.data.avg) {
+          this.agr_result = {name: "AVG", value: json_input.data.avg};
         }
-        if (obj.data.count) {
-          this.agr_result = {name: "COUNT", value: obj.data.count};
+        if (json_input.data.count) {
+          this.agr_result = {name: "COUNT", value: json_input.data.count};
         }
       }
     },
@@ -189,6 +189,7 @@ export default {
 
     onTimestampSubmit() {
       let bufferScores = [];
+      if (this.time.length == 5) this.time += ":00";
       let timestamp = this.date + "T" + this.time + ".000Z";
       timestamp = Date.parse(timestamp)/1000;
       let request = "INSERT INTO " + this.curSeries.name + " VALUES (("+ timestamp +", " + this.value+"));";
@@ -264,7 +265,7 @@ export default {
 .table-scroll tbody{
   display: block;
   overflow: auto;
-  height: 330px;
+  height: 75vh;
 }
 
 .table-scroll thead tr {

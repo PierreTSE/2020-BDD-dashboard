@@ -1,8 +1,8 @@
 <template lang="html">
 
-  <div class="py-4">
-    <p class="h2">{{curSerie.name}}</p>
-    <p>{{curSerie.type}}</p>
+  <div class="my-2">
+    <p class="h2 mb-0">{{curSerie.name}}</p>
+    <p class="text-muted h6">{{curSerie.type}}</p>
   </div>
 
 </template>
