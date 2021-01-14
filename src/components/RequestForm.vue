@@ -225,7 +225,7 @@ export default {
                 if (!res.success) {  // La requete a échoué, abandonné la mission
                     return;
                 }
-                this.$parent.$refs.myTable.jsonParse(JSON.stringify(res));
+                this.$parent.$refs.myTable.jsonParse(res);
                 
             });
             this.clearForm();

@@ -157,8 +157,8 @@ export default {
       while(Math.random() > 0.1) {
         fake_data.data.values.push({"timestamp": Math.floor(Math.random()*34000000)+1577836800, "value": Math.floor(Math.random()*100)});
       }
-      
-      this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
+
+      this.$refs.myTable.jsonParse(fake_data);
     },
 
     on_DEBUG_Request_press() {

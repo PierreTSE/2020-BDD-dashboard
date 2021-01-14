@@ -125,12 +125,11 @@ export default {
 
     jsonParse(json_input) {
       this.clearTable();  // Effacer les données déjà présentes
-      let obj = JSON.parse(json_input);
-      if (obj.success) {
-        for (let i = 0; i < obj.data.values.length; i++) {  // Pour chaque donnée dans le JSON
+      if (json_input.success) {
+        for (let i = 0; i < json_input.data.values.length; i++) {  // Pour chaque donnée dans le JSON
           this.allScores.push({
-            ts: obj.data.values[i].timestamp,
-            value: obj.data.values[i].value,
+            ts: json_input.data.values[i].timestamp,
+            value: json_input.data.values[i].value,
           });
         }
 
@@ -142,20 +141,20 @@ export default {
 
         this.$emit('updateData', this.allScores);
 
-        if (obj.data.min) {
-          this.agr_result = {name: "MIN", value: obj.data.min};
+        if (json_input.data.min) {
+          this.agr_result = {name: "MIN", value: json_input.data.min};
         }
-        if (obj.data.max) {
-          this.agr_result = {name: "MAX", value: obj.data.max};
+        if (json_input.data.max) {
+          this.agr_result = {name: "MAX", value: json_input.data.max};
         }
-        if (obj.data.sum) {
-          this.agr_result = {name: "SUM", value: obj.data.sum};
+        if (json_input.data.sum) {
+          this.agr_result = {name: "SUM", value: json_input.data.sum};
         }
-        if (obj.data.avg) {
-          this.agr_result = {name: "AVG", value: obj.data.avg};
+        if (json_input.data.avg) {
+          this.agr_result = {name: "AVG", value: json_input.data.avg};
         }
-        if (obj.data.count) {
-          this.agr_result = {name: "COUNT", value: obj.data.count};
+        if (json_input.data.count) {
+          this.agr_result = {name: "COUNT", value: json_input.data.count};
         }
       }
     },
