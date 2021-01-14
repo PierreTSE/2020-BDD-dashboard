@@ -2,6 +2,7 @@
 
   <nav class="p-2 mb-1 d-none d-xl-block border-right border-info" id="sidebar-wrapper">
     <p class="h5" v-for="(s,index) in series" :key="index">{{s.name}}</p>
+    <button @click="updateList">Refresh List</button>
   </nav>   
 
 </template>
@@ -17,7 +18,29 @@
       return {}
     },
     methods: {
+      updateList(json_input) {
+        /* json_input aura la forme suivante
+        {
+          "success" : true,
+          "data" : {
+            "info" : [
+              {
+                "name" : "MySeries",
+                "type" : "int32"
+              },
+              {
+                "name" : "CamSeries",
+                "type" : "float64"
+              },      
+            ]
+          }
+        }*/
 
+        // TODO
+        console.log("json_input: ", json_input);
+        // Lui passer le nouveau tableau de séries
+        this.$emit('updateList', null);
+      }
     },
     computed: {
 

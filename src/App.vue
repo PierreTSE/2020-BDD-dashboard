@@ -5,7 +5,7 @@
     <MyHeader :series="series" />  <!-- Barre d'entete en haut -->
   
     <div class="d-flex container-fluid">
-      <MySidebar :series="series" />  <!-- Barre de navigation à gauche -->
+      <MySidebar :series="series" @updateList="updateList" />  <!-- Barre de navigation à gauche -->
       <div id="page-content">
         <div id="content-left">
           <InfoSerie />
@@ -66,6 +66,13 @@ export default {
     Table
   },
   methods: {
+    updateList(new_list) {
+      // Met a jour la liste présente dans la sidebar / header
+      // Chaque élément doit avoir la forme {"name": string, "type": string}
+      this.series = new_list;
+    },
+
+    // DEBUG //
     on_DEBUG_Table_press() {
       // Generer des données aléatoires
       let fake_data = {
