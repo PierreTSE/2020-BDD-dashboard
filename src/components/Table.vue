@@ -42,7 +42,7 @@
       </button>
     </form> -->
      
-    <table class="table mt-5">
+    <table class="table table-sm mt-5">
       <thead>
         <tr>
           <th scope="col">#</th>

@@ -139,10 +139,13 @@ export default {
 
 @media (min-width: 1000px) {  /* Pour grands écrans */
   #content-left {
-    width: 60%;
+    padding-right: 400px;
+    width: 100%;
   }
   #content-right {
-    width: 40%;
+    float: right;
+    width: 400px;
+    margin-left: -400px;
   }
 }
 
