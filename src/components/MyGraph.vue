@@ -46,7 +46,8 @@
         this.y_values.push(Math.random());
       },
       setGraphValues(data){
-        this.x_values = this.y_values = null;
+        this.x_values = [];
+        this.y_values = [];
         data.forEach(element => {
           this.x_values.push(element.ts);
           this.y_values.push(element.value);

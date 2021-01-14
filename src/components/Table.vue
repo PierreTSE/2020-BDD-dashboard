@@ -108,6 +108,14 @@ export default {
           });
         }
 
+        // Trier les scores par timestamp (croissant)
+        this.allScores.sort(function(a, b) {
+          return (a.ts - b.ts);
+        });
+        // console.log(this.allScores);
+
+        this.$emit('updateData', this.allScores);
+
         if (obj.data.min) {
           this.agr_result = {name: "MIN", value: obj.data.min};
         }
@@ -125,11 +133,7 @@ export default {
         }
       }
 
-      // Trier les scores par timestamp (croissant)
-      this.allScores.sort(function(a, b) {
-        return (a.ts - b.ts);
-      });
-      console.log(this.allScores);
+      
     },
 
     loadTextFromFile(ev) {
@@ -169,6 +173,9 @@ export default {
         ts: timestamp,
         value: this.value,
       });
+
+      this.$emit('updateData', this.allScores);
+
       this.sendRequest(request);
     },
 
