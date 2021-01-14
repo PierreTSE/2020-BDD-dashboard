@@ -9,9 +9,9 @@
     </button>
     <div v-if="showFileDiv">
       <br>
-      <input type="file"  @change="loadTextFromFile" style="margin-bottom : 5px"/><br>
+      <input type="file" accept=".csv" @change="loadTextFromFile" style="margin-bottom : 5px"/><br>
       <button :disabled="!isCsvParsed" type="button" @click="onCSVSubmit" class="btn btn-dark">
-        Inserer les données
+        Insérer les données
       </button>
     </div>
 
@@ -121,12 +121,15 @@ export default {
       this.isCsvParsed = false;  // Désactive le bouton "Inserer les données"
 
       const file = ev.target.files[0];
+      console.log(file.name);
       const reader = new FileReader();
-      // TODO Verifier que c'est bien un fichier csv
-
-      // Cette fonction sera appélée quand le reader aura fini de lire le csv
       let self = this;
-      reader.onload = function() {
+
+      // TODO Verifier que c'est bien un fichier csv
+      if(file.name.split(".").pop() != 'csv'){//check if file extension is csv
+        alert( "Please select CSV file type", "error");
+      } else {
+        reader.onload = function() {
         self.$papa.parse(file, {
             complete: function(results) {
               // TODO
@@ -134,12 +137,12 @@ export default {
               console.log(self.csvScores);
               self.isCsvParsed = true;  // Rends le bouton "Inserer les données" clickable
             }
-        });
-     
-      };
-
+          });
+        };
       // Lire le fichier choisis
       reader.readAsText(file);
+      }
+      // Cette fonction sera appélée quand le reader aura fini de lire le csv
     },
 
     onTimestampSubmit() {
