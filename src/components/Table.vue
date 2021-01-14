@@ -64,7 +64,7 @@
                  {{ ++i }}
                 </div>
                 <div class="edit" v-if="canEdit">
-                  <button class="btn btn-info">Check</button>
+                  <i class="fa fa-trash" v-on:click="deleteElement(entry.ts)"></i>
                 </div>
               </th>
               <td>{{ entry.ts }}</td>
@@ -89,9 +89,8 @@ export default {
   },
   methods: {
 
-    onEdit() {
-     
-      console.log("hello");
+    deleteElement(time) {
+      console.log("Timestamp "+time+" selected");
     },
 
     clearTable() {
