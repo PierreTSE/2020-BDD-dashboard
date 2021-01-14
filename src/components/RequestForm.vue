@@ -47,16 +47,35 @@
             </form>
         </div>
         
-        <form class="form-group form-inline">
-            <input type="date" class="form-control flex-fill mr-1" v-model="date_before" v-if="date_before_enable" @change="updateRequest()"/>
-            <input type="time" class="form-control mr-2" step="1" v-model="time_before" v-if="date_before_enable" @change="updateRequest()">
-            <input type="date" class="form-control flex-fill mr-1" v-model="date_after" v-if="date_after_enable" @change="updateRequest()"/>
-            <input type="time" class="form-control mr-2" step="1" v-model="time_after" v-if="date_after_enable" @change="updateRequest()"/>
-
-            <input type="date" class="form-control flex-fill mr-1" v-model="date_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
-            <input type="time" class="form-control mr-2" step="1" v-model="time_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
-            <input type="text" class="form-control flex-fill mr-2" v-model="manual_query" v-if="manual_query_enable" @keyup="updateRequest()" @keydown="updateRequest()"/>            
-            <button type="button" class="btn btn-info" @click="onRequestSubmit()">{{submit_text}}</button>
+        <form class="form-group">
+            <div v-if="date_before_enable" class="form-row">
+                <div class="col-6"><input type="date" class="form-control flex-fill" v-model="date_before" v-if="date_before_enable" @change="updateRequest()"/></div>
+                <div class="col-3"><input type="time" class="form-control" step="1" v-model="time_before" v-if="date_before_enable" @change="updateRequest()"/></div>
+                <div class="col-3"><button v-if="!date_after_enable" type="button" class="btn btn-info btn-block" @click="onRequestSubmit()">
+                    {{submit_text}} <i class="fa fa-chevron-right"></i>
+                </button></div>
+            </div>
+            <div v-if="date_after_enable" class="form-row">
+                <div class="col-6"><input type="date" class="form-control flex-fill" v-model="date_after" v-if="date_after_enable" @change="updateRequest()"/></div>
+                <div class="col-3"><input type="time" class="form-control" step="1" v-model="time_after" v-if="date_after_enable" @change="updateRequest()"/></div>
+                <div class="col-3"><button type="button" class="btn btn-info btn-block" @click="onRequestSubmit()">
+                    {{submit_text}} <i class="fa fa-chevron-right"></i>
+                </button></div>
+            </div>
+            <div v-if="request_mode_all" class="form-row">
+                <div class="col-6"><input type="date" class="form-control flex-fill mr-1" v-model="date_exact" v-if="request_mode_all" @change="updateCheckboxes()"/></div>
+                <div class="col-3"><input type="time" class="form-control" step="1" v-model="time_exact" v-if="request_mode_all" @change="updateCheckboxes()"/></div>
+                <div class="col-3"><button type="button" class="btn btn-info btn-block" @click="onRequestSubmit()">
+                    {{submit_text}} <i class="fa fa-chevron-right"></i>
+                </button></div>
+            </div>
+            <div v-if="manual_query_enable" class="form-row">
+                <div class="col-9"><input type="text" class="form-control flex-fill" v-model="manual_query" v-if="manual_query_enable" @keyup="updateRequest()" @keydown="updateRequest()"/></div>
+                <div class="col-3"><button type="button" class="btn btn-info btn-block" @click="onRequestSubmit()">
+                    {{submit_text}} <i class="fa fa-chevron-right"></i>
+                </button></div>
+            </div>
+            
         </form>
 
         <form class="form-inline">
@@ -320,6 +339,15 @@ export default {
 
 #requestDebug {
     min-height: 27px;
+}
+
+.request-btn-margin {
+    margin-right: 153px; /* meme que request-bt (width + marginleft)*/
+}
+
+.request-btn {
+    margin-left: 8px;
+    width: 145px;  /* meme que la margin right que request-btn-margin - la margin left ici*/
 }
 
 </style>
