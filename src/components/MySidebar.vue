@@ -26,8 +26,7 @@
 
     methods: {
       onRefresh() {
-        let response = this.sendRequest("SHOW ALL");
-        console.log("onRefresh() called");
+        let response = this.sendRequest("SHOW ALL;");
 
         if (response) {
           this.refreshList(response);  
@@ -112,5 +111,9 @@
   /*margin-bottom: -70px; /* Compense l'offset vertical a cause de l'entete */
   padding-right: 20px;
   border-width: 5px!important;
+}
+
+.h5 {
+  cursor: pointer;
 }
 </style>
