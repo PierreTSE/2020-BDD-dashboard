@@ -44,8 +44,6 @@
       async DEBUG_addValue(){
         this.x_values.push(this.y_values.length);
         this.y_values.push(Math.random());
-        console.log(this.x_values);
-        console.log(this.y_values);
       },
       setGraphValues(data){
         this.x_values = this.y_values = null;
