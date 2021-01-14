@@ -127,7 +127,7 @@ export default {
             // TODO FIX pour chrome
             //initialization
             let prefix = "SELECT FROM " + this.serie + " ";
-            let conditions = []
+            let conditions = [];
             let conditions_processed = "";
 
             //load conditions for the request
@@ -168,11 +168,11 @@ export default {
             
             // Apply conditions to request if needed (WHERE clause)
             if (conditions.length > 0) {
-                conditions_processed = "WHERE "
+                conditions_processed = "WHERE ";
                 conditions.forEach(cond => {
-                    conditions_processed += cond + " AND "
+                    conditions_processed += cond + " AND ";
                 });
-                conditions_processed = conditions_processed.slice(0, -5)
+                conditions_processed = conditions_processed.slice(0, -5);
                 
                 this.request = prefix + conditions_processed + ";";
             }
@@ -250,9 +250,9 @@ export default {
             }
             this.request_mode_all = !(this.manual_query_enable | this.date_before_enable | this.date_after_enable);
             if (this.request_mode_all & !this.date_exact) {
-                this.submit_text = "Requete (Tout)"
+                this.submit_text = "Requete (Tout)";
             } else {
-                this.submit_text = "Requete"
+                this.submit_text = "Requete";
             }
             this.updateRequest()
         }
