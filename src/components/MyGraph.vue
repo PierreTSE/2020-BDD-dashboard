@@ -14,7 +14,6 @@
         horizontalLines: true
       }"
       :labels="{
-        xLabels: x_values,
         yLabels: 5,
       }"
       :min="0" 
