@@ -50,7 +50,7 @@
     
     
     
-    <table class="table mt-5">
+    <table class="table table-sm mt-5">
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -59,6 +59,11 @@
         </tr>
       </thead>
       <tbody>
+        <tr v-if="agr_result.name != ''">
+          <th scope="row">{{agr_result.name}}</th>
+          <td></td>
+          <td>{{agr_result.value}}</td>
+        </tr>
         <tr v-for="(entry, i) in allScores" :key="i">
           <th scope="row">{{ ++i }}</th>
           <td>{{ entry.ts }}</td>
@@ -83,34 +88,44 @@ export default {
       value: 0,
       csvScores: [],
       isCsvParsed: false,
+      agr_result: {name:"", value: 0},
     }
-  },
-  computed: {
-    // sortedList: function () {
-    //   return this.allScores.sort(function (a, b) {
-    //     return a.ts > b.ts;
-    //   });
-    // },
   },
   methods: {
     clearTable() {
       this.allScores = [];
+      this.agr_result = {name:"", value: 0};
     },
 
     jsonParse(json_input) {
       this.clearTable();  // Effacer les données déjà présentes
       let obj = JSON.parse(json_input);
       if (obj.success) {
-        for (let i = 0; i < obj.data.length; i++) {  // Pour chaque donnée dans le JSON
+        for (let i = 0; i < obj.data.values.length; i++) {  // Pour chaque donnée dans le JSON
           this.allScores.push({
-            ts: obj.data[i].timestamp,
-            value: obj.data[i].value,
+            ts: obj.data.values[i].timestamp,
+            value: obj.data.values[i].value,
           });
+        }
+
+        if (obj.data.min) {
+          this.agr_result = {name: "MIN", value: obj.data.min};
+        }
+        if (obj.data.max) {
+          this.agr_result = {name: "MAX", value: obj.data.max};
+        }
+        if (obj.data.sum) {
+          this.agr_result = {name: "SUM", value: obj.data.sum};
+        }
+        if (obj.data.avg) {
+          this.agr_result = {name: "AVG", value: obj.data.avg};
+        }
+        if (obj.data.count) {
+          this.agr_result = {name: "COUNT", value: obj.data.count};
         }
       }
 
       // Trier les scores par timestamp (croissant)
-      console.log(this.allScores);
       this.allScores.sort(function(a, b) {
         return (a.ts - b.ts);
       });

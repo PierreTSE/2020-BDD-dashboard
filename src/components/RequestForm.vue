@@ -1,7 +1,7 @@
 <template>
     <div class="py-4 border-top border-bottom">
         <h2>Critères de recherche :</h2>
-        <p class="h5 bg-warning" v-if="show_request">{{ request }}</p>
+        <p id="requestDebug" class="h6 bg-warning p-1" v-if="show_request">{{ request }}</p>
         
         <div class="alert alert-danger alert-dismissible" role="alert" v-if="show_alert">
             Erreur de syntaxe dans la requete !
@@ -12,7 +12,7 @@
 
         <div> 
 
-            <label class="container">requête manuelle
+            <label class="my-container">requête manuelle
                 <input type="checkbox" v-model="manual_query_enable" @change="updateCheckboxes(true)">
                 <span class="checkmark"></span>
             </label>
@@ -20,11 +20,11 @@
             <form class="form-inline">
 
                 <div class="form-check form-check-inline">
-                    <label class="container">jusqu'à
+                    <label class="my-container">jusqu'à
                         <input type="checkbox" v-model="date_before_enable" @change="updateCheckboxes()">
                         <span class="checkmark"></span>
                     </label>
-                    <label class="container" v-if="date_before_enable"> inclus
+                    <label class="my-container" v-if="date_before_enable"> inclus
                             <input type="checkbox" v-model="include_before_enable" @change="updateCheckboxes()">
                             <span class="checkmark"></span>
                     </label>
@@ -35,11 +35,11 @@
             <form class="form-inline">
 
                 <div class="form-check form-check-inline">
-                    <label class="container">à partir de
+                    <label class="my-container">à partir de
                         <input type="checkbox" v-model="date_after_enable" @change="updateCheckboxes()">
                         <span class="checkmark"></span>
                     </label>
-                    <label class="container" v-if="date_after_enable"> inclus
+                    <label class="my-container" v-if="date_after_enable"> inclus
                             <input type="checkbox" v-model="include_after_enable" @change="updateCheckboxes()">
                             <span class="checkmark"></span>
                     </label>
@@ -53,36 +53,36 @@
             <input type="date" class="form-control flex-fill mr-1" v-model="date_after" v-if="date_after_enable" @change="updateRequest()"/>
             <input type="time" class="form-control mr-2" step="1" v-model="time_after" v-if="date_after_enable" @change="updateRequest()"/>
 
-            <input type="date" class="form-control flex-fill" v-model="date_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
-            <input type="text" class="form-control flex-fill" v-model="manual_query" v-if="manual_query_enable" @keyup="updateRequest()" @keydown="updateRequest()"/>            
+            <input type="date" class="form-control flex-fill mr-1" v-model="date_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
+            <input type="time" class="form-control mr-2" step="1" v-model="time_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
+            <input type="text" class="form-control flex-fill mr-2" v-model="manual_query" v-if="manual_query_enable" @keyup="updateRequest()" @keydown="updateRequest()"/>            
             <button type="button" class="btn btn-info" @click="onRequestSubmit()">{{submit_text}}</button>
         </form>
 
         <form class="form-inline">
-
             <div class="form-check form-check-inline">
 
-                <label class="container" id="aggregation">SUM
+                <label class="my-container" id="aggregation">SUM
                     <input class="form-check-input" type="checkbox" v-model="sum_enable" @change="updateCheckboxes()">
                     <span class="checkmark"></span>
                 </label>
 
-                <label class="container" id="aggregation">COUNT
+                <label class="my-container" id="aggregation">COUNT
                     <input class="form-check-input" type="checkbox" v-model="count_enable" @change="updateCheckboxes()">
                     <span class="checkmark"></span>
                 </label>
 
-                <label class="container" id="aggregation">AVG
+                <label class="my-container" id="aggregation">AVG
                     <input class="form-check-input" type="checkbox" v-model="avg_enable" @change="updateCheckboxes()">
                     <span class="checkmark"></span>
                 </label>
 
-                <label class="container" id="aggregation">MIN
+                <label class="my-container" id="aggregation">MIN
                     <input class="form-check-input" type="checkbox" v-model="min_enable" @change="updateCheckboxes()">
                     <span class="checkmark"></span>
                 </label>
 
-                <label class="container" id="aggregation">MAX
+                <label class="my-container" id="aggregation">MAX
                     <input class="form-check-input" type="checkbox" v-model="max_enable" @change="updateCheckboxes()">
                     <span class="checkmark"></span>
                 </label> 
@@ -116,31 +116,34 @@ export default {
         time_before: "00:00:00",
         time_after: "00:00:00",
         date_exact: null,
-        request: null,
+        time_exact: "00:00:00",
+        request: "",
         serie: "MySerie",
         show_request: false,
         show_alert: false,
     }),
     methods: {
         updateRequest() {
+            // TODO FIX pour chrome
             //initialization
             let prefix = "SELECT FROM " + this.serie + " ";
-            let conditions = []
+            let conditions = [];
             let conditions_processed = "";
 
             //load conditions for the request
             if (this.request_mode_all) {
                 if (this.date_exact) {
-                    conditions.push("timestamp == " + Date.parse(this.date_exact)/1000);
+                    console.log(this.time_exact);
+                    let timestamp = this.date_exact + "T" + this.time_exact + ".000Z";
+                    conditions.push("timestamp <= " + Date.parse(timestamp)/1000);
                 } else {
-                    this.request =  "SELECT all FROM " + this.serie +";";
+                    this.request =  "SELECT ALL FROM " + this.serie +";";
                 }
             } 
             else if (this.manual_query_enable){
                 this.request = this.manual_query;
             } 
             else {
-                // TODO : Do we want finer controls ? like choose with hour rather than date (pls no)
                 if (this.date_before_enable){
                     if (this.include_before_enable){
                         let timestamp = this.date_before + "T" + this.time_before + ".000Z";
@@ -165,17 +168,17 @@ export default {
             
             // Apply conditions to request if needed (WHERE clause)
             if (conditions.length > 0) {
-                conditions_processed = "WHERE "
+                conditions_processed = "WHERE ";
                 conditions.forEach(cond => {
-                    conditions_processed += cond + " AND "
+                    conditions_processed += cond + " AND ";
                 });
-                conditions_processed = conditions_processed.slice(0, -5)
+                conditions_processed = conditions_processed.slice(0, -5);
                 
                 this.request = prefix + conditions_processed + ";";
             }
 
             // Insert aggregation functions
-            if (this.sum_enable | this.count_enable | this.avg_enable | this.min_enable | this.max_enable){
+            if (!this.manual_query_enable) {
                 let agg_prefix = "";
                 if (this.sum_enable){
                     agg_prefix += "SUM ";
@@ -247,9 +250,9 @@ export default {
             }
             this.request_mode_all = !(this.manual_query_enable | this.date_before_enable | this.date_after_enable);
             if (this.request_mode_all & !this.date_exact) {
-                this.submit_text = "Requete (Tout)"
+                this.submit_text = "Requete (Tout)";
             } else {
-                this.submit_text = "Requete"
+                this.submit_text = "Requete";
             }
             this.updateRequest()
         }
@@ -263,11 +266,12 @@ export default {
 <style scoped>
 
  /* Customize the label (the container) */
-.container {
+.my-container {
   display: block;
   position: relative;
-  padding-left: 35px;
+  padding-left: 31px;
   margin-bottom: 12px;
+  margin-right: 16px;
   cursor: pointer;
   font-size: 22px;
   -webkit-user-select: none;
@@ -278,7 +282,7 @@ export default {
 }
 
 /* Hide the browser's default checkbox */
-.container input {
+.my-container input {
   position: absolute;
   opacity: 0;
   cursor: pointer;
@@ -289,7 +293,7 @@ export default {
 /* Create a custom checkbox */
 .checkmark {
   position: absolute;
-  top: 0;
+  top: 5px;
   left: 0;
   height: 25px;
   width: 25px;
@@ -297,12 +301,12 @@ export default {
 }
 
 /* On mouse-over, add a grey background color */
-.container:hover input ~ .checkmark {
+.my-container:hover input ~ .checkmark {
   background-color: #ccc;
 }
 
 /* When the checkbox is checked, add a blue background */
-.container input:checked ~ .checkmark {
+.my-container input:checked ~ .checkmark {
   background-color: #2196F3;
 }
 
@@ -314,12 +318,12 @@ export default {
 }
 
 /* Show the checkmark when checked */
-.container input:checked ~ .checkmark:after {
+.my-container input:checked ~ .checkmark:after {
   display: block;
 }
 
 /* Style the checkmark/indicator */
-.container .checkmark:after {
+.my-container .checkmark:after {
   left: 9px;
   top: 5px;
   width: 5px;
@@ -330,5 +334,9 @@ export default {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 } 
+
+#requestDebug {
+    min-height: 27px;
+}
 
 </style>
