@@ -41,28 +41,32 @@
         Submit
       </button>
     </form> -->
-     
-    <table class="table table-sm mt-5">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Timestamp</th>
-          <th scope="col">Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="agr_result.name != ''">
-          <th scope="row">{{agr_result.name}}</th>
-          <td></td>
-          <td>{{agr_result.value}}</td>
-        </tr>
-        <tr v-for="(entry, i) in allScores" :key="i">
-          <th scope="row">{{ ++i }}</th>
-          <td>{{ entry.ts }}</td>
-          <td>{{ entry.value }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div>
+      <button class="btn btn-info" @click="onEdit">Edit</button>
+      <div>
+        <table class="table table-sm mt-5">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Timestamp</th>
+              <th scope="col">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="agr_result.name != ''">
+              <th scope="row">{{agr_result.name}}</th>
+              <td></td>
+              <td>{{agr_result.value}}</td>
+            </tr>
+            <tr v-for="(entry, i) in allScores" :key="i">
+              <th scope="row">{{ ++i }}</th>
+              <td>{{ entry.ts }}</td>
+              <td>{{ entry.value }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -73,9 +77,16 @@ export default {
     return {
       allScores: [],
       agr_result: {name:"", value: 0},
+      isEdit: false,
     }
   },
   methods: {
+
+    onEdit() {
+      this.isEdit=true;
+      console.log("hello");
+    },
+
     clearTable() {
       this.allScores = [];
       this.agr_result = {name:"", value: 0};
@@ -117,3 +128,7 @@ export default {
   },
 };
 </script>
+
+<style>
+
+</style>
