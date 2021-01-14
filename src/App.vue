@@ -170,13 +170,15 @@ export default {
 
 @media (min-width: 1000px) {  /* Pour grands écrans */
   #content-left {
-    padding-right: 400px;
-    width: 100%;
+    /* padding-right: 400px;
+    width: 100%; */
+    width: 60%;
   }
   #content-right {
-    float: right;
+    /* float: right;
     width: 400px;
-    margin-left: -400px;
+    margin-left: -400px; */
+    width: 40%;
   }
 }
 
