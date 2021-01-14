@@ -2,7 +2,9 @@
 
   <nav class="p-2 mb-1 d-none d-xl-block border-right border-info" id="sidebar-wrapper">
     <p class="h5" v-for="(s,index) in series" :key="index">{{s.name}}</p>
-    <button @click="updateList">Refresh List</button>
+    <p>Todo mettre en avant la série actuelle</p>
+    <button @click="onRefresh">F5</button>
+    <button @click="onCreate">Nouvelle série</button>
   </nav>   
 
 </template>
@@ -10,16 +12,36 @@
 <script lang="js">
   export default  {
     name: 'MySidebar',
-    props: ["series"],  // Data from parent
+    props: ["series", "curSerie"],  // Data from parent
 
     mounted () {},
     
     data () {
-      return {}
+      return {
+        possible_types: ["int32", "int64", "float32", "float64"],
+      }
     },
+
     methods: {
-      updateList(json_input) {
-        /* json_input aura la forme suivante
+      onRefresh() {
+        // TODO la requete
+        // La requete à la forme suivante : SHOW ALL;
+        console.log("onRefresh() called");
+
+        this.refreshList({});  // TODO parser la réponse de la requete
+      },
+
+      onCreate() {
+        // TODO la requete
+        // La requete à la forme suivante : CREATE <name:string> <type:string>
+        // BTW, "type" peut être un des 4 types dans la variable this.possible_types
+        console.log("onCreate() called");
+        // Maintenant que nous avons creer une série, mettre à jour la liste
+        this.onRefresh();
+      },
+        
+      refreshList(json_data) {
+        /* json_data est un json avec la forme suivante
         {
           "success" : true,
           "data" : {
@@ -35,15 +57,11 @@
             ]
           }
         }*/
+        console.log("json_data", json_data);
 
-        // TODO
-        console.log("json_input: ", json_input);
         // Lui passer le nouveau tableau de séries
         this.$emit('updateList', null);
-      }
-    },
-    computed: {
-
+      },
     }
 }
 </script>

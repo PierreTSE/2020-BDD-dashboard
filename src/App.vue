@@ -5,10 +5,10 @@
     <MyHeader :series="series" />  <!-- Barre d'entete en haut -->
   
     <div class="d-flex container-fluid">
-      <MySidebar :series="series" @updateList="updateList" />  <!-- Barre de navigation à gauche -->
+      <MySidebar :series="series" :curSerie="curSerie" @updateList="updateList" />  <!-- Barre de navigation à gauche -->
       <div id="page-content">
         <div id="content-left">
-          <InfoSerie />
+          <InfoSerie :curSerie="curSerie"/>
           
           <div class="container-fluid bg-dark p-2">
             <div class="row mx-auto">
@@ -54,6 +54,7 @@ export default {
         {"name": "SerieTemp", "type":"float32"},
         {"name": "SerieFun", "type":"int32"},
       ],
+      curSerie: {"name": "SerieFun", "type":"int32"},
       showDebug: true,
     }
   },
@@ -67,9 +68,32 @@ export default {
   },
   methods: {
     updateList(new_list) {
-      // Met a jour la liste présente dans la sidebar / header
+      // Met à jour la liste présente dans la sidebar / header
       // Chaque élément doit avoir la forme {"name": string, "type": string}
       this.series = new_list;
+
+      // Verifier que notre série actuelle est encore dans la liste
+      let valid = false;
+      for (const s of this.series) {
+        if (s.name == this.curSerie.name) {
+          valid = true;
+          break;
+        }
+      }
+      if (!valid) {
+        this.curSerie = this.series[0];  // Prendre la première série (car notre serie n'existe plus)
+      }
+    },
+
+    loadSeries(series_name) {
+      // Les noms des séries sont uniques
+      this.curSerie = this.series[0];  // Par défaut, prendre la première série (au cas ou notre for ne trouve rien qui match)
+      for (const s of this.series) {
+        if (s.name == series_name) {
+          this.curSerie = s;
+          break;
+        }
+      }
     },
 
     // DEBUG //
@@ -90,7 +114,6 @@ export default {
       this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
     },
 
-    // DEBUGGING //
     on_DEBUG_Request_press() {
       this.$refs.requestForm.show_request = !this.$refs.requestForm.show_request;
       if (this.$refs.requestForm.show_request) {
@@ -112,6 +135,7 @@ export default {
       
       this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
     }
+    // FIN DEBUG //
   }
 };
 
