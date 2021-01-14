@@ -171,6 +171,11 @@ export default {
         value: parseInt(this.value),
       });
 
+      // Trier les scores par timestamp (croissant)
+      this.allScores.sort(function(a, b) {
+        return (a.ts - b.ts);
+      });
+
       this.$emit('updateData', this.allScores);
 
       this.sendRequest(request);
@@ -194,6 +199,11 @@ export default {
         request += "("+ this.csvScores[i][0] +", " + this.csvScores[i][1]+")," ;
       }
       request += ");";
+
+      // Trier les scores par timestamp (croissant)
+      this.allScores.sort(function(a, b) {
+        return (a.ts - b.ts);
+      });
 
       this.$emit('updateData', this.allScores);
 
