@@ -17,11 +17,12 @@
         xLabels: x_values,
         yLabels: 5,
       }"
-      :min="0">
+      :min="0" 
+      v-if="x_values.length > 2" >
     </TrendChart>
     <button @click="DEBUG_addValue()">DEBUG(add value)</button>
   </div>
-
+  
 </template>
 
 <script lang="js">
@@ -36,17 +37,15 @@
 
     },
     data: () => ({
-      x_values: [0,0],
-      y_values: [0,0],
+      x_values: [0, 0],
+      y_values: [0, 0],
     }),
     methods: {
       async DEBUG_addValue(){
-        //TODO: get values from re
-        this.x_values = [0,this.y_values[this.y_values.length - 1],this.y_values.length];
-        this.y_values.push(this.y_values[this.y_values.length - 1] + Math.random() - 0.5);
-        this.y_values = this.y_values.slice(Math.max(this.y_values.length - 100, 0))
-        await new Promise(r => setTimeout(r, 1));
-        this.addValue();
+        this.x_values.push(this.y_values.length);
+        this.y_values.push(Math.random());
+        console.log(this.x_values);
+        console.log(this.y_values);
       },
       setGraphValues(data){
         this.x_values = this.y_values = null;
