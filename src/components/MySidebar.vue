@@ -8,7 +8,11 @@
       <input class="form-control" type="text" v-if="add_mode" v-model="new_serie_name">
       <button class="btn btn-info btn-block " @click="add_mode=true;" v-if="!add_mode">Nouvelle série</button>
       <select class="form-control" style="margin-top:0.5em;" v-if="add_mode" v-model="selected_type"> <option v-for="type in possible_types" :value="type" :key="type"> {{type}}</option ></select>
-      <button class="btn btn-info btn-block" style="margin-top:0.5em;" @click="onCreate" v-if="add_mode">Ajouter série</button>
+      <div v-if="add_mode" class="form-group row mx-auto mt-2">
+        <button class="col-2 btn btn-info px-1 mr-2" @click="add_mode = false; selected_type = null; new_serie_name=''"><i class="fa fa-chevron-left"></i></button>
+        <button class="col btn btn-info" @click="onCreate"
+          :disabled="!new_serie_name || selected_type == null">Ajouter série</button>
+      </div>
       <button class="btn btn-info btn-block" @click="onRefresh" v-if="!add_mode">Rafraichir</button>
     </form>
 

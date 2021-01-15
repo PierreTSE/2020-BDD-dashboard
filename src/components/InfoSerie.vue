@@ -62,7 +62,7 @@
   line-height: 1;
   color: #0004;
   border-color: #0004;
-  transition: border 0s, 0.3s;
+  transition: border 0s, 0.15s;
   margin-top: 1em;
   margin-left: 0.2em;
 }
