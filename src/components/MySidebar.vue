@@ -1,7 +1,7 @@
 <template lang="html">
 
   <nav class="p-2 mb-1 d-none d-xl-block border-right border-info" id="sidebar-wrapper">
-    <p class="h5" v-for="(s,index) in series" :key="index" @click="onSelect(s)" v-bind:id="s.name">{{s.name}}</p>
+    <p class="h5" v-for="(s,index) in series" :key="index" @click="onSelect(s)" v-bind:id="'side-' + s.name">{{s.name}}</p>
 
 
     <form class="button-wrapper" onsubmit="return false">
@@ -13,7 +13,7 @@
         <button class="col btn btn-info" @click="onCreate"
           :disabled="!new_serie_name || selected_type == null">Ajouter série</button>
       </div>
-      <button class="btn btn-info btn-block" @click="onRefresh" v-if="!add_mode">Rafraichir</button>
+      <button class="btn btn-info btn-block" @click="onRefresh" v-if="!add_mode">Rafraichir liste</button>
     </form>
 
   </nav>   
@@ -85,10 +85,11 @@
 
       onSelect(serie) {
         for (const line of this.series) {
-          document.getElementById(line.name).style.setProperty('font-weight', 'normal');
+          document.getElementById("side-" + line.name).style.setProperty('font-weight', 'normal');
+          document.getElementById("head-" + line.name).style.setProperty('font-weight', 'normal');
         }
-        
-        document.getElementById(serie.name).style.setProperty('font-weight', 'bold');
+        document.getElementById("side-" + serie.name).style.setProperty('font-weight', 'bold');
+        document.getElementById("head-" + serie.name).style.setProperty('font-weight', 'bold');
         this.$emit('selectSerie', serie.name);
       },
     }
@@ -113,7 +114,7 @@
   border-width: 5px;
   border-top: solid;
   border-top-color: #17a2b8 !important;
-  border-top-width: 5px;
+  border-top-width: 3px;
   padding-top: 13px;
   margin-top: 15px;
   width: 100%;

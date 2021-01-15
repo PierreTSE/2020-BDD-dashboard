@@ -289,6 +289,7 @@ export default {
   height: 25px;
   width: 25px;
   background-color: #eee;
+  border-radius: 20%;
 }
 
 /* On mouse-over, add a grey background color */

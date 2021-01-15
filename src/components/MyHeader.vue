@@ -8,7 +8,7 @@
           <b-navbar-nav>
             <b-nav-item href="#" v-for="(s,index) in series" :key="index" 
               v-bind:class="{'font-weight-bold': s.name == curSerie.name, 'text-light': s.name != curSerie.name}"
-              @click="onSelect(s)" v-bind:id="s.name">{{s.name}} 
+              @click="onSelect(s)" v-bind:id="'head-' + s.name">{{s.name}} 
               </b-nav-item>
           </b-navbar-nav>
         </b-collapse>
@@ -31,7 +31,7 @@
     },
     methods: {
       onSelect(serie) {
-        this.$emit('selectSerie', serie.name);
+        this.$parent.$refs.mySideBar.onSelect(serie);
       }
     },
     computed: {
