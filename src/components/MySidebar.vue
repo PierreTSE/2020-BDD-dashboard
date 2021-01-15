@@ -4,7 +4,7 @@
     <p class="h5" v-for="(s,index) in series" :key="index" @click="onSelect(s)" v-bind:id="s.name">{{s.name}}</p>
 
 
-    <form class="button-wrapper">
+    <form class="button-wrapper" onsubmit="return false">
       <input class="form-control" type="text" v-if="add_mode" v-model="new_serie_name">
       <button class="btn btn-info btn-block " @click="add_mode=true;" v-if="!add_mode">Nouvelle série</button>
       <select class="form-control" style="margin-top:0.5em;" v-if="add_mode" v-model="selected_type"> <option v-for="type in possible_types" :value="type" :key="type"> {{type}}</option ></select>
