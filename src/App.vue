@@ -90,11 +90,11 @@ export default {
           this.requestLoading = false;
           return {"success": true, "data": []};
         }
-        let response = await fetch(this.$apiurl + query_string);
+        let response = await fetch(this.$apiurl + query_string, {method: 'POST'});
         this.requestLoading = false;
+        const data = await response.json();
         
-        if (response.ok) {
-          const data = await response.json();
+        if (response.ok) {  // 200
           console.log("RESPONSE : ", data);
           if (data["success"] == true) {
             return data;
@@ -105,9 +105,14 @@ export default {
               this.requestError = "Request failed. Unknown error (no message).";
             return {"success": false, "error": data.error};
           }
-        } else {
-          console.error("ERROR (BAD NETWORK RESPONSE).");
-          this.requestError = "Request failed. Bad Network Response.";
+        } else {  // 400 & 500
+          console.error("ERROR (" + response.data.error.code + ")." + response.data.error);
+          
+          if (data.error && data.error.message)
+            this.requestError = data.error.message;
+          else
+            this.requestError = "Request failed. Unknown error (" + response.status + ").";
+
           this.requestLoading = false;
           return {"success": false, "error": {'message': "BAD NETWORK RESPONSE"}};
         }
