@@ -33,7 +33,8 @@
       deleteSeries(){
         let r = confirm("Voulez-vous vraiment supprimer la série : " + this.curSerie.name + " ?");
         if (r == true) {
-          console.log("DROP " + this.curSerie.name + ";");
+          let request ="DROP " + this.curSerie.name + ";";
+          this.$parent.sendRequest(request);
         }
       }
     },
