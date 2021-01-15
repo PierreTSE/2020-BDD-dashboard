@@ -80,7 +80,7 @@
     </div>
     
     <div>
-    <table class="table table-scroll table-striped table-sm mt-3">
+    <table class="table table-scroll table-striped table-sm mt-0">
       <thead class="bg-info">
         <tr>
           <th scope="col">#</th>
@@ -317,7 +317,7 @@ export default {
 .btn-circle.btn-xl {
   width: 40px;
   height: 40px;
-  padding: 10px 12px;
+  padding: 11px 11px;
   border-radius: 50%;
   font-size: 16px;
   line-height: 1;

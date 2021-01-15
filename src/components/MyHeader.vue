@@ -52,8 +52,8 @@ header {
   z-index: 10;
 }
 @media only screen and (min-width: 1200px) {
-  .my-menu {
-    display: none;
+  #nav-collapse.my-menu {
+    display: none! important;
   }
 }
 </style>

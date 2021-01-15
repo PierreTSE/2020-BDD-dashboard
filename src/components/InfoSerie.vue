@@ -6,7 +6,7 @@
       <p class="text-muted h6">{{curSerie.type}}</p>
     </div>
     <div class="drop-button-wrapper" style="display: inline-block; position: absolute; padding-left: 15px">
-      <button type="button" class="btn btn-circle btn-xl my-2 mr-1" 
+      <button type="button" class="btn btn-circle btn-outline-danger btn-xl mr-1" 
       @click="deleteSeries">
       <i class="fa fa-trash"></i>
     </button>
@@ -53,5 +53,25 @@
 </script>
 
 <style scoped>
-
+.btn-circle.btn-xl {
+  width: 32px;
+  height: 32px;
+  padding: 4px 7.5px;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  color: #0004;
+  border-color: #0004;
+  transition: border 0s, 0.3s;
+  margin-top: 1em;
+  margin-left: 0.2em;
+}
+.btn-circle.btn-xl:hover {
+  border-width: 0;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  margin-top: 0.8em;
+  margin-left: 0.04em;
+}
 </style>
