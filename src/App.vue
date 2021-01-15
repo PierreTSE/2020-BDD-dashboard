@@ -106,7 +106,7 @@ export default {
             return {"success": false, "error": data.error};
           }
         } else {  // 400 & 500
-          console.error("ERROR (" + response.data.error.code + ")." + response.data.error);
+          console.error("ERROR (" + data.error.code + ")." + JSON.stringify(data.error));
           
           if (data.error && data.error.message)
             this.requestError = data.error.message;
