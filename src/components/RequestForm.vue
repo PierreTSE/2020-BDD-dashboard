@@ -70,37 +70,34 @@
             </div>
             
         </form>
-
         <form class="form-inline">
-            <div class="form-check form-check-inline">
+            <div class="form-check form-check-inline container row mx-auto">
 
-                <label class="my-container" id="aggregation">SUM
+                <label class="my-container col-4 col-sm-2" id="aggregation1">SUM
                     <input class="form-check-input" type="checkbox" v-model="sum_enable" @change="updateCheckboxes()">
                     <span class="checkmark"></span>
                 </label>
 
-                <label class="my-container" id="aggregation">COUNT
+                <label class="my-container col-4 col-sm-2" id="aggregation2">COUNT
                     <input class="form-check-input" type="checkbox" v-model="count_enable" @change="updateCheckboxes()">
                     <span class="checkmark"></span>
                 </label>
 
-                <label class="my-container" id="aggregation">AVG
+                <label class="my-container col-4 col-sm-2" id="aggregation3">AVG
                     <input class="form-check-input" type="checkbox" v-model="avg_enable" @change="updateCheckboxes()">
                     <span class="checkmark"></span>
                 </label>
 
-                <label class="my-container" id="aggregation">MIN
+                <label class="my-container col-4 col-sm-2" id="aggregation4">MIN
                     <input class="form-check-input" type="checkbox" v-model="min_enable" @change="updateCheckboxes()">
                     <span class="checkmark"></span>
                 </label>
 
-                <label class="my-container" id="aggregation">MAX
+                <label class="my-container col-4 col-sm-2" id="aggregation5">MAX
                     <input class="form-check-input" type="checkbox" v-model="max_enable" @change="updateCheckboxes()">
                     <span class="checkmark"></span>
                 </label> 
-
             </div>
-
         </form>
     </div>
 </template>
@@ -267,7 +264,7 @@ export default {
   margin-bottom: 12px;
   margin-right: 16px;
   cursor: pointer;
-  font-size: 22px;
+  font-size: 1.3em;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;

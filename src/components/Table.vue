@@ -31,7 +31,7 @@
 
     <p v-if="error != ''" class="h6 text-light p-2 bg-danger mt-1 mb-3">{{error}}</p>
 
-    <div v-if="showFileDiv || showInsertDiv" class=" conatiner-fluid bg-info p-2 mt-2 mx-3">
+    <div v-if="showFileDiv || showInsertDiv" class="conatiner-fluid bg-info p-2 mt-2 mb-3 mx-3">
       <div v-if="showFileDiv">
         <p class="text-light h5 pb-1 border-bottom">Importer un fichier CSV</p>
         <input type="file" accept=".csv" @change="loadTextFromFile" style="margin-bottom : 5px"/><br>

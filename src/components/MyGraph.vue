@@ -15,6 +15,7 @@
       }"
       :labels="{
         yLabels: 5,
+        yLabelsTextFormatter: (val) => {return Math.round(val * 100) / 100;}
       }"
       :min="0" 
       v-if="x_values.length > 2" >
@@ -58,9 +59,25 @@
   }
 </script>
 
-<style scoped>
+<style>
 #MyGraph {
   width: 100%;
   height: 250px;
+}
+
+.fill {
+  fill: #17a2b8;
+  fill-opacity: 0.2;
+}
+
+.stroke {
+  stroke: #17a2b8;
+  stroke-width: 0.3em;
+}
+
+.points circle{
+  fill:#17a2b8;
+  stroke: #0008;
+  r: 0.25em;
 }
 </style>
