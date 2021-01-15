@@ -7,30 +7,30 @@
     <div class="d-flex container-fluid">
       <MySidebar ref="mySideBar" :series="series" :curSerie="curSerie" @updateList="updateList" @selectSerie="selectSerie"/>  <!-- Barre de navigation à gauche -->
       <div id="page-content">
-        <div v-if="checkSeries()">
-        <div id="content-left">
-          <InfoSerie :curSerie="curSerie"/>
-          
-          <div class="container-fluid bg-dark p-2">
-            <div class="row mx-auto">
-              <p class="col-auto mr-auto h6 text-warning my-auto">Debug:</p>
-              <button class="col-auto btn btn-sm text-warning bg-transparent" v-if="!showDebug" @click="showDebug = true;">v</button>
-              <button class="col-auto btn btn-sm text-warning bg-transparent" v-if="showDebug" @click="showDebug = false;">^</button>
+        <div v-show="checkSeries()">
+          <div id="content-left">
+            <InfoSerie :curSerie="curSerie"/>
+            
+            <div class="container-fluid bg-dark p-2">
+              <div class="row mx-auto">
+                <p class="col-auto mr-auto h6 text-warning my-auto">Debug:</p>
+                <button class="col-auto btn btn-sm text-warning bg-transparent" v-if="!showDebug" @click="showDebug = true;">v</button>
+                <button class="col-auto btn btn-sm text-warning bg-transparent" v-if="showDebug" @click="showDebug = false;">^</button>
+              </div>
+              <div v-if="showDebug" class="">
+                <button id="DEBUG_Request" class="btn btn-warning m-1" @click="on_DEBUG_Request_press()">Show Live Request</button>
+                <button id="DEBUG_Table" class="btn btn-warning m-1" @click="on_DEBUG_Table_press()">Test affichage données</button>
+                <button id="DEBUG_Agreg" class="btn btn-warning m-1" @click="on_DEBUG_Agreg_press()">Test affichage agregation</button>
+              </div>
             </div>
-            <div v-if="showDebug" class="">
-              <button id="DEBUG_Request" class="btn btn-warning m-1" @click="on_DEBUG_Request_press()">Show Live Request</button>
-              <button id="DEBUG_Table" class="btn btn-warning m-1" @click="on_DEBUG_Table_press()">Test affichage données</button>
-              <button id="DEBUG_Agreg" class="btn btn-warning m-1" @click="on_DEBUG_Agreg_press()">Test affichage agregation</button>
-            </div>
-          </div>
 
-          <RequestForm ref="requestForm" :serie="curSerie.name"/>
-          <MyGraph ref="myGraph"/>
-        </div>
-        <div id="content-right">
-          <Table ref="myTable" :curSeries="curSerie" :error="requestError" 
-            :loading="requestLoading" @updateData="updateData"/>
-        </div>
+            <RequestForm ref="requestForm" :serie="curSerie.name"/>
+            <MyGraph ref="myGraph"/>
+          </div>
+          <div id="content-right">
+            <Table ref="myTable" :curSeries="curSerie" :error="requestError" 
+              :loading="requestLoading" @updateData="updateData"/>
+          </div>
         </div>
         <div v-if="!checkSeries()">
           <h1>Bienvenue sur notre application</h1>

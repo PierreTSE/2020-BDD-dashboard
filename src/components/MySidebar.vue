@@ -76,7 +76,6 @@
             ]
           }
         }*/
-        console.log("json_data", json_data);
         
         let seriesList = JSON.parse(json_data).data.info;
 
@@ -85,9 +84,10 @@
       },
 
       onSelect(serie) {
-        if (this.$parent.checkSeries()) {
-          document.getElementById(this.curSerie.name).style.setProperty('font-weight', 'normal');
+        for (const line of this.series) {
+          document.getElementById(line.name).style.setProperty('font-weight', 'normal');
         }
+        
         document.getElementById(serie.name).style.setProperty('font-weight', 'bold');
         this.$emit('selectSerie', serie.name);
       },
