@@ -78,9 +78,10 @@ export default {
     Table
   },
   methods: {
-    checkSeries(){
+    checkSeries() {
       return !this.curSerie.name == "";
     },
+
     async sendRequest(query_string) {
       this.requestLoading = true;
       this.requestError = "";

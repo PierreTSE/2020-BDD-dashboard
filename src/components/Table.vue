@@ -135,7 +135,19 @@ export default {
   methods: {
 
     deleteElement(time) {
-      console.log("DELETE FROM MySeries WHERE TIMESTAMP == "+time+";");
+      const query_string = "DELETE FROM MySeries WHERE TIMESTAMP == " + time + ";";
+      console.log(query_string);
+      this.$parent.sendRequest(query_string).then((res) => {
+        if (!res.success) {
+          return;
+        }
+        for (const s of this.allScores) {
+          if (s.ts == time) {
+            this.allScores.splice(this.allScores.indexOf(s), 1);
+            break;
+          }
+        }
+      });
     },
 
     clearTable() {
