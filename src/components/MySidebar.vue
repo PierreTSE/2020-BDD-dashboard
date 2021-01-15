@@ -77,7 +77,7 @@
           }
         }*/
         
-        let seriesList = JSON.parse(json_data).data.info;
+        let seriesList = json_data.data.info;
 
         // Lui passer le nouveau tableau de séries
         this.$emit('updateList', seriesList);

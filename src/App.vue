@@ -127,8 +127,13 @@ export default {
 
     updateList(new_list) {
       // Met à jour la liste présente dans la sidebar / header
+      if (!new_list || !Array.isArray(new_list)) {
+        console.log("/!\\ Cannot refresh series because a non-array object was recieved. This is expected when offline.");
+        return;
+      }
+
       // Chaque élément doit avoir la forme {"name": string, "type": string}
-      this.series = new_list;
+      this.series = [...new_list];
 
       // Verifier que notre série actuelle est encore dans la liste
       let valid = false;
@@ -139,13 +144,13 @@ export default {
         }
       }
       if (!valid) {
-        this.curSerie = this.series[0];  // Prendre la première série (car notre serie n'existe plus)
+        this.curSerie.name = "";
       }
     },
 
     selectSerie(series_name) {
       // Les noms des séries sont uniques
-      this.curSerie = this.series[0];  // Par défaut, prendre la première série (au cas ou notre for ne trouve rien qui match)
+      this.curSerie.name = "";
       for (const s of this.series) {
         if (s.name == series_name) {
           this.curSerie = {...s};
