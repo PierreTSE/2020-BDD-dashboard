@@ -23,6 +23,11 @@
       @click="showFileDiv=!showFileDiv; showInsertDiv=false;">
       <i class="fa fa-file"></i>
     </button>
+    <button type="button" class="btn btn-circle btn-xl my-2 mr-1" v-on:click="canEdit = !canEdit"
+      v-bind:class="{'btn-info': canEdit, 'btn-outline-info': !canEdit}">
+      <i class="fa fa-pencil"></i>
+    </button>
+    <!-- <button class="btn btn-info" >Edit</button> -->
 
     <p v-if="error != ''" class="h6 text-light p-2 bg-danger mt-1 mb-3">{{error}}</p>
 
@@ -74,10 +79,9 @@
       </form>    
     </div>
     
-    <button class="btn btn-info" v-on:click="canEdit = !canEdit">Edit</button>
     <div>
-    <table class="table table-scroll table-sm mt-3">
-      <thead>
+    <table class="table table-scroll table-striped table-sm mt-3">
+      <thead class="bg-info">
         <tr>
           <th scope="col">#</th>
           <th scope="col">Timestamp</th>
@@ -96,7 +100,7 @@
              {{ ++i }}
             </div>
             <div class="edit" v-if="canEdit">
-              <i class="fa fa-trash" v-on:click="deleteElement(entry.ts)"></i>
+              <i class="mon-click fa fa-trash" v-on:click="deleteElement(entry.ts)"></i>
             </div>
           </th>
           <td>{{ entry.ts }}</td>
@@ -290,7 +294,7 @@ export default {
 }
 
 .table-scroll thead {
-  background: #10bccf;
+  /* background: #10bccf; */
   color:#fff;
 }
 
@@ -307,5 +311,9 @@ export default {
   border-radius: 50%;
   font-size: 16px;
   line-height: 1;
+}
+
+.mon-click {
+  cursor: pointer;
 }
 </style>
