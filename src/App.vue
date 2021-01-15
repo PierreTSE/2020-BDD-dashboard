@@ -80,7 +80,7 @@ export default {
           this.requestLoading = false;
           return {"success": true, "data": []};
         }
-        let response = await fetch(this.$apiurl + query_string, {mode: 'no-cors'});
+        let response = await fetch(this.$apiurl + query_string, {method:'POST', mode: 'no-cors'});
         this.requestLoading = false;
         
         if (response.ok) {
