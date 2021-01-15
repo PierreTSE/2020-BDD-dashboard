@@ -147,13 +147,12 @@ export default {
       this.curSerie = this.series[0];  // Par défaut, prendre la première série (au cas ou notre for ne trouve rien qui match)
       for (const s of this.series) {
         if (s.name == series_name) {
-          this.curSerie = s;
+          this.curSerie = {...s};
           break;
         }
       }
       this.updateData([]);
       this.$refs.myTable.jsonParse({});
-
     },
 
     updateData(new_data) {
