@@ -74,6 +74,8 @@
       </form>    
     </div>
     
+    <button class="btn btn-info" v-on:click="canEdit = !canEdit">Edit</button>
+    <div>
     <table class="table table-scroll table-sm mt-3">
       <thead>
         <tr>
@@ -88,13 +90,21 @@
           <td></td>
           <td>{{agr_result.value}}</td>
         </tr>
-        <tr v-for="(entry, i) in allScores" :key="i">
-          <th scope="row">{{ ++i }}</th>
+        <tr v-for="(entry, i) in allScores" :key="i" v-cloak>
+          <th scope="row">
+            <div class="view" v-if="!canEdit">
+             {{ ++i }}
+            </div>
+            <div class="edit" v-if="canEdit">
+              <i class="fa fa-trash" v-on:click="deleteElement(entry.ts)"></i>
+            </div>
+          </th>
           <td>{{ entry.ts }}</td>
           <td>{{ entry.value }}</td>
         </tr>
       </tbody>
     </table>
+    </div>
   </div>
 
 </template>
@@ -115,9 +125,15 @@ export default {
       isCsvParsed: false,
       parsedCsvFilename: "",
       agr_result: {name:"", value: 0},
+      canEdit: false,
     }
   },
   methods: {
+
+    deleteElement(time) {
+      console.log("DELETE FROM MySeries WHERE TIMESTAMP == "+time+";");
+    },
+
     clearTable() {
       this.allScores = [];
       this.agr_result = {name:"", value: 0};
@@ -257,6 +273,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .table-scroll{

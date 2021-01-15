@@ -225,6 +225,7 @@ export default {
     /* float: right;
     width: 400px;
     margin-left: -400px; */
+
     width: 40%;
   }
 }
