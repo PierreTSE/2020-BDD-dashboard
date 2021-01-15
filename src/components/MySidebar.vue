@@ -2,8 +2,16 @@
 
   <nav class="p-2 mb-1 d-none d-xl-block border-right border-info" id="sidebar-wrapper">
     <p class="h5" v-for="(s,index) in series" :key="index" @click="onSelect(s)" v-bind:id="s.name">{{s.name}}</p>
-    <button @click="onRefresh">F5</button>
-    <button @click="onCreate">Nouvelle série</button>
+
+
+    <div class="button-wrapper">
+      <input type="text" v-if="add_mode" v-model="new_serie_name" style="width: 100%;">
+      <button @click="add_mode=true;" v-if="!add_mode">Nouvelle série</button>
+      <select v-if="add_mode" v-model="selected_type"> <option v-for="type in possible_types" :value="type" :key="type"> {{type}}</option ></select>
+      <button @click="onCreate" v-if="add_mode">Ajouter série</button>
+      <button @click="onRefresh" v-if="!add_mode">Rafraichir</button>
+    </div>
+
   </nav>   
 
 </template>
@@ -14,6 +22,7 @@
     props: ["series", "curSerie"],  // Data from parent
 
 
+
     mounted () {
       document.getElementById(this.curSerie.name).style.setProperty('font-weight', 'bold');
     },
@@ -21,25 +30,34 @@
     data () {
       return {
         possible_types: ["int32", "int64", "float32", "float64"],
+        add_mode: false,
+        new_serie_name: null,
+        selected_type: null,
       }
     },
 
     methods: {
       onRefresh() {
-        let response = this.sendRequest("SHOW ALL;");
 
-        if (response) {
-          this.refreshList(response);  
-        }
+      this.$parent.sendRequest("SHOW ALL;").then((res) => {
+        if (!res.success) {  // La requete a échoué, abandonné la mission
+          return;
+        }    
+        this.refreshList(res);  
+      });
+
       },
 
       onCreate() {
-        // TODO la requete
-        // La requete à la forme suivante : CREATE <name:string> <type:string>
-        // BTW, "type" peut être un des 4 types dans la variable this.possible_types
-        console.log("onCreate() called");
-        // Maintenant que nous avons creer une série, mettre à jour la liste
-        this.onRefresh();
+        this.add_mode = !this.add_mode;
+
+        let request = `CREATE ${this.new_serie_name} ${this.selected_type};`; 
+        this.$parent.sendRequest(request).then((res) => {
+          if (!res.success) {  // La requete a échoué, abandonné la mission
+            return;
+          }
+          this.onRefresh();
+        });
       },
         
       refreshList(json_data) {
@@ -101,16 +119,25 @@
 
 <style>
 #sidebar-wrapper {
-  width: 170px;  /* Meme valeur que le padding-left div#page-content */
+  width: 170px; /* Meme valeur que le padding-left div#page-content */
   position: fixed;
-  top: 90px;  /* Meme valeur que 'height' de MyHeader */
+  top: 90px; /* Meme valeur que 'height' de MyHeader */
   left: 0;
   bottom: 0;
-  margin :0;
+  margin: 0;
   /*min-height: 100vh;  /* Occupe tout l'ecran */
   /*margin-bottom: -70px; /* Compense l'offset vertical a cause de l'entete */
   padding-right: 20px;
-  border-width: 5px!important;
+  border-width: 5px !important;
+}
+
+.button-wrapper {
+  border-width: 5px;
+  border-top: solid;
+  border-top-color: #17a2b8 !important;
+  border-top-width: 5px;
+  padding-top: 10px;
+  width: 100%;
 }
 
 .h5 {
