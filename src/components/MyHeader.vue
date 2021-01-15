@@ -11,6 +11,15 @@
               @click="onSelect(s)" v-bind:id="'head-' + s.name">{{s.name}} 
               </b-nav-item>
           </b-navbar-nav>
+          <button class="btn btn-sm btn-light rounded-circle mr-2" @click="onRefresh()"><i class="fa fa-refresh"></i></button>
+          <button class="btn btn-sm btn-light rounded-circle" v-if="!create_form" @click="create_form = !create_form"><i class="fa fa-plus"></i></button>
+          <button class="btn btn-sm btn-light rounded-circle" v-if="create_form" @click="create_form = !create_form"><i class="fa fa-minus"></i></button>
+          <form v-if="create_form" class="mt-2" onsubmit="return false">
+            <input class="form-control form-control-sm" type="text" v-model="new_serie_name">
+            <select class="form-control form-control-sm" style="margin-top:0.2em;" v-model="selected_type"> <option v-for="type in possible_types" :value="type" :key="type"> {{type}}</option ></select>
+            <button class="btn btn-sm btn-light mt-1" @click="onCreate()"
+              :disabled="!new_serie_name || selected_type == null">Ajouter série <i class="fa fa-plus"></i></button>
+          </form>
         </b-collapse>
       </b-navbar>
     </div>
@@ -27,12 +36,29 @@
 
     data () {
       return {
+        possible_types: ["int32", "int64", "float32", "float64"],
+        create_form: false,
+        new_serie_name: "",
+        selected_type: null,
       }
     },
     methods: {
       onSelect(serie) {
         this.$parent.$refs.mySideBar.onSelect(serie);
-      }
+      },
+
+      onRefresh() {
+        this.$parent.$refs.mySideBar.onRefresh();
+      },
+
+      onCreate() {
+        this.$parent.$refs.mySideBar.new_serie_name = this.new_serie_name;
+        this.$parent.$refs.mySideBar.selected_type = this.selected_type;
+        this.$parent.$refs.mySideBar.onCreate();
+        this.create_form = false;
+        this.new_serie_name = "";
+        this.selected_type = null;
+      },
     },
     computed: {
 

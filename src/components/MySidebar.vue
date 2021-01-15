@@ -48,7 +48,7 @@
       },
 
       onCreate() {
-        this.add_mode = !this.add_mode;
+        this.add_mode = false;
 
         let request = `CREATE ${this.new_serie_name} ${this.selected_type};`; 
         this.$parent.sendRequest(request).then((res) => {
@@ -57,6 +57,9 @@
           }
           this.onRefresh();
         });
+
+        this.new_serie_name = "";
+        this.selected_type = null;
       },
         
       refreshList(json_data) {
