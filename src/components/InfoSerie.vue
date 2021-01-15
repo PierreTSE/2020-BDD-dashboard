@@ -1,8 +1,17 @@
 <template lang="html">
 
-  <div class="my-2">
-    <p class="h2 mb-0">{{curSerie.name}}</p>
-    <p class="text-muted h6">{{curSerie.type}}</p>
+  <div class="infoserie-wrapper">
+    <div class="my-2" style="display : inline-block">
+      <p class="h2 mb-0">{{curSerie.name}}</p>
+      <p class="text-muted h6">{{curSerie.type}}</p>
+    </div>
+    <div class="drop-button-wrapper" style="display: inline-block; position: absolute; padding-left: 15px">
+      <button type="button" class="btn btn-circle btn-xl my-2 mr-1" 
+      v-bind:class="{'btn-info': showDeleteDiv, 'btn-outline-info': !showDeleteDiv}"
+      @click="deleteSeries">
+      <i class="fa fa-trash"></i>
+    </button>
+    </div>
   </div>
 
 </template>
@@ -21,7 +30,12 @@
       }
     },
     methods: {
-
+      deleteSeries(){
+        let r = confirm("Voulez-vous vraiment supprimer la série : " + this.curSerie.name + " ?");
+        if (r == true) {
+          console.log("DROP " + this.curSerie.name + ";");
+        }
+      }
     },
     computed: {
 
