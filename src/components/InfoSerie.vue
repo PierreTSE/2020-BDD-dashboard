@@ -38,7 +38,7 @@
                 if (!res.success) {  // La requete a échoué, abandonné la mission
                   return;
                 } else {
-                  this.$parent.curSerie.name=null;
+                  this.$parent.curSerie.name="";
               }
         })
       }
