@@ -7,6 +7,7 @@
     <div class="d-flex container-fluid">
       <MySidebar :series="series" :curSerie="curSerie" @updateList="updateList" />  <!-- Barre de navigation à gauche -->
       <div id="page-content">
+        <div v-if="checkSeries()">
         <div id="content-left">
           <InfoSerie :curSerie="curSerie"/>
           
@@ -29,6 +30,11 @@
         <div id="content-right">
           <Table ref="myTable" :curSeries="curSerie" :error="requestError" 
             :loading="requestLoading" @updateData="updateData"/>
+        </div>
+        </div>
+        <div v-if="!checkSeries()">
+          <h1>Problème..</h1>
+          <p>Veuillez créer une série</p>
         </div>
       </div>
     </div>
@@ -60,6 +66,7 @@ export default {
       data: {},
       requestError: "",
       requestLoading: false,
+      hasASerie: false,
     }
   },
   components: {
@@ -71,6 +78,9 @@ export default {
     Table
   },
   methods: {
+    checkSeries(){
+      return !this.series.length == 0;
+    },
     async sendRequest(query_string) {
       this.requestLoading = true;
       this.requestError = "";
