@@ -5,8 +5,9 @@
     <MyHeader :series="series" />  <!-- Barre d'entete en haut -->
   
     <div class="d-flex container-fluid">
-      <MySidebar :series="series" :curSerie="curSerie" @updateList="updateList" />  <!-- Barre de navigation à gauche -->
+      <MySidebar :series="series" :curSerie="curSerie" @updateList="updateList" @selectSerie="selectSerie"/>  <!-- Barre de navigation à gauche -->
       <div id="page-content">
+        <div v-if="checkSeries()">
         <div id="content-left">
           <InfoSerie :curSerie="curSerie"/>
           
@@ -29,6 +30,11 @@
         <div id="content-right">
           <Table ref="myTable" :curSeries="curSerie" :error="requestError" 
             :loading="requestLoading" @updateData="updateData"/>
+        </div>
+        </div>
+        <div v-if="!checkSeries()">
+          <h1>Bienvenue sur notre application</h1>
+          <p>Veuillez créer ou sélectionner une série pour commencer</p>
         </div>
       </div>
     </div>
@@ -60,6 +66,7 @@ export default {
       data: {},
       requestError: "",
       requestLoading: false,
+      hasASerie: false,
     }
   },
   components: {
@@ -71,6 +78,9 @@ export default {
     Table
   },
   methods: {
+    checkSeries(){
+      return !this.curSerie.name == "";
+    },
     async sendRequest(query_string) {
       this.requestLoading = true;
       this.requestError = "";
@@ -80,11 +90,12 @@ export default {
           this.requestLoading = false;
           return {"success": true, "data": []};
         }
-        let response = await fetch(this.$apiurl + query_string, {method:'POST', mode: 'no-cors'});
-        this.requestLoading = false;
+        let response = await fetch(this.$apiurl + query_string, {method: 'POST'});
         
-        if (response.ok) {
-          const data = await response.json();
+        this.requestLoading = false;
+        const data = await response.json();
+        
+        if (response.ok) {  // 200
           console.log("RESPONSE : ", data);
           if (data["success"] == true) {
             return data;
@@ -95,9 +106,14 @@ export default {
               this.requestError = "Request failed. Unknown error (no message).";
             return {"success": false, "error": data.error};
           }
-        } else {
-          console.error("ERROR (BAD NETWORK RESPONSE).");
-          this.requestError = "Request failed. Bad Network Response.";
+        } else {  // 400 & 500
+          console.error("ERROR (" + data.error.code + ")." + JSON.stringify(data.error));
+          
+          if (data.error && data.error.message)
+            this.requestError = data.error.message;
+          else
+            this.requestError = "Request failed. Unknown error (" + response.status + ").";
+
           this.requestLoading = false;
           return {"success": false, "error": {'message': "BAD NETWORK RESPONSE"}};
         }
@@ -127,7 +143,7 @@ export default {
       }
     },
 
-    loadSeries(series_name) {
+    selectSerie(series_name) {
       // Les noms des séries sont uniques
       this.curSerie = this.series[0];  // Par défaut, prendre la première série (au cas ou notre for ne trouve rien qui match)
       for (const s of this.series) {
@@ -225,6 +241,7 @@ export default {
     /* float: right;
     width: 400px;
     margin-left: -400px; */
+
     width: 40%;
   }
 }

@@ -23,6 +23,11 @@
       @click="showFileDiv=!showFileDiv; showInsertDiv=false;">
       <i class="fa fa-file"></i>
     </button>
+    <button type="button" class="btn btn-circle btn-xl my-2 mr-1" v-on:click="canEdit = !canEdit"
+      v-bind:class="{'btn-info': canEdit, 'btn-outline-info': !canEdit}">
+      <i class="fa fa-pencil"></i>
+    </button>
+    <!-- <button class="btn btn-info" >Edit</button> -->
 
     <p v-if="error != ''" class="h6 text-light p-2 bg-danger mt-1 mb-3">{{error}}</p>
 
@@ -74,8 +79,9 @@
       </form>    
     </div>
     
-    <table class="table table-scroll table-sm mt-3">
-      <thead>
+    <div>
+    <table class="table table-scroll table-striped table-sm mt-3">
+      <thead class="bg-info">
         <tr>
           <th scope="col">#</th>
           <th scope="col">Timestamp</th>
@@ -88,13 +94,21 @@
           <td></td>
           <td>{{agr_result.value}}</td>
         </tr>
-        <tr v-for="(entry, i) in allScores" :key="i">
-          <th scope="row">{{ ++i }}</th>
+        <tr v-for="(entry, i) in allScores" :key="i" v-cloak>
+          <th scope="row">
+            <div class="view" v-if="!canEdit">
+             {{ ++i }}
+            </div>
+            <div class="edit" v-if="canEdit">
+              <i class="mon-click fa fa-trash" v-on:click="deleteElement(entry.ts)"></i>
+            </div>
+          </th>
           <td>{{ entry.ts }}</td>
           <td>{{ entry.value }}</td>
         </tr>
       </tbody>
     </table>
+    </div>
   </div>
 
 </template>
@@ -115,9 +129,15 @@ export default {
       isCsvParsed: false,
       parsedCsvFilename: "",
       agr_result: {name:"", value: 0},
+      canEdit: false,
     }
   },
   methods: {
+
+    deleteElement(time) {
+      console.log("DELETE FROM MySeries WHERE TIMESTAMP == "+time+";");
+    },
+
     clearTable() {
       this.allScores = [];
       this.agr_result = {name:"", value: 0};
@@ -258,6 +278,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
 .table-scroll{
   width: 100%;
@@ -273,7 +294,7 @@ export default {
 }
 
 .table-scroll thead {
-  background: #10bccf;
+  /* background: #10bccf; */
   color:#fff;
 }
 
@@ -290,5 +311,9 @@ export default {
   border-radius: 50%;
   font-size: 16px;
   line-height: 1;
+}
+
+.mon-click {
+  cursor: pointer;
 }
 </style>
