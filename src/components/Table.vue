@@ -90,7 +90,7 @@ export default {
   methods: {
 
     deleteElement(time) {
-      console.log("Timestamp "+time+" selected");
+      console.log("DELETE FROM MySeries WHERE TIMESTAMP == "+time+";");
     },
 
     clearTable() {
