@@ -2,7 +2,7 @@
 
   <div>
 
-    <MyHeader :series="series" />  <!-- Barre d'entete en haut -->
+    <MyHeader :series="series" :curSerie="curSerie" @selectSerie="selectSerie"/>  <!-- Barre d'entete en haut -->
   
     <div class="d-flex container-fluid">
       <MySidebar ref="mySideBar" :series="series" :curSerie="curSerie" @updateList="updateList" @selectSerie="selectSerie"/>  <!-- Barre de navigation à gauche -->
@@ -34,7 +34,7 @@
         </div>
         <div v-if="!checkSeries()">
           <h1>Bienvenue sur notre application</h1>
-          <p>Veuillez créer ou sélectionner une série pour commencer</p>
+          <p>Veuillez créer ou sélectionner une série pour commencer.</p>
         </div>
       </div>
     </div>
@@ -61,12 +61,12 @@ export default {
         {"name": "SerieTemp", "type":"float32"},
         {"name": "SerieFun", "type":"int32"},
       ],
-      curSerie: {},
+      curSerie: {'name': '', 'type':""},
       showDebug: false,
       data: {},
       requestError: "",
       requestLoading: false,
-      hasASerie: false,
+      // hasASerie: false,
     }
   },
   components: {
@@ -78,10 +78,6 @@ export default {
     Table
   },
   methods: {
-    checkSeries() {
-      return !this.curSerie.name == "";
-    },
-
     async sendRequest(query_string) {
       this.requestLoading = true;
       this.requestError = "";
@@ -124,6 +120,10 @@ export default {
         this.requestLoading = false;
         return {"success": false, "error": err};
       }
+    },
+
+    checkSeries() {
+      return !this.curSerie.name == "";
     },
 
     updateList(new_list) {
