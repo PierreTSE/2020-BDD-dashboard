@@ -169,7 +169,6 @@ export default {
         this.allScores.sort(function(a, b) {
           return (a.ts - b.ts);
         });
-        // console.log(this.allScores);
 
         this.$emit('updateData', this.allScores);
 
@@ -208,7 +207,6 @@ export default {
         self.$papa.parse(file, {
             complete: function(results) {
               self.csvScores = results.data;
-              console.log(self.csvScores);
               self.isCsvParsed = true;  // Rends le bouton "Inserer les données" clickable
             }
           });
