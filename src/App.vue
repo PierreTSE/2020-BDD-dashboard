@@ -5,7 +5,7 @@
     <MyHeader :series="series" />  <!-- Barre d'entete en haut -->
   
     <div class="d-flex container-fluid">
-      <MySidebar :series="series" :curSerie="curSerie" @updateList="updateList" @selectSerie="selectSerie"/>  <!-- Barre de navigation à gauche -->
+      <MySidebar ref="mySideBar" :series="series" :curSerie="curSerie" @updateList="updateList" @selectSerie="selectSerie"/>  <!-- Barre de navigation à gauche -->
       <div id="page-content">
         <div v-if="checkSeries()">
         <div id="content-left">
@@ -61,7 +61,7 @@ export default {
         {"name": "SerieTemp", "type":"float32"},
         {"name": "SerieFun", "type":"int32"},
       ],
-      curSerie: {"name": "SerieFun", "type":"int32"},
+      curSerie: {},
       showDebug: false,
       data: {},
       requestError: "",
@@ -151,11 +151,16 @@ export default {
           break;
         }
       }
+      this.updateData([]);
+      this.$refs.myTable.jsonParse({});
+
     },
 
     updateData(new_data) {
       this.data = new_data;
-      this.$refs.myGraph.setGraphValues(this.data);
+      if (this.checkSeries()) {
+        this.$refs.myGraph.setGraphValues(this.data);
+      }
     },
 
     // DEBUG //

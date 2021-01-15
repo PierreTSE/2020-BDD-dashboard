@@ -4,13 +4,13 @@
     <p class="h5" v-for="(s,index) in series" :key="index" @click="onSelect(s)" v-bind:id="s.name">{{s.name}}</p>
 
 
-    <div class="button-wrapper">
-      <input type="text" v-if="add_mode" v-model="new_serie_name" style="width: 100%;">
-      <button class="btn btn-info m-1" @click="add_mode=true;" v-if="!add_mode">Nouvelle série</button>
-      <select v-if="add_mode" v-model="selected_type"> <option v-for="type in possible_types" :value="type" :key="type"> {{type}}</option ></select>
-      <button class="btn btn-info m-1" @click="onCreate" v-if="add_mode">Ajouter série</button>
-      <button class="btn btn-info m-1" @click="onRefresh" v-if="!add_mode">Rafraichir</button>
-    </div>
+    <form class="button-wrapper">
+      <input class="form-control" type="text" v-if="add_mode" v-model="new_serie_name">
+      <button class="btn btn-info btn-block " @click="add_mode=true;" v-if="!add_mode">Nouvelle série</button>
+      <select class="form-control" style="margin-top:0.5em;" v-if="add_mode" v-model="selected_type"> <option v-for="type in possible_types" :value="type" :key="type"> {{type}}</option ></select>
+      <button class="btn btn-info btn-block" style="margin-top:0.5em;" @click="onCreate" v-if="add_mode">Ajouter série</button>
+      <button class="btn btn-info btn-block" @click="onRefresh" v-if="!add_mode">Rafraichir</button>
+    </form>
 
   </nav>   
 
@@ -24,7 +24,6 @@
 
 
     mounted () {
-      document.getElementById(this.curSerie.name).style.setProperty('font-weight', 'bold');
     },
     
     data () {
@@ -86,7 +85,9 @@
       },
 
       onSelect(serie) {
-        document.getElementById(this.curSerie.name).style.setProperty('font-weight', 'normal');
+        if (this.$parent.checkSeries()) {
+          document.getElementById(this.curSerie.name).style.setProperty('font-weight', 'normal');
+        }
         document.getElementById(serie.name).style.setProperty('font-weight', 'bold');
         this.$emit('selectSerie', serie.name);
       },

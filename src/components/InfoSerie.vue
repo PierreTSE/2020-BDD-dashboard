@@ -7,7 +7,6 @@
     </div>
     <div class="drop-button-wrapper" style="display: inline-block; position: absolute; padding-left: 15px">
       <button type="button" class="btn btn-circle btn-xl my-2 mr-1" 
-      v-bind:class="{'btn-info': showDeleteDiv, 'btn-outline-info': !showDeleteDiv}"
       @click="deleteSeries">
       <i class="fa fa-trash"></i>
     </button>
@@ -31,15 +30,16 @@
     },
     methods: {
       deleteSeries(){
-        let r = confirm("Voulez-vous vraiment supprimer la série : " + this.$parent.curSerie.name + " ?");
-        if (r == true) {
+        let confirmation = confirm("Voulez-vous vraiment supprimer la série : " + this.$parent.curSerie.name + " ?");
+        if (confirmation) {
           let request ="DROP " + this.$parent.curSerie.name + ";";
           this.$parent.sendRequest(request).then((res) => {
-                if (!res.success) {  // La requete a échoué, abandonné la mission
-                  return;
-                } else {
-                  this.$parent.curSerie.name="";
-              }
+            if (!res.success) {  // La requete a échoué, abandonné la mission
+              return;
+            } else {
+              this.$parent.curSerie.name="";
+              this.$parent.$refs.mySideBar.refreshList();
+            }
         })
       }
     }
