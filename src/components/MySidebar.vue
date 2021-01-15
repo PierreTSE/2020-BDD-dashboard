@@ -6,10 +6,10 @@
 
     <div class="button-wrapper">
       <input type="text" v-if="add_mode" v-model="new_serie_name" style="width: 100%;">
-      <button @click="add_mode=true;" v-if="!add_mode">Nouvelle série</button>
+      <button class="btn btn-info m-1" @click="add_mode=true;" v-if="!add_mode">Nouvelle série</button>
       <select v-if="add_mode" v-model="selected_type"> <option v-for="type in possible_types" :value="type" :key="type"> {{type}}</option ></select>
-      <button @click="onCreate" v-if="add_mode">Ajouter série</button>
-      <button @click="onRefresh" v-if="!add_mode">Rafraichir</button>
+      <button class="btn btn-info m-1" @click="onCreate" v-if="add_mode">Ajouter série</button>
+      <button class="btn btn-info m-1" @click="onRefresh" v-if="!add_mode">Rafraichir</button>
     </div>
 
   </nav>   
@@ -136,7 +136,8 @@
   border-top: solid;
   border-top-color: #17a2b8 !important;
   border-top-width: 5px;
-  padding-top: 10px;
+  padding-top: 13px;
+  margin-top: 15px;
   width: 100%;
 }
 
