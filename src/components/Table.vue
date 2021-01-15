@@ -226,7 +226,7 @@ export default {
       let request = "INSERT INTO " + this.curSeries.name + " VALUES (("+ timestamp +", " + this.value+"));";
       bufferScores.push({
         ts: timestamp,
-        value: parseInt(this.value),
+        value: parseFloat(this.value),
       });
 
       this.$parent.sendRequest(request).then((res) => {
@@ -256,8 +256,8 @@ export default {
           continue;
         }
         bufferScores.push({
-          ts: parseInt(this.csvScores[i][0]),
-          value: parseInt(this.csvScores[i][1]),
+          ts: parseFloat(this.csvScores[i][0]),
+          value: parseFloat(this.csvScores[i][1]),
         });
 
         request += "("+ this.csvScores[i][0] +", " + this.csvScores[i][1]+")," ;
