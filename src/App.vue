@@ -33,8 +33,8 @@
         </div>
         </div>
         <div v-if="!checkSeries()">
-          <h1>Problème..</h1>
-          <p>Veuillez créer une série</p>
+          <h1>Bienvenue sur notre application</h1>
+          <p>Veuillez créer ou sélectionner une série pour commencer</p>
         </div>
       </div>
     </div>
@@ -79,7 +79,7 @@ export default {
   },
   methods: {
     checkSeries(){
-      return !this.series.length == 0;
+      return !this.curSerie.name == "";
     },
     async sendRequest(query_string) {
       this.requestLoading = true;
