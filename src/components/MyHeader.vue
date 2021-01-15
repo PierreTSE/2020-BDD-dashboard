@@ -49,7 +49,6 @@ header {
   width: 100%;
   background-color: #fff;
   padding: 5px;
-  /* border-bottom: 3px solid black; */
   z-index: 10;
 }
 @media only screen and (min-width: 1200px) {

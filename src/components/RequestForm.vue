@@ -135,13 +135,12 @@ export default {
     }),
     methods: {
         updateRequest() {
-            // TODO FIX pour chrome
-            //initialization
+            // Initialization
             let prefix = "SELECT FROM " + this.serie + " ";
             let conditions = [];
             let conditions_processed = "";
 
-            //load conditions for the request
+            // Load conditions for the request
             if (this.request_mode_all) {
                 if (this.date_exact) {
                     if (this.time_exact.length == 5) this.time_exact += ":00";

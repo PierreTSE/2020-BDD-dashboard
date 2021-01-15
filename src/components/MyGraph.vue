@@ -19,7 +19,6 @@
       :min="0" 
       v-if="x_values.length > 2" >
     </TrendChart>
-    <!-- <button @click="DEBUG_addValue()">DEBUG(add value)</button> -->
   </div>
   
 </template>

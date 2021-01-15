@@ -136,7 +136,6 @@ export default {
 
     deleteElement(time) {
       const query_string = "DELETE FROM MySeries WHERE TIMESTAMP == " + time + ";";
-      console.log(query_string);
       this.$parent.sendRequest(query_string).then((res) => {
         if (!res.success) {
           return;
@@ -147,6 +146,8 @@ export default {
             break;
           }
         }
+
+        this.$emit('updateData', this.allScores);
       });
     },
 
@@ -304,7 +305,6 @@ export default {
 }
 
 .table-scroll thead {
-  /* background: #10bccf; */
   color:#fff;
 }
 

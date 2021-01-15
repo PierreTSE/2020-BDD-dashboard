@@ -21,8 +21,6 @@
     name: 'MySidebar',
     props: ["series", "curSerie"],  // Data from parent
 
-
-
     mounted () {
     },
     
@@ -37,14 +35,12 @@
 
     methods: {
       onRefresh() {
-
-      this.$parent.sendRequest("SHOW ALL;").then((res) => {
-        if (!res.success) {  // La requete a échoué, abandonné la mission
-          return;
-        }    
-        this.refreshList(res);  
-      });
-
+        this.$parent.sendRequest("SHOW ALL;").then((res) => {
+          if (!res.success) {  // La requete a échoué, abandonnez la mission
+            return;
+          }    
+          this.refreshList(res);  
+        });
       },
 
       onCreate() {
@@ -52,7 +48,7 @@
 
         let request = `CREATE ${this.new_serie_name} ${this.selected_type};`; 
         this.$parent.sendRequest(request).then((res) => {
-          if (!res.success) {  // La requete a échoué, abandonné la mission
+          if (!res.success) {  // La requete a échoué, abandonnez la mission
             return;
           }
           this.onRefresh();
@@ -91,29 +87,6 @@
         document.getElementById(serie.name).style.setProperty('font-weight', 'bold');
         this.$emit('selectSerie', serie.name);
       },
-
-      async sendRequest(query_string) {
-            console.log("REQUEST :", query_string);
-            try {
-                let response = await fetch("http://localhost:8080/query?query=" + query_string);
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log("RESPONSE : ", data);
-                    if (data["success"] == true) {
-                      console.log("Data received: ", data["data"]);
-                      return response;
-                    } else {
-                      this.show_alert = true;
-                      throw new Error("ERROR(S) : " + JSON.stringify(data["error"]));
-                    }
-                } else {
-                  throw new Error("ERROR (BAD NETWORK RESPONSE).");
-                }
-            } catch (err) {
-                console.error("ERROR : ", err);
-                return undefined;
-            }
-        },
     }
 }
 </script>
