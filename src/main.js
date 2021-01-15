@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import VuePapaParse from 'vue-papa-parse'
+
 import App from './App.vue'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -8,6 +10,11 @@ Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
 
+Vue.use(VuePapaParse)
+
+Vue.prototype.$apiurl = "http://localhost:8082/query?query=";
+Vue.prototype.$offlineMode = true;  // Si true, les requetes ne seront pas envoyés à l'api
 new Vue({
   render: h => h(App),
 }).$mount('#app')
+

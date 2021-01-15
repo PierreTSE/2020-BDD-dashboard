@@ -1,8 +1,8 @@
 <template lang="html">
 
-  <div class="py-4">
-    <h2>[Description / Informations sur la Série ici]</h2>
-    <p>Blabla</p>
+  <div class="my-2">
+    <p class="h2 mb-0">{{curSerie.name}}</p>
+    <p class="text-muted h6">{{curSerie.type}}</p>
   </div>
 
 </template>
@@ -11,7 +11,7 @@
 
   export default  {
     name: 'InfoSerie',
-    props: [],
+    props: ["curSerie"],
     mounted () {
 
     },
