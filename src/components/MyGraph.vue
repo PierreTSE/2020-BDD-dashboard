@@ -14,13 +14,12 @@
         horizontalLines: true
       }"
       :labels="{
-        xLabels: x_values,
         yLabels: 5,
       }"
       :min="0" 
       v-if="x_values.length > 2" >
     </TrendChart>
-    <button @click="DEBUG_addValue()">DEBUG(add value)</button>
+    <!-- <button @click="DEBUG_addValue()">DEBUG(add value)</button> -->
   </div>
   
 </template>
@@ -41,12 +40,13 @@
       y_values: [0, 0],
     }),
     methods: {
-      async DEBUG_addValue(){
+      async DEBUG_addValue() {
         this.x_values.push(this.y_values.length);
         this.y_values.push(Math.random());
       },
-      setGraphValues(data){
-        this.x_values = this.y_values = null;
+      setGraphValues(data) {
+        this.x_values = [];
+        this.y_values = [];
         data.forEach(element => {
           this.x_values.push(element.ts);
           this.y_values.push(element.value);

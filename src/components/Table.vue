@@ -1,48 +1,80 @@
 <template>
   <div class="container">
-    <h1 class="mt-4 text-center">Table</h1>
-    <!-- <form>
-      <div class="form-group">
-        <label for="name">Timestamp</label>
-        <input
-          type="text"
-          placeholder="Ex: Timestamp 1"
-          v-model="name"
-          class="form-control"
-        />
+    <button v-if="error == '' && !loading" type="button" class="btn btn-outline-success btn-circle btn-xl my-2 mr-1" disabled>
+       <i class="fa fa-check"></i>
+    </button>
+
+    <button v-if="loading" type="button" class="btn btn-outline btn-circle btn-xl my-2 mr-1" disabled>
+       <i class="fa fa-spinner fa-pulse"></i>
+    </button>
+    
+    <button v-if="error != '' && !loading" type="button" class="btn btn-outline-danger btn-circle btn-xl my-2 mr-1" disabled>
+       <i class="fa fa-exclamation"></i>
+    </button>
+
+    <button type="button" class="btn btn-circle btn-xl my-2 mr-1" 
+      v-bind:class="{'btn-info': showInsertDiv, 'btn-outline-info': !showInsertDiv}"
+      @click="showInsertDiv=!showInsertDiv; showFileDiv=false;">
+      <i class="fa fa-plus"></i>
+    </button>
+
+    <button type="button" class="btn btn-circle btn-xl my-2 mr-1" 
+      v-bind:class="{'btn-info': showFileDiv, 'btn-outline-info': !showFileDiv}"
+      @click="showFileDiv=!showFileDiv; showInsertDiv=false;">
+      <i class="fa fa-file"></i>
+    </button>
+
+    <p v-if="error != ''" class="h6 text-light p-2 bg-danger mt-1 mb-3">{{error}}</p>
+
+    <div v-if="showFileDiv || showInsertDiv" class=" conatiner-fluid bg-info p-2 mt-2 mx-3">
+      <div v-if="showFileDiv">
+        <p class="text-light h5 pb-1 border-bottom">Importer un fichier CSV</p>
+        <input type="file" accept=".csv" @change="loadTextFromFile" style="margin-bottom : 5px"/><br>
+        <button v-if="!isCsvParsed" type="button" class="btn btn-dark mt-2" disabled>
+          Aucun fichier chargé
+        </button>
+        <button v-if="isCsvParsed" type="button" @click="onCSVSubmit" class="btn btn-dark mt-2">
+          Insérer les données de {{parsedCsvFilename}}
+        </button>
       </div>
-      <div class="form-group">
-        <label for="value">Value</label>
-        <input
-          type="number"
-          placeholder="Ex: 53453"
-          v-model="value"
-          class="form-control"
-        />
-      </div>
-      <div class="form-group">
-        <label for="date">Date</label>
-        <input 
-          type="date" 
-          v-model="date"
-          class="form-control"
-        />
-      </div>
-      <div>
-        <label for="time">Time</label>
-        <input
-          type="time"
-          v-model="time"
-          class="form-control"
-          step="1"
-        />
-      </div>
-     <button type="button" @click="onSubmit" class="btn btn-dark">
-        Submit
-      </button>
-    </form> -->
-     
-    <table class="table table-sm mt-5">
+
+      <!-- Add row to table div -->
+      <form v-if="showInsertDiv" action="#">
+      <p class="text-light h5 pb-1 border-bottom">Ajouter une entrée</p>
+        <div class="form-group row my-2 mx-auto">
+          <label for="date" class="col-3 text-light h6 col-form-label">Date</label>
+          <input 
+            type="date" required
+            v-model="date"
+            class="form-control col"
+          />
+        </div>
+        <div class="form-group row my-2 mx-auto">
+          <label for="time" class="col-3 text-light h6 col-form-label">Heure</label>
+          <input
+            type="time" required
+            v-model="time"
+            class="form-control col"
+            step="1"
+          />
+        </div>
+        <div class="form-group row my-2 mx-auto">
+          <label for="value" class="col-3 text-light h6 col-form-label">Valeur</label>
+          <input
+            type="number" required
+            placeholder="Ex: 53453"
+            v-model="value"
+            class="form-control col"
+          @keyup.enter="onEnterClicked()"/>
+        </div>
+      <button type="button" @click="onTimestampSubmit" class="btn btn-dark mt-2 ml-1 px-4" 
+        :disabled="date == '' || time.length < 5">
+          Submit
+        </button>
+      </form>    
+    </div>
+    
+    <table class="table table-scroll table-sm mt-3">
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -52,7 +84,7 @@
       </thead>
       <tbody>
         <tr v-if="agr_result.name != ''">
-          <th scope="row">{{agr_result.name}}</th>
+          <th scope="row" >{{agr_result.name}}</th>
           <td></td>
           <td>{{agr_result.value}}</td>
         </tr>
@@ -64,14 +96,24 @@
       </tbody>
     </table>
   </div>
+
 </template>
 
 <script>
 export default {
   name: "Table",
+  props: ["curSeries", "error", "loading"],  // Data from parent
   data() {
     return {
-      allScores: [],
+      allScores: [], 
+      showInsertDiv: false,
+      showFileDiv: false,
+      date: "",
+      time: "00:00:00",
+      value: 0,
+      csvScores: [],
+      isCsvParsed: false,
+      parsedCsvFilename: "",
       agr_result: {name:"", value: 0},
     }
   },
@@ -83,37 +125,170 @@ export default {
 
     jsonParse(json_input) {
       this.clearTable();  // Effacer les données déjà présentes
-      let obj = JSON.parse(json_input);
-      if (obj.success) {
-        for (let i = 0; i < obj.data.values.length; i++) {  // Pour chaque donnée dans le JSON
+      if (json_input.success) {
+        for (let i = 0; i < json_input.data.values.length; i++) {  // Pour chaque donnée dans le JSON
           this.allScores.push({
-            ts: obj.data.values[i].timestamp,
-            value: obj.data.values[i].value,
+            ts: json_input.data.values[i].timestamp,
+            value: json_input.data.values[i].value,
           });
         }
 
-        if (obj.data.min) {
-          this.agr_result = {name: "MIN", value: obj.data.min};
+        // Trier les scores par timestamp (croissant)
+        this.allScores.sort(function(a, b) {
+          return (a.ts - b.ts);
+        });
+        // console.log(this.allScores);
+
+        this.$emit('updateData', this.allScores);
+
+        if (json_input.data.min) {
+          this.agr_result = {name: "MIN", value: json_input.data.min};
         }
-        if (obj.data.max) {
-          this.agr_result = {name: "MAX", value: obj.data.max};
+        if (json_input.data.max) {
+          this.agr_result = {name: "MAX", value: json_input.data.max};
         }
-        if (obj.data.sum) {
-          this.agr_result = {name: "SUM", value: obj.data.sum};
+        if (json_input.data.sum) {
+          this.agr_result = {name: "SUM", value: json_input.data.sum};
         }
-        if (obj.data.avg) {
-          this.agr_result = {name: "AVG", value: obj.data.avg};
+        if (json_input.data.avg) {
+          this.agr_result = {name: "AVG", value: json_input.data.avg};
         }
-        if (obj.data.count) {
-          this.agr_result = {name: "COUNT", value: obj.data.count};
+        if (json_input.data.count) {
+          this.agr_result = {name: "COUNT", value: json_input.data.count};
         }
       }
+    },
 
-      // Trier les scores par timestamp (croissant)
-      this.allScores.sort(function(a, b) {
-        return (a.ts - b.ts);
+    loadTextFromFile(ev) {
+      this.isCsvParsed = false;  // Désactive le bouton "Inserer les données"
+
+      const file = ev.target.files[0];
+      this.parsedCsvFilename = file.name;
+      const reader = new FileReader();
+      let self = this;
+
+      // Verifier que c'est bien un fichier csv
+      if(file.name.split(".").pop() != 'csv'){//check if file extension is csv
+        alert( "Veuillez sélectionner un fichier CSV", "error");
+      } else {
+        // Cette fonction sera appélée quand le reader aura fini de lire le csv
+        reader.onload = function() {
+        self.$papa.parse(file, {
+            complete: function(results) {
+              self.csvScores = results.data;
+              console.log(self.csvScores);
+              self.isCsvParsed = true;  // Rends le bouton "Inserer les données" clickable
+            }
+          });
+        };
+        
+        // Lire le fichier choisis
+        reader.readAsText(file);
+      }
+    },
+
+    onTimestampSubmit() {
+      let bufferScores = [];
+      if (this.time.length == 5) this.time += ":00";
+      let timestamp = this.date + "T" + this.time + ".000Z";
+      timestamp = Date.parse(timestamp)/1000;
+      let request = "INSERT INTO " + this.curSeries.name + " VALUES (("+ timestamp +", " + this.value+"));";
+      bufferScores.push({
+        ts: timestamp,
+        value: parseInt(this.value),
       });
-    }
+
+      this.$parent.sendRequest(request).then((res) => {
+        if (!res.success) {  // La requete a échoué, abandonné la mission
+          return;
+        }
+        
+        this.allScores.push(...bufferScores);
+        
+        // Trier les scores par timestamp (croissant)
+        this.allScores.sort(function(a, b) {
+          return (a.ts - b.ts);
+        });
+
+        this.$emit('updateData', this.allScores);
+      
+      });
+    },
+
+    onCSVSubmit() {
+      let bufferScores = [];
+      let request = "INSERT INTO " + this.curSeries.name + " VALUES (";
+
+      for (let i = 0; i <= this.csvScores.length-1; i++) {  // Every data in the CSV
+        // Check that this is valid data
+        if (this.csvScores[i].length != 2 || !/^[0-9]+$/.test(this.csvScores[i][0]) || !/^[0-9]+$/.test(this.csvScores[i][1])) {
+          continue;
+        }
+        bufferScores.push({
+          ts: parseInt(this.csvScores[i][0]),
+          value: parseInt(this.csvScores[i][1]),
+        });
+
+        request += "("+ this.csvScores[i][0] +", " + this.csvScores[i][1]+")," ;
+      }
+      request += ");";
+
+      this.$parent.sendRequest(request).then((res) => {
+        if (!res.success) {  // La requete a échoué, abandonné la mission
+          return;
+        }
+
+        this.allScores.push(...bufferScores);
+        
+        // Trier les scores par timestamp (croissant)
+        this.allScores.sort(function(a, b) {
+          return (a.ts - b.ts);
+        });
+
+        this.$emit('updateData', this.allScores);
+      });
+
+    },
+
+    onEnterClicked(){
+      this.onTimestampSubmit();
+    },
+
   },
 };
 </script>
+
+<style scoped>
+.table-scroll{
+  width: 100%;
+}
+.table-scroll tbody{
+  display: block;
+  overflow: auto;
+  height: 75vh;
+}
+
+.table-scroll thead tr {
+   display: block;
+}
+
+.table-scroll thead {
+  background: #10bccf;
+  color:#fff;
+}
+
+.table-scroll th, .table-scroll td {
+  padding: 5px;
+  text-align: left;
+  width: 200px;
+}
+
+.btn-circle.btn-xl {
+  width: 40px;
+  height: 40px;
+  padding: 10px 12px;
+  border-radius: 50%;
+  font-size: 16px;
+  line-height: 1;
+}
+</style>

@@ -23,11 +23,12 @@
             </div>
           </div>
 
-          <RequestForm ref="requestForm"/>
-          <MyGraph />
+          <RequestForm ref="requestForm" :serie="curSerie.name"/>
+          <MyGraph ref="myGraph"/>
         </div>
         <div id="content-right">
-          <Table ref="myTable"/>
+          <Table ref="myTable" :curSeries="curSerie" :error="requestError" 
+            :loading="requestLoading" @updateData="updateData"/>
         </div>
       </div>
     </div>
@@ -55,7 +56,10 @@ export default {
         {"name": "SerieFun", "type":"int32"},
       ],
       curSerie: {"name": "SerieFun", "type":"int32"},
-      showDebug: true,
+      showDebug: false,
+      data: {},
+      requestError: "",
+      requestLoading: false,
     }
   },
   components: {
@@ -67,6 +71,44 @@ export default {
     Table
   },
   methods: {
+    async sendRequest(query_string) {
+      this.requestLoading = true;
+      this.requestError = "";
+      console.log("REQUEST :", query_string);
+      try {
+        if (this.$offlineMode) {
+          this.requestLoading = false;
+          return {"success": true, "data": []};
+        }
+        let response = await fetch(this.$apiurl + query_string);
+        this.requestLoading = false;
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log("RESPONSE : ", data);
+          if (data["success"] == true) {
+            return data;
+          } else {
+            if (data.error.message)
+              this.requestError = data.error.message;
+            else
+              this.requestError = "Request failed. Unknown error (no message).";
+            return {"success": false, "error": data.error};
+          }
+        } else {
+          console.error("ERROR (BAD NETWORK RESPONSE).");
+          this.requestError = "Request failed. Bad Network Response.";
+          this.requestLoading = false;
+          return {"success": false, "error": {'message': "BAD NETWORK RESPONSE"}};
+        }
+      } catch (err) {
+        console.error("ERROR : ", err);
+        this.requestError = "Request failed. Connection error.";
+        this.requestLoading = false;
+        return {"success": false, "error": err};
+      }
+    },
+
     updateList(new_list) {
       // Met à jour la liste présente dans la sidebar / header
       // Chaque élément doit avoir la forme {"name": string, "type": string}
@@ -96,6 +138,11 @@ export default {
       }
     },
 
+    updateData(new_data) {
+      this.data = new_data;
+      this.$refs.myGraph.setGraphValues(this.data);
+    },
+
     // DEBUG //
     on_DEBUG_Table_press() {
       // Generer des données aléatoires
@@ -103,15 +150,15 @@ export default {
         "success" : true,
         "data" : {
           "values": [
-            {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
-            {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
-            {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
-            {"timestamp": Math.floor(Math.random()*1000), "value": Math.floor(Math.random()*100)},
+            {"timestamp": Math.floor(Math.random()*34000000)+1577836800, "value": Math.floor(Math.random()*100)},
           ]
         }
       };
-      this.series.push("azerty");
-      this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
+      while(Math.random() > 0.1) {
+        fake_data.data.values.push({"timestamp": Math.floor(Math.random()*34000000)+1577836800, "value": Math.floor(Math.random()*100)});
+      }
+
+      this.$refs.myTable.jsonParse(fake_data);
     },
 
     on_DEBUG_Request_press() {
@@ -133,7 +180,7 @@ export default {
       };
       fake_data.data[agr_op[Math.floor(Math.random() * agr_op.length)]] = Math.floor(Math.random() * 100);
       
-      this.$refs.myTable.jsonParse(JSON.stringify(fake_data));
+      this.$refs.myTable.jsonParse(fake_data);
     }
     // FIN DEBUG //
   }
@@ -146,7 +193,7 @@ export default {
 
 <style scoped>
 #page-content {
-  padding-top: 70px;  /* Meme valeur que le height de MyHeader */
+  padding-top: 90px;  /* Meme valeur que le height de MyHeader */
   padding-left: 170px;  /* Meme valeur que le width du Sidebar */
   min-width: 0;
   width: 100%;

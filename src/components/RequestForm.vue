@@ -3,13 +3,6 @@
         <h2>Critères de recherche :</h2>
         <p id="requestDebug" class="h6 bg-warning p-1" v-if="show_request">{{ request }}</p>
         
-        <div class="alert alert-danger alert-dismissible" role="alert" v-if="show_alert">
-            Erreur de syntaxe dans la requete !
-            <div v-on:click="show_alert = !show_alert" class="close">
-                <p>&times;</p>
-            </div>
-        </div>
-
         <div> 
 
             <label class="my-container">requête manuelle
@@ -47,16 +40,35 @@
             </form>
         </div>
         
-        <form class="form-group form-inline">
-            <input type="date" class="form-control flex-fill mr-1" v-model="date_before" v-if="date_before_enable" @change="updateRequest()"/>
-            <input type="time" class="form-control mr-2" step="1" v-model="time_before" v-if="date_before_enable" @change="updateRequest()">
-            <input type="date" class="form-control flex-fill mr-1" v-model="date_after" v-if="date_after_enable" @change="updateRequest()"/>
-            <input type="time" class="form-control mr-2" step="1" v-model="time_after" v-if="date_after_enable" @change="updateRequest()"/>
-
-            <input type="date" class="form-control flex-fill mr-1" v-model="date_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
-            <input type="time" class="form-control mr-2" step="1" v-model="time_exact" v-if="request_mode_all" @change="updateCheckboxes()"/>
-            <input type="text" class="form-control flex-fill mr-2" v-model="manual_query" v-if="manual_query_enable" @keyup="updateRequest()" @keydown="updateRequest()"/>            
-            <button type="button" class="btn btn-info" @click="onRequestSubmit()">{{submit_text}}</button>
+        <form class="form-group">
+            <div v-if="date_before_enable" class="form-row">
+                <div class="col-5"><input type="date" class="form-control flex-fill" v-model="date_before" v-if="date_before_enable" @change="updateRequest()"/></div>
+                <div class="col-3"><input type="time" class="form-control" step="1" v-model="time_before" v-if="date_before_enable" @change="updateRequest()"/></div>
+                <div class="col"><button v-if="!date_after_enable" type="button" class="btn btn-info btn-block" @click="onRequestSubmit()">
+                    {{submit_text}} <i class="fa fa-chevron-right"></i>
+                </button></div>
+            </div>
+            <div v-if="date_after_enable" class="form-row">
+                <div class="col-5"><input type="date" class="form-control flex-fill" v-model="date_after" v-if="date_after_enable" @change="updateRequest()"/></div>
+                <div class="col-3"><input type="time" class="form-control" step="1" v-model="time_after" v-if="date_after_enable" @change="updateRequest()"/></div>
+                <div class="col"><button type="button" class="btn btn-info btn-block" @click="onRequestSubmit()">
+                    {{submit_text}} <i class="fa fa-chevron-right"></i>
+                </button></div>
+            </div>
+            <div v-if="request_mode_all" class="form-row">
+                <div class="col-5"><input type="date" class="form-control flex-fill mr-1" v-model="date_exact" v-if="request_mode_all" @change="updateCheckboxes()"/></div>
+                <div class="col-3"><input type="time" class="form-control" step="1" v-model="time_exact" v-if="request_mode_all" @change="updateCheckboxes()"/></div>
+                <div class="col"><button type="button" class="btn btn-info btn-block" @click="onRequestSubmit()">
+                    {{submit_text}} <i class="fa fa-chevron-right"></i>
+                </button></div>
+            </div>
+            <div v-if="manual_query_enable" class="form-row">
+                <div class="col-8"><input type="text" class="form-control flex-fill" v-model="manual_query" v-if="manual_query_enable" @keyup="updateRequest()" @keydown="updateRequest()"/></div>
+                <div class="col"><button type="button" class="btn btn-info btn-block" @click="onRequestSubmit()">
+                    {{submit_text}} <i class="fa fa-chevron-right"></i>
+                </button></div>
+            </div>
+            
         </form>
 
         <form class="form-inline">
@@ -97,6 +109,7 @@
 <script>
 export default {
     name: "RequestForm",
+    props: ["serie"],
     data: () => ({   
         submit_text: null,
         date_before_enable: false,
@@ -118,9 +131,7 @@ export default {
         date_exact: null,
         time_exact: "00:00:00",
         request: "",
-        serie: "MySerie",
         show_request: false,
-        show_alert: false,
     }),
     methods: {
         updateRequest() {
@@ -133,7 +144,7 @@ export default {
             //load conditions for the request
             if (this.request_mode_all) {
                 if (this.date_exact) {
-                    console.log(this.time_exact);
+                    if (this.time_exact.length == 5) this.time_exact += ":00";
                     let timestamp = this.date_exact + "T" + this.time_exact + ".000Z";
                     conditions.push("timestamp <= " + Date.parse(timestamp)/1000);
                 } else {
@@ -145,6 +156,7 @@ export default {
             } 
             else {
                 if (this.date_before_enable){
+                    if (this.time_before.length == 5) this.time_before += ":00";
                     if (this.include_before_enable){
                         let timestamp = this.date_before + "T" + this.time_before + ".000Z";
                         conditions.push("timestamp <= " + Date.parse(timestamp)/1000);
@@ -155,6 +167,7 @@ export default {
                     }
                 }
                 if (this.date_after_enable){
+                    if (this.time_after.length == 5) this.time_after += ":00";
                     if (this.include_after_enable) {
                         let timestamp = this.date_after + "T" + this.time_after + ".000Z";
                         conditions.push("timestamp >= " + Date.parse(timestamp)/1000);
@@ -201,32 +214,14 @@ export default {
         },
 
         onRequestSubmit() {
-            this.show_alert = false;  // Hide the potential leftover error message
-            this.sendRequest(this.request);
-            this.clearForm();
-        },
-
-        async sendRequest(query_string) {
-            console.log("REQUEST :", query_string);
-            try {
-                let response = await fetch("http://localhost:8080/query?query=" + query_string);
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log("RESPONSE : ", data);
-                    if (data["success"] == true) {
-                        console.log("Data received: ", data["data"]);
-                        // Send data to Table
-                        this.$parent.$refs.myTable.jsonParse(JSON.stringify(data));
-                    } else {
-                        this.show_alert = true;
-                        throw new Error("ERROR(S) : " + JSON.stringify(data["error"]));
-                    }
-                } else {
-                    throw new Error("ERROR (BAD NETWORK RESPONSE).");
+            this.$parent.sendRequest(this.request).then((res) => {
+                if (!res.success) {  // La requete a échoué, abandonné la mission
+                    return;
                 }
-            } catch (err) {
-                console.error("ERROR : ", err);
-            }
+                this.$parent.$refs.myTable.jsonParse(res);
+                
+            });
+            this.clearForm();
         },
 
         clearForm() {
@@ -337,6 +332,15 @@ export default {
 
 #requestDebug {
     min-height: 27px;
+}
+
+.request-btn-margin {
+    margin-right: 153px; /* meme que request-bt (width + marginleft)*/
+}
+
+.request-btn {
+    margin-left: 8px;
+    width: 145px;  /* meme que la margin right que request-btn-margin - la margin left ici*/
 }
 
 </style>
