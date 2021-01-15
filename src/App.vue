@@ -5,7 +5,7 @@
     <MyHeader :series="series" />  <!-- Barre d'entete en haut -->
   
     <div class="d-flex container-fluid">
-      <MySidebar :series="series" :curSerie="curSerie" @updateList="updateList" />  <!-- Barre de navigation à gauche -->
+      <MySidebar :series="series" :curSerie="curSerie" @updateList="updateList" @selectSerie="selectSerie"/>  <!-- Barre de navigation à gauche -->
       <div id="page-content">
         <div v-if="checkSeries()">
         <div id="content-left">
@@ -142,7 +142,7 @@ export default {
       }
     },
 
-    loadSeries(series_name) {
+    selectSerie(series_name) {
       // Les noms des séries sont uniques
       this.curSerie = this.series[0];  // Par défaut, prendre la première série (au cas ou notre for ne trouve rien qui match)
       for (const s of this.series) {
