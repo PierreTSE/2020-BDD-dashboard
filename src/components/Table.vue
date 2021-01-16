@@ -135,7 +135,7 @@ export default {
   methods: {
 
     deleteElement(time) {
-      const query_string = "DELETE FROM MySeries WHERE TIMESTAMP == " + time + ";";
+      const query_string = "DELETE FROM " + this.curSeries.name + " WHERE TIMESTAMP == " + time + ";";
       this.$parent.sendRequest(query_string).then((res) => {
         if (!res.success) {
           return;
