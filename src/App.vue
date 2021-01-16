@@ -33,7 +33,7 @@
           </div>
         </div>
         <div v-if="!checkSeries()">
-          <h1>Bienvenue sur notre application</h1>
+          <h1>Bienvenue sur notre application.</h1>
           <p>Veuillez créer ou sélectionner une série pour commencer.</p>
         </div>
       </div>

@@ -130,6 +130,9 @@ export default {
         request: "",
         show_request: false,
     }),
+    created: function() {
+        this.updateCheckboxes();
+    },
     methods: {
         updateRequest() {
             // Initialization
@@ -210,6 +213,7 @@ export default {
         },
 
         onRequestSubmit() {
+            this.updateRequest();
             this.$parent.sendRequest(this.request).then((res) => {
                 if (!res.success) {  // La requete a échoué, abandonné la mission
                     return;
@@ -241,16 +245,14 @@ export default {
             }
             this.request_mode_all = !(this.manual_query_enable | this.date_before_enable | this.date_after_enable);
             if (this.request_mode_all & !this.date_exact) {
-                this.submit_text = "Requete (Tout)";
+                this.submit_text = "Requête (Tout)";
             } else {
-                this.submit_text = "Requete";
+                this.submit_text = "Requête";
             }
             this.updateRequest()
         }
     },
-    created(){  //execute on page load
-        this.updateCheckboxes();
-    },
+
 };
 </script>
 

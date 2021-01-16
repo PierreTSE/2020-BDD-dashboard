@@ -13,7 +13,7 @@
         <button class="col btn btn-info" @click="onCreate"
           :disabled="!new_serie_name || selected_type == null">Ajouter série</button>
       </div>
-      <button class="btn btn-info btn-block" @click="onRefresh" v-if="!add_mode">Rafraichir liste</button>
+      <button class="btn btn-info btn-block" @click="onRefresh" v-if="!add_mode">Rafraîchir liste</button>
     </form>
 
   </nav>   

@@ -84,8 +84,8 @@
       <thead class="bg-info">
         <tr>
           <th scope="col">#</th>
-          <th scope="col">Timestamp</th>
-          <th scope="col">Value</th>
+          <th scope="col">Timestamps</th>
+          <th scope="col">Valeurs</th>
         </tr>
       </thead>
       <tbody>
@@ -262,6 +262,7 @@ export default {
 
         request += "("+ this.csvScores[i][0] +", " + this.csvScores[i][1]+")," ;
       }
+      request = request.slice(0, -1); // Retirer la dernière virgule
       request += ");";
 
       this.$parent.sendRequest(request).then((res) => {
