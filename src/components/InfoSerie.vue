@@ -38,7 +38,7 @@
               return;
             } else {
               this.$parent.curSerie.name="";
-              this.$parent.$refs.mySideBar.refreshList();
+              this.$parent.$refs.mySideBar.onRefresh();
             }
         })
       }
