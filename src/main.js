@@ -14,7 +14,7 @@ Vue.use(VuePapaParse)
 
 Vue.prototype.$apiurl = "http://localhost:8082/query?query=";
 Vue.prototype.$offlineMode = true;  // Si true, les requetes ne seront pas envoyés à l'api
-Vue.prototype.$deployMode = true;  // Si false, la page sera pré-peuplée + des boutons de débug seront accessibles
+Vue.prototype.$deployMode = false;  // Si false, la page sera pré-peuplée + des boutons de débug seront accessibles
 
 new Vue({
   render: h => h(App),
