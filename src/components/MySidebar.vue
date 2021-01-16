@@ -36,6 +36,9 @@
         selected_type: null,
       }
     },
+    created: function() {
+      this.onRefresh();  // Force a refresh on page load
+    },
 
     methods: {
       onRefresh() {

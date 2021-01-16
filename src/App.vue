@@ -11,7 +11,7 @@
           <div id="content-left">
             <InfoSerie :curSerie="curSerie"/>
             
-            <div class="container-fluid bg-dark p-2">
+            <div v-if="!deployMode" class="container-fluid bg-dark p-2">
               <div class="row mx-auto">
                 <p class="col-auto mr-auto h6 text-warning my-auto">Debug:</p>
                 <button class="col-auto btn btn-sm text-warning bg-transparent" v-if="!showDebug" @click="showDebug = true;">v</button>
@@ -56,16 +56,13 @@ export default {
   name: "App",
   data() {
     return {
-      series: [
-        {"name": "Serie1", "type":"int64"},
-        {"name": "SerieTemp", "type":"float32"},
-        {"name": "SerieFun", "type":"int32"},
-      ],
+      series: [],
       curSerie: {'name': '', 'type':""},
       showDebug: false,
       data: {},
       requestError: "",
       requestLoading: false,
+      deployMode: this.$deployMode,
     }
   },
   components: {
@@ -75,6 +72,15 @@ export default {
     MyGraph,
     InfoSerie,
     Table
+  },
+  created: function() {
+    if (!this.$deployMode) {
+      this.series = [
+        {"name": "Serie1", "type":"int64"},
+        {"name": "SerieTemp", "type":"float32"},
+        {"name": "SerieFun", "type":"int32"},
+      ];
+    }
   },
   methods: {
     async sendRequest(query_string) {
