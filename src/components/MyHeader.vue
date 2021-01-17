@@ -18,7 +18,7 @@
             <input class="form-control form-control-sm" type="text" v-model="new_serie_name">
             <select class="form-control form-control-sm" style="margin-top:0.2em;" v-model="selected_type"> <option v-for="type in possible_types" :value="type" :key="type"> {{type}}</option ></select>
             <button class="btn btn-sm btn-light mt-1" @click="onCreate()"
-              :disabled="!new_serie_name || selected_type == null">Ajouter série <i class="fa fa-plus"></i></button>
+              :disabled="!new_serie_name || selected_type == null || new_serie_name.includes(' ')">Ajouter série <i class="fa fa-plus"></i></button>
           </form>
         </b-collapse>
       </b-navbar>

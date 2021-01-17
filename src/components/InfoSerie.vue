@@ -63,7 +63,7 @@
   color: #0004;
   border-color: #0004;
   transition: border 0s, 0.15s;
-  margin-top: 1em;
+  margin-top: 0.7em;
   margin-left: 0.2em;
 }
 .btn-circle.btn-xl:hover {
@@ -71,7 +71,7 @@
   color: #fff;
   width: 40px;
   height: 40px;
-  margin-top: 0.8em;
+  margin-top: 0.5em;
   margin-left: 0.04em;
 }
 </style>
