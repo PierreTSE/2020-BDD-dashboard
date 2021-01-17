@@ -94,8 +94,8 @@ export default {
         }
         let response = await fetch(this.$apiurl + query_string, {method: 'POST'});
         
-        this.requestLoading = false;
         const data = await response.json();
+        this.requestLoading = false;
         
         if (response.ok) {  // 200
           console.log("RESPONSE : ", data);

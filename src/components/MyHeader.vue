@@ -36,7 +36,7 @@
 
     data () {
       return {
-        possible_types: ["int32", "int64", "float32", "float64"],
+        possible_types: ["int32", "int64", "float32"],
         create_form: false,
         new_serie_name: "",
         selected_type: null,
