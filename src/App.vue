@@ -35,6 +35,8 @@
         <div v-if="!checkSeries()">
           <h1>Bienvenue sur notre application.</h1>
           <p>Veuillez créer ou sélectionner une série pour commencer.</p>
+          <p v-if="requestLoading" class="h6 text-dark"><i class="fa fa-spinner fa-pulse"></i> En attente du serveur...</p>
+          <p v-if="requestError" class="h6 text-danger"><i class="fa fa-exclamation"></i> {{requestError}}</p>
         </div>
       </div>
     </div>
