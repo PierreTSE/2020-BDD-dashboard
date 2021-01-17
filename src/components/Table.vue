@@ -78,7 +78,7 @@
         </div>
       <button type="button" @click="onTimestampSubmit" class="btn btn-dark mt-2 ml-1 px-4" 
         :disabled="date == '' || time.length < 5">
-          Submit
+          Envoyer
         </button>
       </form>    
     </div>
