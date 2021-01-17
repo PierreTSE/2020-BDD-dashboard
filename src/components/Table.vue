@@ -34,7 +34,13 @@
     <div v-if="showFileDiv || showInsertDiv" class="conatiner-fluid bg-info p-2 mt-2 mb-3 mx-3">
       <div v-if="showFileDiv">
         <p class="text-light h5 pb-1 border-bottom">Importer un fichier CSV</p>
-        <input type="file" accept=".csv" @change="loadTextFromFile" style="margin-bottom : 5px"/><br>
+        
+        <div class="custom-file">
+          <!-- <input type="file" class="custom-file-input" id="inputGroupFile01"> -->
+          <input type="file" class="custom-file-input" accept=".csv" @change="loadTextFromFile"/><br>
+          <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+        </div>
+        
         <button v-if="!isCsvParsed" type="button" class="btn btn-dark mt-2" disabled>
           Aucun fichier chargé
         </button>

@@ -1,7 +1,7 @@
 <template lang="html">
 
   <nav class="p-2 mb-1 d-none d-xl-block border-right border-info" id="sidebar-wrapper">
-    <p class="h5" v-for="(s,index) in series" :key="index" @click="onSelect(s)" v-bind:id="'side-' + s.name">{{s.name}}</p>
+    <p class="h5 text-break mb-3" v-for="(s,index) in series" :key="index" @click="onSelect(s)" v-bind:id="'side-' + s.name">{{s.name}}</p>
 
 
     <form class="button-wrapper" onsubmit="return false">
