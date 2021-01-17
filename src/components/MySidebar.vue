@@ -1,7 +1,8 @@
 <template lang="html">
 
   <nav class="p-2 mb-1 d-none d-xl-block border-right border-info" id="sidebar-wrapper">
-    <p class="h5 text-break mb-3" v-for="(s,index) in series" :key="index" @click="onSelect(s)" v-bind:id="'side-' + s.name">{{s.name}}</p>
+    <p class="h5 text-break mb-3" v-for="(s,index) in series" :key="index" @click="onSelect(s)" v-bind:id="'side-' + s.name"
+      v-bind:class="{'font-weight-bold': s.name == curSerie.name, 'font-weight-normal': s.name != curSerie.name}">{{s.name}}</p>
 
 
     <form class="button-wrapper" onsubmit="return false">
@@ -41,12 +42,15 @@
     },
 
     methods: {
-      onRefresh() {
+      onRefresh(select="") {
         this.$parent.sendRequest("SHOW ALL;").then((res) => {
           if (!res.success) {  // La requete a échoué, abandonnez la mission
             return;
           }    
-          this.refreshList(res);  
+          this.refreshList(res);
+          if (select) {
+            this.onSelect(select);
+          }
         });
       },
 
@@ -58,11 +62,11 @@
           if (!res.success) {  // La requete a échoué, abandonnez la mission
             return;
           }
-          this.onRefresh();
+          this.onRefresh({"name": this.new_serie_name, "type":this.selected_type});  
+          this.new_serie_name = "";
+          this.selected_type = null;
         });
 
-        this.new_serie_name = "";
-        this.selected_type = null;
       },
         
       refreshList(json_data) {
@@ -89,12 +93,13 @@
       },
 
       onSelect(serie) {
-        for (const line of this.series) {
-          document.getElementById("side-" + line.name).style.setProperty('font-weight', 'normal');
-          document.getElementById("head-" + line.name).style.setProperty('font-weight', 'normal');
-        }
-        document.getElementById("side-" + serie.name).style.setProperty('font-weight', 'bold');
-        document.getElementById("head-" + serie.name).style.setProperty('font-weight', 'bold');
+        console.log("select", serie);
+        // for (const line of this.series) {
+        //   document.getElementById("side-" + line.name).style.setProperty('font-weight', 'normal');
+        //   document.getElementById("head-" + line.name).style.setProperty('font-weight', 'normal');
+        // }
+        // document.getElementById("side-" + serie.name).style.setProperty('font-weight', 'bold');
+        // document.getElementById("head-" + serie.name).style.setProperty('font-weight', 'bold');
         this.$emit('selectSerie', serie.name);
       },
     }
