@@ -136,7 +136,7 @@ export default {
     methods: {
         updateRequest() {
             // Initialization
-            let prefix = "SELECT FROM " + this.serie + " ";
+            let prefix = "SELECT ALL FROM " + this.serie + " ";
             let conditions = [];
             let conditions_processed = "";
 

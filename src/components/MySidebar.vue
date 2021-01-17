@@ -11,7 +11,7 @@
       <div v-if="add_mode" class="form-group row mx-auto mt-2">
         <button class="col-2 btn btn-info px-1 mr-2" @click="add_mode = false; selected_type = null; new_serie_name=''"><i class="fa fa-chevron-left"></i></button>
         <button class="col btn btn-info" @click="onCreate"
-          :disabled="!new_serie_name || selected_type == null">Ajouter série</button>
+          :disabled="!new_serie_name || selected_type == null || new_serie_name.includes(' ')">Ajouter série</button>
       </div>
       <button class="btn btn-info btn-block" @click="onRefresh" v-if="!add_mode">Rafraîchir liste</button>
     </form>
