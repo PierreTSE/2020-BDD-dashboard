@@ -93,7 +93,6 @@
       },
 
       onSelect(serie) {
-        console.log("select", serie);
         // for (const line of this.series) {
         //   document.getElementById("side-" + line.name).style.setProperty('font-weight', 'normal');
         //   document.getElementById("head-" + line.name).style.setProperty('font-weight', 'normal');
