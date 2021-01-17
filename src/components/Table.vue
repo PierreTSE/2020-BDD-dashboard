@@ -89,7 +89,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(a, i) in agr_result" :key="i" v-cloak>
+        <tr v-for="(a, i) in agr_result" :key="'arg_' + i" v-cloak>
           <th scope="row" >{{a.name}}</th>
           <td></td>
           <td>{{a.value}}</td>
