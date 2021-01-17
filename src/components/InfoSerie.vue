@@ -1,11 +1,11 @@
 <template lang="html">
 
   <div class="infoserie-wrapper">
-    <div class="my-2" style="display : inline-block">
-      <p class="h2 mb-0">{{curSerie.name}}</p>
+    <div class="my-2 mr-5" style="display : inline-block">
+      <p class="h2 mb-0 text-break">{{curSerie.name}}</p>
       <p class="text-muted h6">{{curSerie.type}}</p>
     </div>
-    <div class="drop-button-wrapper" style="display: inline-block; position: absolute; padding-left: 15px">
+    <div class="drop-button-wrapper ml-n5" style="display: inline-block; position: absolute; padding-left: 15px">
       <button type="button" class="btn btn-circle btn-outline-danger btn-xl mr-1" 
       @click="deleteSeries">
       <i class="fa fa-trash"></i>

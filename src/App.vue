@@ -76,7 +76,7 @@ export default {
     Table
   },
   created: function() {
-    if (!this.$deployMode) {
+    if (this.$offlineMode) {
       this.series = [
         {"name": "Serie1", "type":"int64"},
         {"name": "SerieTemp", "type":"float32"},

@@ -82,7 +82,6 @@
             ]
           }
         }*/
-        
         let seriesList = json_data.data.info;
 
         // Lui passer le nouveau tableau de séries

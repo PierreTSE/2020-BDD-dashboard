@@ -6,8 +6,8 @@
         <b-navbar-toggle class="custom-toggler" target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" class="my-menu" style="width:100%" is-nav>
           <b-navbar-nav>
-            <b-nav-item href="#" v-for="(s,index) in series" :key="index" 
-              v-bind:class="{'font-weight-bold': s.name == curSerie.name, 'text-light': s.name != curSerie.name}"
+            <b-nav-item href="#" v-for="(s,index) in series" :key="index"
+              v-bind:class="{'font-weight-bold': s.name == curSerie.name, 'text-white': s.name != curSerie.name}"
               @click="onSelect(s)" v-bind:id="'head-' + s.name">{{s.name}} 
               </b-nav-item>
           </b-navbar-nav>
@@ -80,6 +80,11 @@ header {
 
 .navbar-brand {
   cursor: default;
+}
+
+.nav-link {
+  color:rgb(200, 230, 250)!important;
+  word-break: break-word !important;
 }
 
 @media only screen and (min-width: 1200px) {

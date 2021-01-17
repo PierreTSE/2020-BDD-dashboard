@@ -40,7 +40,7 @@
             </form>
         </div>
         
-        <form class="form-group">
+        <form class="form-group" onsubmit="return false">
             <div v-if="date_before_enable" class="form-row">
                 <div class="col-5"><input type="date" class="form-control flex-fill" v-model="date_before" v-if="date_before_enable" @change="updateRequest()"/></div>
                 <div class="col-3"><input type="time" class="form-control" step="1" v-model="time_before" v-if="date_before_enable" @change="updateRequest()"/></div>
@@ -221,20 +221,20 @@ export default {
                 this.$parent.$refs.myTable.jsonParse(res);
                 
             });
-            this.clearForm();
+            // this.clearForm();
         },
 
-        clearForm() {
-            this.value_min = null;
-            this.value_max = null;
-            this.date_before = new Date().toISOString().substr(0, 10);
-            this.date_after = new Date().toISOString().substr(0, 10);
-            this.time_before = "00:00:00";
-            this.time_after = "00:00:00";
-            this.date_exact = null;
-            this.manual_query = null;
-            this.updateCheckboxes();
-        },
+        // clearForm() {
+        //     this.value_min = null;
+        //     this.value_max = null;
+        //     this.date_before = new Date().toISOString().substr(0, 10);
+        //     this.date_after = new Date().toISOString().substr(0, 10);
+        //     this.time_before = "00:00:00";
+        //     this.time_after = "00:00:00";
+        //     this.date_exact = null;
+        //     this.manual_query = null;
+        //     this.updateCheckboxes();
+        // },
 
         updateCheckboxes(manual_query_mode=false) {
             if (manual_query_mode) {
