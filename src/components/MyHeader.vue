@@ -77,6 +77,11 @@ header {
   padding: 5px;
   z-index: 10;
 }
+
+.navbar-brand {
+  cursor: default;
+}
+
 @media only screen and (min-width: 1200px) {
   #nav-collapse.my-menu {
     display: none! important;
