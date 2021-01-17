@@ -93,13 +93,6 @@
       },
 
       onSelect(serie) {
-        console.log("select", serie);
-        // for (const line of this.series) {
-        //   document.getElementById("side-" + line.name).style.setProperty('font-weight', 'normal');
-        //   document.getElementById("head-" + line.name).style.setProperty('font-weight', 'normal');
-        // }
-        // document.getElementById("side-" + serie.name).style.setProperty('font-weight', 'bold');
-        // document.getElementById("head-" + serie.name).style.setProperty('font-weight', 'bold');
         this.$emit('selectSerie', serie.name);
       },
     }

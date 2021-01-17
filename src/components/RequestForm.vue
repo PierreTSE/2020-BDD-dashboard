@@ -224,20 +224,7 @@ export default {
                 this.$parent.$refs.myTable.jsonParse(res);
                 
             });
-            // this.clearForm();
         },
-
-        // clearForm() {
-        //     this.value_min = null;
-        //     this.value_max = null;
-        //     this.date_before = new Date().toISOString().substr(0, 10);
-        //     this.date_after = new Date().toISOString().substr(0, 10);
-        //     this.time_before = "00:00:00";
-        //     this.time_after = "00:00:00";
-        //     this.date_exact = null;
-        //     this.manual_query = null;
-        //     this.updateCheckboxes();
-        // },
 
         updateCheckboxes(manual_query_mode=false) {
             if (manual_query_mode) {

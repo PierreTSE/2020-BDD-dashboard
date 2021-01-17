@@ -99,7 +99,7 @@ export default {
         const data = await response.json();
         this.requestLoading = false;
         
-        if (response.ok) {  // 200
+        if (response.ok) {  // Status 200+
           console.log("RESPONSE : ", data);
           if (data["success"] == true) {
             return data;
@@ -110,7 +110,7 @@ export default {
               this.requestError = "Request failed. Unknown error (no message).";
             return {"success": false, "error": data.error};
           }
-        } else {  // 400 & 500
+        } else {  // Status 400+ & 500+
           console.error("ERROR (" + data.error.code + ")." + JSON.stringify(data.error));
           
           if (data.error && data.error.message)

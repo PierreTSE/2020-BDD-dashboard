@@ -27,7 +27,6 @@
       v-bind:class="{'btn-info': canEdit, 'btn-outline-info': !canEdit}">
       <i class="fa fa-pencil"></i>
     </button>
-    <!-- <button class="btn btn-info" >Edit</button> -->
 
     <p v-if="error != ''" class="h6 text-light p-2 bg-danger mt-1 mb-3">{{error}}</p>
 
@@ -36,7 +35,6 @@
         <p class="text-light h5 pb-1 border-bottom">Importer un fichier CSV</p>
         
         <div class="custom-file">
-          <!-- <input type="file" class="custom-file-input" id="inputGroupFile01"> -->
           <input type="file" class="custom-file-input" accept=".csv" @change="loadTextFromFile"/><br>
           <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
         </div>
@@ -180,19 +178,19 @@ export default {
         this.$emit('updateData', this.allScores);
 
         this.agr_result = [];
-        if (json_input.data.min) {
+        if ("min" in json_input.data) {
           this.agr_result.push({name: "MIN", value: json_input.data.min});
         }
-        if (json_input.data.max) {
+        if ("max" in json_input.data) {
           this.agr_result.push({name: "MAX", value: json_input.data.max});
         }
-        if (json_input.data.sum) {
+        if ("sum" in json_input.data) {
           this.agr_result.push({name: "SUM", value: json_input.data.sum});
         }
-        if (json_input.data.avg) {
+        if ("avg" in json_input.data) {
           this.agr_result.push({name: "AVG", value: json_input.data.avg});
         }
-        if (json_input.data.count) {
+        if ("count" in json_input.data) {
           this.agr_result.push({name: "COUNT", value: json_input.data.count});
         }
       }
