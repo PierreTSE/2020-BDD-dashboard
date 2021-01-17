@@ -1,8 +1,11 @@
 <template>
     <div class="py-4 border-top border-bottom">
         <h2>Critères de recherche :</h2>
-        <p id="requestDebug" class="h6 bg-warning p-1" v-if="show_request">{{ request }}</p>
-        
+        <div class="pl-1 border-info rounded d-flex" v-bind:class="{'border bg-light': show_request, 'bg-white': !show_request}">
+            <a class="my-auto py-1" @click="updateRequest(); show_request = !show_request"><i class="fa fa-eye"></i></a>
+            <p id="requestDebug" class="flex-fill h6 text-info bg-transparent p-1 my-0" 
+                v-if="show_request">{{ request }}</p>
+        </div> 
         <div> 
 
             <label class="my-container">requête manuelle
@@ -340,6 +343,10 @@ export default {
 .request-btn {
     margin-left: 8px;
     width: 145px;  /* meme que la margin right que request-btn-margin - la margin left ici*/
+}
+
+.my-transition {
+    transition: 0.2s;
 }
 
 </style>
