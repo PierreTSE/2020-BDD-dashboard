@@ -94,7 +94,7 @@
 
       onSelect(serie) {
         this.$emit('selectSerie', serie.name);
-      },
+      }
     }
 }
 </script>
