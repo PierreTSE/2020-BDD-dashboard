@@ -89,10 +89,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-if="agr_result.name != ''">
-          <th scope="row" >{{agr_result.name}}</th>
+        <tr v-for="(a, i) in agr_result" :key="i" v-cloak>
+          <th scope="row" >{{a.name}}</th>
           <td></td>
-          <td>{{agr_result.value}}</td>
+          <td>{{a.value}}</td>
         </tr>
         <tr v-for="(entry, i) in allScores" :key="i" v-cloak>
           <th scope="row">
@@ -128,7 +128,7 @@ export default {
       csvScores: [],
       isCsvParsed: false,
       parsedCsvFilename: "",
-      agr_result: {name:"", value: 0},
+      agr_result: [],
       canEdit: false,
     }
   },
@@ -173,20 +173,21 @@ export default {
 
         this.$emit('updateData', this.allScores);
 
+        this.agr_result = [];
         if (json_input.data.min) {
-          this.agr_result = {name: "MIN", value: json_input.data.min};
+          this.agr_result.push({name: "MIN", value: json_input.data.min});
         }
         if (json_input.data.max) {
-          this.agr_result = {name: "MAX", value: json_input.data.max};
+          this.agr_result.push({name: "MAX", value: json_input.data.max});
         }
         if (json_input.data.sum) {
-          this.agr_result = {name: "SUM", value: json_input.data.sum};
+          this.agr_result.push({name: "SUM", value: json_input.data.sum});
         }
         if (json_input.data.avg) {
-          this.agr_result = {name: "AVG", value: json_input.data.avg};
+          this.agr_result.push({name: "AVG", value: json_input.data.avg});
         }
         if (json_input.data.count) {
-          this.agr_result = {name: "COUNT", value: json_input.data.count};
+          this.agr_result.push({name: "COUNT", value: json_input.data.count});
         }
       }
     },
@@ -260,10 +261,12 @@ export default {
           value: parseFloat(this.csvScores[i][1]),
         });
 
-        request += "("+ this.csvScores[i][0] +", " + this.csvScores[i][1]+")," ;
+        request += "("+ this.csvScores[i][0] +", " + this.csvScores[i][1]+"), " ;
       }
-      request = request.slice(0, -1); // Retirer la dernière virgule
+      request = request.slice(0, -2); // Retirer la dernière virgule
       request += ");";
+
+      this.showFileDiv = false;
 
       this.$parent.sendRequest(request).then((res) => {
         if (!res.success) {  // La requete a échoué, abandonné la mission
