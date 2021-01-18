@@ -2,14 +2,14 @@
 
   <div class="infoserie-wrapper">
     <div class="my-2 mr-5" style="display : inline-block">
-      <p class="h2 mb-0 text-break">{{curSerie.name}}</p>
-      <p class="text-muted h6">{{curSerie.type}}</p>
+      <p class="h2 mb-0 text-break">{{ curSerie.name }}</p>
+      <p class="text-muted h6">{{ curSerie.type }}</p>
     </div>
     <div class="drop-button-wrapper ml-n5" style="display: inline-block; position: absolute; padding-left: 15px">
-      <button type="button" class="btn btn-circle btn-outline-danger btn-xl mr-1" 
-      @click="deleteSeries">
-      <i class="fa fa-trash"></i>
-    </button>
+      <button class="btn btn-circle btn-outline-danger btn-xl mr-1" type="button"
+              @click="deleteSeries">
+        <i class="fa fa-trash"></i>
+      </button>
     </div>
   </div>
 
@@ -17,36 +17,32 @@
 
 <script lang="js">
 
-  export default  {
-    name: 'InfoSerie',
-    props: ["curSerie"],
-    mounted () {
+export default {
+  name: 'InfoSerie',
+  props: ["curSerie"],
+  mounted() {
 
-    },
-    data () {
-      return {
+  },
+  data() {
+    return {}
+  },
+  methods: {
+    deleteSeries() {
+      let confirmation = confirm("Voulez-vous vraiment supprimer la série : " + this.$parent.curSerie.name + " ?");
+      if (confirmation) {
+        let request = "DROP " + this.$parent.curSerie.name + ";";
+        this.$parent.sendRequest(request).then((res) => {
+          if (!res.success) {  // La requete a échoué, abandonné la mission
 
-      }
-    },
-    methods: {
-      deleteSeries(){
-        let confirmation = confirm("Voulez-vous vraiment supprimer la série : " + this.$parent.curSerie.name + " ?");
-        if (confirmation) {
-          let request ="DROP " + this.$parent.curSerie.name + ";";
-          this.$parent.sendRequest(request).then((res) => {
-            if (!res.success) {  // La requete a échoué, abandonné la mission
-              return;
-            } else {
-              this.$parent.curSerie.name="";
-              this.$parent.$refs.mySideBar.onRefresh();
-            }
+          } else {
+            this.$parent.curSerie.name = "";
+            this.$parent.$refs.mySideBar.onRefresh();
+          }
         })
       }
     }
-    },
-    computed: {
-
-    }
+  },
+  computed: {}
 }
 
 
@@ -66,6 +62,7 @@
   margin-top: 0.7em;
   margin-left: 0.2em;
 }
+
 .btn-circle.btn-xl:hover {
   border-width: 0;
   color: #fff;

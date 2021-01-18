@@ -2,20 +2,20 @@
 
   <div>
 
-    <MyHeader :series="series" :curSerie="curSerie" @selectSerie="selectSerie"/>  <!-- Barre d'entete en haut -->
-  
+    <MyHeader :curSerie="curSerie" :series="series" @selectSerie="selectSerie"/>  <!-- Barre d'entete en haut -->
+
     <div class="d-flex container-fluid">
-      <MySidebar ref="mySideBar" :series="series" :curSerie="curSerie" @updateList="updateList" @selectSerie="selectSerie"/>  <!-- Barre de navigation à gauche -->
+      <MySidebar ref="mySideBar" :curSerie="curSerie" :series="series" @selectSerie="selectSerie" @updateList="updateList"/>  <!-- Barre de navigation à gauche -->
       <div id="page-content">
         <div v-show="checkSeries()">
           <div id="content-left">
             <InfoSerie :curSerie="curSerie"/>
-            
+
             <div v-if="!deployMode" class="container-fluid bg-dark p-2">
               <div class="row mx-auto">
                 <p class="col-auto mr-auto h6 text-warning my-auto">Debug:</p>
-                <button class="col-auto btn btn-sm text-warning bg-transparent" v-if="!showDebug" @click="showDebug = true;">v</button>
-                <button class="col-auto btn btn-sm text-warning bg-transparent" v-if="showDebug" @click="showDebug = false;">^</button>
+                <button v-if="!showDebug" class="col-auto btn btn-sm text-warning bg-transparent" @click="showDebug = true;">v</button>
+                <button v-if="showDebug" class="col-auto btn btn-sm text-warning bg-transparent" @click="showDebug = false;">^</button>
               </div>
               <div v-if="showDebug" class="">
                 <button id="DEBUG_Request" class="btn btn-warning m-1" @click="on_DEBUG_Request_press()">Show Live Request</button>
@@ -28,15 +28,15 @@
             <MyGraph ref="myGraph"/>
           </div>
           <div id="content-right">
-            <Table ref="myTable" :curSeries="curSerie" :error="requestError" 
-              :loading="requestLoading" @updateData="updateData"/>
+            <Table ref="myTable" :curSeries="curSerie" :error="requestError"
+                   :loading="requestLoading" @updateData="updateData"/>
           </div>
         </div>
         <div v-if="!checkSeries()">
           <h1>Bienvenue sur notre application.</h1>
           <p>Veuillez créer ou sélectionner une série pour commencer.</p>
           <p v-if="requestLoading" class="h6 text-dark"><i class="fa fa-spinner fa-pulse"></i> En attente du serveur...</p>
-          <p v-if="requestError" class="h6 text-danger"><i class="fa fa-exclamation"></i> {{requestError}}</p>
+          <p v-if="requestError" class="h6 text-danger"><i class="fa fa-exclamation"></i> {{ requestError }}</p>
         </div>
       </div>
     </div>
@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       series: [],
-      curSerie: {'name': '', 'type':""},
+      curSerie: {'name': '', 'type': ""},
       showDebug: false,
       data: {},
       requestError: "",
@@ -75,12 +75,12 @@ export default {
     InfoSerie,
     Table
   },
-  created: function() {
+  created: function () {
     if (this.$offlineMode) {
       this.series = [
-        {"name": "Serie1", "type":"int64"},
-        {"name": "SerieTemp", "type":"float32"},
-        {"name": "SerieFun", "type":"int32"},
+        {"name": "Serie1", "type": "int64"},
+        {"name": "SerieTemp", "type": "float32"},
+        {"name": "SerieFun", "type": "int32"},
       ];
     }
   },
@@ -95,10 +95,10 @@ export default {
           return {"success": true, "data": []};
         }
         let response = await fetch(this.$apiurl + query_string, {method: 'POST'});
-        
+
         const data = await response.json();
         this.requestLoading = false;
-        
+
         if (response.ok) {  // Status 200+
           console.log("RESPONSE : ", data);
           if (data["success"] == true) {
@@ -112,7 +112,7 @@ export default {
           }
         } else {  // Status 400+ & 500+
           console.error("ERROR (" + data.error.code + ")." + JSON.stringify(data.error));
-          
+
           if (data.error && data.error.message)
             this.requestError = data.error.message;
           else
@@ -180,15 +180,15 @@ export default {
     on_DEBUG_Table_press() {
       // Generer des données aléatoires
       let fake_data = {
-        "success" : true,
-        "data" : {
+        "success": true,
+        "data": {
           "values": [
-            {"timestamp": Math.floor(Math.random()*34000000)+1577836800, "value": Math.floor(Math.random()*100)},
+            {"timestamp": Math.floor(Math.random() * 34000000) + 1577836800, "value": Math.floor(Math.random() * 100)},
           ]
         }
       };
-      while(Math.random() > 0.1) {
-        fake_data.data.values.push({"timestamp": Math.floor(Math.random()*34000000)+1577836800, "value": Math.floor(Math.random()*100)});
+      while (Math.random() > 0.1) {
+        fake_data.data.values.push({"timestamp": Math.floor(Math.random() * 34000000) + 1577836800, "value": Math.floor(Math.random() * 100)});
       }
 
       this.$refs.myTable.jsonParse(fake_data);
@@ -197,24 +197,24 @@ export default {
     on_DEBUG_Request_press() {
       this.$refs.requestForm.show_request = !this.$refs.requestForm.show_request;
       if (this.$refs.requestForm.show_request) {
-        document.getElementById("DEBUG_Request").innerText  = "Hide Live Request";
+        document.getElementById("DEBUG_Request").innerText = "Hide Live Request";
       } else {
-        document.getElementById("DEBUG_Request").innerText  = "Show Live Request";
+        document.getElementById("DEBUG_Request").innerText = "Show Live Request";
       }
     },
 
     on_DEBUG_Agreg_press() {
       let agr_op = ["min", "max", "avg", "sum", "count"];
       let fake_data = {
-        "success" : true,
-        "data" : {
+        "success": true,
+        "data": {
           "values": [],
         }
       };
       fake_data.data[agr_op[Math.floor(Math.random() * agr_op.length)]] = Math.floor(Math.random() * 100);
       fake_data.data[agr_op[Math.floor(Math.random() * agr_op.length)]] = Math.floor(Math.random() * 100);
       fake_data.data[agr_op[Math.floor(Math.random() * agr_op.length)]] = Math.floor(Math.random() * 100);
-      
+
       this.$refs.myTable.jsonParse(fake_data);
     }
     // FIN DEBUG //
@@ -228,14 +228,14 @@ export default {
 
 <style scoped>
 #page-content {
-  padding-top: 90px;  /* Meme valeur que le height de MyHeader */
-  padding-left: 170px;  /* Meme valeur que le width du Sidebar */
+  padding-top: 90px; /* Meme valeur que le height de MyHeader */
+  padding-left: 170px; /* Meme valeur que le width du Sidebar */
   min-width: 0;
   width: 100%;
 }
 
 @media only screen and (max-width: 1200px) {
-  #page-content{
+  #page-content {
     padding-left: 0;
   }
 }
@@ -250,19 +250,23 @@ export default {
   display: inline-block;
 }
 
-@media (min-width: 1000px) {  /* Pour grands écrans */
+@media (min-width: 1000px) {
+  /* Pour grands écrans */
   #content-left {
     width: 60%;
   }
+
   #content-right {
     width: 40%;
   }
 }
 
-@media (max-width: 1000px) {  /* Pour petits écrans */
+@media (max-width: 1000px) {
+  /* Pour petits écrans */
   #content-left {
     width: 100%;
   }
+
   #content-right {
     width: 100%;
   }

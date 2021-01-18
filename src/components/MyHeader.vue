@@ -4,21 +4,23 @@
       <b-navbar toggleable="xl" type="dark" variant="info">
         <b-navbar-brand href="#"><p class="h1">Dashboard</p></b-navbar-brand>
         <b-navbar-toggle class="custom-toggler" target="nav-collapse"></b-navbar-toggle>
-        <b-collapse id="nav-collapse" class="my-menu" style="width:100%" is-nav>
+        <b-collapse id="nav-collapse" class="my-menu" is-nav style="width:100%">
           <b-navbar-nav>
-            <b-nav-item href="#" v-for="(s,index) in series" :key="index"
-              v-bind:class="{'font-weight-bold': s.name == curSerie.name, 'text-white': s.name != curSerie.name}"
-              @click="onSelect(s)" v-bind:id="'head-' + s.name">{{s.name}} 
-              </b-nav-item>
+            <b-nav-item v-for="(s,index) in series" v-bind:id="'head-' + s.name" :key="index"
+                        href="#"
+                        v-bind:class="{'font-weight-bold': s.name == curSerie.name, 'text-white': s.name != curSerie.name}" @click="onSelect(s)">{{ s.name }}
+            </b-nav-item>
           </b-navbar-nav>
           <button class="btn btn-sm btn-light rounded-circle mr-2" @click="onRefresh()"><i class="fa fa-refresh"></i></button>
-          <button class="btn btn-sm btn-light rounded-circle" v-if="!create_form" @click="create_form = !create_form"><i class="fa fa-plus"></i></button>
-          <button class="btn btn-sm btn-light rounded-circle" v-if="create_form" @click="create_form = !create_form"><i class="fa fa-minus"></i></button>
+          <button v-if="!create_form" class="btn btn-sm btn-light rounded-circle" @click="create_form = !create_form"><i class="fa fa-plus"></i></button>
+          <button v-if="create_form" class="btn btn-sm btn-light rounded-circle" @click="create_form = !create_form"><i class="fa fa-minus"></i></button>
           <form v-if="create_form" class="mt-2" onsubmit="return false">
-            <input class="form-control form-control-sm" type="text" v-model="new_serie_name">
-            <select class="form-control form-control-sm" style="margin-top:0.2em;" v-model="selected_type"> <option v-for="type in possible_types" :value="type" :key="type"> {{type}}</option ></select>
-            <button class="btn btn-sm btn-light mt-1" @click="onCreate()"
-              :disabled="!new_serie_name || selected_type == null || new_serie_name.includes(' ')">Ajouter série <i class="fa fa-plus"></i></button>
+            <input v-model="new_serie_name" class="form-control form-control-sm" type="text">
+            <select v-model="selected_type" class="form-control form-control-sm" style="margin-top:0.2em;">
+              <option v-for="type in possible_types" :key="type" :value="type"> {{ type }}</option>
+            </select>
+            <button :disabled="!new_serie_name || selected_type == null || new_serie_name.includes(' ')" class="btn btn-sm btn-light mt-1"
+                    @click="onCreate()">Ajouter série <i class="fa fa-plus"></i></button>
           </form>
         </b-collapse>
       </b-navbar>
@@ -28,41 +30,40 @@
 
 <script lang="js">
 
-  export default  {
-    name: 'MyHeader',
-    props: ["series", "curSerie"],  // Data from parent
-    
-    mounted () {},
+export default {
+  name: 'MyHeader',
+  props: ["series", "curSerie"],  // Data from parent
 
-    data () {
-      return {
-        possible_types: ["int32", "int64", "float32"],
-        create_form: false,
-        new_serie_name: "",
-        selected_type: null,
-      }
-    },
-    methods: {
-      onSelect(serie) {
-        this.$parent.$refs.mySideBar.onSelect(serie);
-      },
+  mounted() {
+  },
 
-      onRefresh() {
-        this.$parent.$refs.mySideBar.onRefresh();
-      },
-
-      onCreate() {
-        this.$parent.$refs.mySideBar.new_serie_name = this.new_serie_name;
-        this.$parent.$refs.mySideBar.selected_type = this.selected_type;
-        this.$parent.$refs.mySideBar.onCreate();
-        this.create_form = false;
-        this.new_serie_name = "";
-        this.selected_type = null;
-      },
-    },
-    computed: {
-
+  data() {
+    return {
+      possible_types: ["int32", "int64", "float32"],
+      create_form: false,
+      new_serie_name: "",
+      selected_type: null,
     }
+  },
+  methods: {
+    onSelect(serie) {
+      this.$parent.$refs.mySideBar.onSelect(serie);
+    },
+
+    onRefresh() {
+      this.$parent.$refs.mySideBar.onRefresh();
+    },
+
+    onCreate() {
+      this.$parent.$refs.mySideBar.new_serie_name = this.new_serie_name;
+      this.$parent.$refs.mySideBar.selected_type = this.selected_type;
+      this.$parent.$refs.mySideBar.onCreate();
+      this.create_form = false;
+      this.new_serie_name = "";
+      this.selected_type = null;
+    },
+  },
+  computed: {}
 }
 </script>
 
@@ -83,13 +84,13 @@ header {
 }
 
 .nav-link {
-  color:rgb(200, 230, 250)!important;
+  color: rgb(200, 230, 250) !important;
   word-break: break-word !important;
 }
 
 @media only screen and (min-width: 1200px) {
   #nav-collapse.my-menu {
-    display: none! important;
+    display: none ! important;
   }
 }
 </style>

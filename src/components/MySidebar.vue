@@ -1,101 +1,104 @@
 <template lang="html">
 
-  <nav class="p-2 mb-1 d-none d-xl-block border-right border-info" id="sidebar-wrapper">
-    <p class="h5 text-break mb-3" v-for="(s,index) in series" :key="index" @click="onSelect(s)" v-bind:id="'side-' + s.name"
-      v-bind:class="{'font-weight-bold': s.name == curSerie.name, 'font-weight-normal': s.name != curSerie.name}">{{s.name}}</p>
+  <nav id="sidebar-wrapper" class="p-2 mb-1 d-none d-xl-block border-right border-info">
+    <p v-for="(s,index) in series" v-bind:id="'side-' + s.name" :key="index" class="h5 text-break mb-3" v-bind:class="{'font-weight-bold': s.name == curSerie.name, 'font-weight-normal': s.name != curSerie.name}"
+       @click="onSelect(s)">{{ s.name }}</p>
 
 
     <form class="button-wrapper" onsubmit="return false">
-      <input class="form-control" type="text" v-if="add_mode" v-model="new_serie_name">
-      <button class="btn btn-info btn-block " @click="add_mode=true;" v-if="!add_mode">Nouvelle série</button>
-      <select class="form-control" style="margin-top:0.5em;" v-if="add_mode" v-model="selected_type"> <option v-for="type in possible_types" :value="type" :key="type"> {{type}}</option ></select>
+      <input v-if="add_mode" v-model="new_serie_name" class="form-control" type="text">
+      <button v-if="!add_mode" class="btn btn-info btn-block " @click="add_mode=true;">Nouvelle série</button>
+      <select v-if="add_mode" v-model="selected_type" class="form-control" style="margin-top:0.5em;">
+        <option v-for="type in possible_types" :key="type" :value="type"> {{ type }}</option>
+      </select>
       <div v-if="add_mode" class="form-group row mx-auto mt-2">
         <button class="col-2 btn btn-info px-1 mr-2" @click="add_mode = false; selected_type = null; new_serie_name=''"><i class="fa fa-chevron-left"></i></button>
-        <button class="col btn btn-info" @click="onCreate"
-          :disabled="!new_serie_name || selected_type == null || new_serie_name.includes(' ')">Ajouter série</button>
+        <button :disabled="!new_serie_name || selected_type == null || new_serie_name.includes(' ')" class="col btn btn-info"
+                @click="onCreate">Ajouter série
+        </button>
       </div>
-      <button class="btn btn-info btn-block" @click="onRefresh" v-if="!add_mode">Rafraîchir liste</button>
+      <button v-if="!add_mode" class="btn btn-info btn-block" @click="onRefresh">Rafraîchir liste</button>
     </form>
 
-  </nav>   
+  </nav>
 
 </template>
 
 <script lang="js">
-  export default  {
-    name: 'MySidebar',
-    props: ["series", "curSerie"],  // Data from parent
+export default {
+  name: 'MySidebar',
+  props: ["series", "curSerie"],  // Data from parent
 
-    mounted () {
-    },
-    
-    data () {
-      return {
-        possible_types: ["int32", "int64", "float32"],
-        add_mode: false,
-        new_serie_name: null,
-        selected_type: null,
-      }
-    },
-    created: function() {
-      this.onRefresh();  // Force a refresh on page load
-    },
+  mounted() {
+  },
 
-    methods: {
-      onRefresh(select="") {
-        this.$parent.sendRequest("SHOW ALL;").then((res) => {
-          if (!res.success) {  // La requete a échoué, abandonnez la mission
-            return;
-          }    
-          this.refreshList(res);
-          if (select) {
-            this.onSelect(select);
-          }
-        });
-      },
-
-      onCreate() {
-        this.add_mode = false;
-
-        let request = `CREATE ${this.new_serie_name} ${this.selected_type};`; 
-        this.$parent.sendRequest(request).then((res) => {
-          if (!res.success) {  // La requete a échoué, abandonnez la mission
-            return;
-          }
-          this.onRefresh({"name": this.new_serie_name, "type":this.selected_type});  
-          this.new_serie_name = "";
-          this.selected_type = null;
-        });
-
-      },
-        
-      refreshList(json_data) {
-        /* json_data est un json avec la forme suivante
-        {
-          "success" : true,
-          "data" : {
-            "info" : [
-              {
-                "name" : "MySeries",
-                "type" : "int32"
-              },
-              {
-                "name" : "CamSeries",
-                "type" : "float64"
-              },      
-            ]
-          }
-        }*/
-        let seriesList = json_data.data.info;
-
-        // Lui passer le nouveau tableau de séries
-        this.$emit('updateList', seriesList);
-      },
-
-      onSelect(serie) {
-        this.$emit('selectSerie', serie.name);
-      }
+  data() {
+    return {
+      possible_types: ["int32", "int64", "float32"],
+      add_mode: false,
+      new_serie_name: null,
+      selected_type: null,
     }
+  },
+  created: function () {
+    this.onRefresh();  // Force a refresh on page load
+  },
+
+  methods: {
+    onRefresh(select = "") {
+      this.$parent.sendRequest("SHOW ALL;").then((res) => {
+        if (!res.success) {  // La requete a échoué, abandonnez la mission
+          return;
+        }
+        this.refreshList(res);
+        if (select) {
+          this.onSelect(select);
+        }
+      });
+    },
+
+    onCreate() {
+      this.add_mode = false;
+
+      let request = `CREATE ${this.new_serie_name} ${this.selected_type};`;
+      this.$parent.sendRequest(request).then((res) => {
+        if (!res.success) {  // La requete a échoué, abandonnez la mission
+          return;
+        }
+        this.onRefresh({"name": this.new_serie_name, "type": this.selected_type});
+        this.new_serie_name = "";
+        this.selected_type = null;
+      });
+
+    },
+
+    refreshList(json_data) {
+      /* json_data est un json avec la forme suivante
+      {
+        "success" : true,
+        "data" : {
+          "info" : [
+            {
+              "name" : "MySeries",
+              "type" : "int32"
+            },
+            {
+              "name" : "CamSeries",
+              "type" : "float64"
+            },
+          ]
+        }
+      }*/
+      let seriesList = json_data.data.info;
+
+      // Lui passer le nouveau tableau de séries
+      this.$emit('updateList', seriesList);
+    },
+
+    onSelect(serie) {
+      this.$emit('selectSerie', serie.name);
+    }
+  }
 }
 </script>
 
