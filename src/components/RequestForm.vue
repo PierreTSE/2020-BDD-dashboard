@@ -210,8 +210,7 @@ export default {
                 if (this.max_enable){
                     agg_prefix += "MAX ";
                 }
-                let new_request = [this.request.slice(0, 7), agg_prefix, this.request.slice(7)].join('');
-                this.request = new_request;
+              this.request = [this.request.slice(0, 7), agg_prefix, this.request.slice(7)].join('');
             }
         },
 
@@ -233,8 +232,8 @@ export default {
             } else {
                 this.manual_query_enable = false;
             }
-            this.request_mode_all = !(this.manual_query_enable | this.date_before_enable | this.date_after_enable);
-            if (this.request_mode_all & !this.date_exact) {
+            this.request_mode_all = !(this.manual_query_enable | this.date_before_enable || this.date_after_enable);
+            if (this.request_mode_all && !this.date_exact) {
                 this.submit_text = "Requête (Tout)";
             } else {
                 this.submit_text = "Requête";

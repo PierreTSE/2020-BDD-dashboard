@@ -130,7 +130,7 @@ export default {
     },
 
     checkSeries() {
-      return !this.curSerie.name == "";
+      return this.curSerie.name !== "";
     },
 
     updateList(new_list) {
@@ -236,7 +236,7 @@ export default {
 
 @media only screen and (max-width: 1200px) {
   #page-content{
-    padding-left: 0px;
+    padding-left: 0;
   }
 }
 
